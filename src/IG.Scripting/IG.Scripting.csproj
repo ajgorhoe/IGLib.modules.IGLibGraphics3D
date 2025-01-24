@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+    -->
+    <TargetFrameworks>net6.0;net8.0;net48;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+	<RootNamespace>IG.Scripting</RootNamespace>
+
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <!-- Attributes that were previously put into AsemblyInfo.cs: -->
+    <AssemblyName>IGLibScripting</AssemblyName>
+    <PackageId>IGLib.Scripting</PackageId>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
+    <Authors>Igor Grešovnik et al.</Authors>
+    <Company>IGLib</Company>
+    <Product>IGLib</Product>
+    <NeutralLanguage>en-us</NeutralLanguage>
+    <RepositoryUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibScripting.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Description>Library for C# scripting and dynamic compilation and execution of code.</Description>
+    <Copyright>Copyright © Igor Grešovnik (2024 - present).</Copyright>
+    <PackageLicenseUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibScripting/blob/main/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibScripting/</PackageProjectUrl>
+    <PackageIconUrl>https://ajgorhoe.github.io/icons/IGLibIcon_64x64.png</PackageIconUrl>
+    <PackageTags>C# scripting dynamic compilation</PackageTags>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+	<!--
+    <PackageLicenseExpression>IGLib Binary Redistributable Licence</PackageLicenseExpression>
+	-->
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
