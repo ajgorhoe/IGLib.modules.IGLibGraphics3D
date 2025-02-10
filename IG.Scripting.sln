@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IG.Scripting", "src\IG.Scri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests_IG.Scripting", "src\Tests_IG.Scripting\Tests_IG.Scripting.csproj", "{FD627183-28DD-4234-B747-6EFEEA291E7F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{6F7BD4E0-E7F3-4235-987B-EDC52C2FE25B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{08A352A6-C128-4679-980A-C9B658F182B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IGLibModules", "IGLibModules", "{F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGLibCore", "..\IGLibCore\src\IGLibCore.csproj", "{2B6D7672-8010-4313-8544-9E590C6B0BB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +29,17 @@ Global
 		{FD627183-28DD-4234-B747-6EFEEA291E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD627183-28DD-4234-B747-6EFEEA291E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD627183-28DD-4234-B747-6EFEEA291E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B6D7672-8010-4313-8544-9E590C6B0BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B6D7672-8010-4313-8544-9E590C6B0BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B6D7672-8010-4313-8544-9E590C6B0BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B6D7672-8010-4313-8544-9E590C6B0BB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F7BD4E0-E7F3-4235-987B-EDC52C2FE25B} = {08A352A6-C128-4679-980A-C9B658F182B4}
+		{F86C1DA2-8F39-4D74-AC44-AFB86797C1AC} = {08A352A6-C128-4679-980A-C9B658F182B4}
+		{2B6D7672-8010-4313-8544-9E590C6B0BB5} = {F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}
 	EndGlobalSection
 EndGlobal

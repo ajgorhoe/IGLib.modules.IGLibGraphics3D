@@ -10,6 +10,7 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\IGLibCore\src\IGLibCore.csproj" />
 	  <ProjectReference Include="..\IG.Scripting\IG.Scripting.csproj" />
 	</ItemGroup>
 </Project>
