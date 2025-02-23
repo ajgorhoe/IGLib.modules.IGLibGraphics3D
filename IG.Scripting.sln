@@ -15,6 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGLib.Scripting.Tests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGLib.Scripting", "src\IGLib.Scripting\IGLib.Scripting.csproj", "{4A2A98DA-1FDF-4154-A807-297D9A6698E1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0_SolutionItems", "0_SolutionItems", "{CB1B7E08-2967-435C-A5BC-85DDB2C2A491}"
+	ProjectSection(SolutionItems) = preProject
+		ajgorhoe_IGLib.modules.IGLibScripting.url = ajgorhoe_IGLib.modules.IGLibScripting.url
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
