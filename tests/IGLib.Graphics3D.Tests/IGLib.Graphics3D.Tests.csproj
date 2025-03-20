@@ -15,6 +15,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\IGLibCore\src\IGLib.Core\IGLib.Core.csproj" />
 	  <ProjectReference Include="..\..\..\IGLibCore\tests\IGLib.TestBase\IGLib.TestBase.csproj" />
-	  <ProjectReference Include="..\..\src\IGLib.Scripting\IGLib.Scripting.csproj" />
+	  <ProjectReference Include="..\..\src\IGLib.Graphics3D\IGLib.Graphics3D.csproj" />
 	</ItemGroup>
 </Project>
