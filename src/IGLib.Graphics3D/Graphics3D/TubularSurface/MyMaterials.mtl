@@ -1,0 +1,9 @@
+newmtl BlueSurface
+Kd 0.0 0.0 1.0  # Diffuse color (blue)
+Ka 0.1 0.1 0.3  # Ambient color (darker blue)
+Ks 0.5 0.5 0.5  # Specular reflection
+Ns 50.0         # Shininess
+
+newmtl WhiteLines
+Kd 1.0 1.0 1.0  # Diffuse color (white)
+Ka 0.8 0.8 0.8  # Ambient color (bright white)
