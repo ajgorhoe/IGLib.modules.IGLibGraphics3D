@@ -27,37 +27,44 @@ namespace IG.SandboxTests
         /// method to generate test output.</param>
         public TubularSurfaceTests(ITestOutputHelper output) : base(output)
         {
-            Console = Output;
         }
 
         #region Examples
 
-        /// <summary>Extract dat form information on running processes, which could be used to initialize random
-        /// generators.</summary>
+        /// <summary>Creates the first test of tubular surface generation and export.</summary>
         [Fact]
         protected void Example_CreateAndExportTubularSurfaceTest()
         {
             try
             {
+                Output.WriteLine("Example / Semi-manual test: Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software:");
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string objFile = exportDirectory + "0_TubularSurfaceFirstTest.obj";
+                string mtlFile = exportDirectory + "0_TubularSurfaceFirstTest.obj.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
                 Stopwatch sw = Stopwatch.StartNew();
-
 
                 // Define a 3D helical curve
                 Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), t / 5.0);
-
                 // Generate the tubular mesh
-                var mesh = TubularMeshGenerator_03.Generate(helix, 0, 6 * Math.PI, 0.1, 1000, 100);
-
-                // Export mesh and material file
-                string objFile = "helix.obj";
-                string mtlFile = "helix.mtl";
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch(Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                }
+                var mesh = TubularMeshGenerator.Generate(helix, 0, 6 * Math.PI, 0.1, 1000, 100);
+                // TubularMeshGenerator_03.Generate(helix, 0, 6 * Math.PI, 0.1, 1000, 100);
 
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions_03.ExportMaterial(mtlFile, new vec3(0, 0, 1)); // Blue color
 
-                Console.WriteLine("Helix mesh exported successfully!");
-
+                Console.WriteLine("\nSample mesh (Helix) exported successfully.");
 
                 sw.Stop();
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
