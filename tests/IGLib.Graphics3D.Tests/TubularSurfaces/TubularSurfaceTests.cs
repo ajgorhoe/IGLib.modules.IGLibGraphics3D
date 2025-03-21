@@ -4,17 +4,8 @@ using Xunit.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using System.Configuration;
-using Microsoft.CodeAnalysis.Scripting;
 using System.Diagnostics;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Serialization;
-using System.Reflection;
-using System.Dynamic;
-
 using IGLib.Tests.Base;
-using IG.Text.Extensions;
-using IG.Text;
 using System.Linq;
 using System.IO;
 using IGLib.Gr3D;
