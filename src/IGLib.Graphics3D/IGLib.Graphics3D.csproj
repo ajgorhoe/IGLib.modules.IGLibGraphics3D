@@ -10,14 +10,14 @@
 	<TargetFrameworks>net8.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
-	<RootNamespace>IG.Scripting</RootNamespace>
+	<RootNamespace>IG.Graphics3D</RootNamespace>
 
   </PropertyGroup>
   
   <PropertyGroup>
     <!-- Attributes that were previously put into AsemblyInfo.cs: -->
-    <AssemblyName>IGLibScripting</AssemblyName>
-    <PackageId>IGLib.Scripting</PackageId>
+    <AssemblyName>IGLib.Graphics3D</AssemblyName>
+    <PackageId>IGLib.Graphics3D</PackageId>
     <Version>2.0.0</Version>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <FileVersion>2.0.0</FileVersion>
@@ -25,14 +25,14 @@
     <Company>IGLib</Company>
     <Product>IGLib</Product>
     <NeutralLanguage>en-us</NeutralLanguage>
-    <RepositoryUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibScripting.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Description>Library for C# scripting and dynamic compilation and execution of code.</Description>
+    <Description>IGLib Library for 3D graphics in C#.</Description>
     <Copyright>Copyright © Igor Grešovnik (2024 - present).</Copyright>
-    <PackageLicenseUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibScripting/blob/main/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibScripting/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D/blob/main/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D/</PackageProjectUrl>
     <PackageIconUrl>https://ajgorhoe.github.io/icons/IGLibIcon_64x64.png</PackageIconUrl>
-    <PackageTags>Scripting utilities (parsing, command-line interpreter, parametric commands).</PackageTags>
+    <PackageTags>3D Graphics, IGLib</PackageTags>
     <PackageReleaseNotes>Normal Release</PackageReleaseNotes>
 	<!--
     <PackageLicenseExpression>IGLib Binary Redistributable Licence</PackageLicenseExpression>
