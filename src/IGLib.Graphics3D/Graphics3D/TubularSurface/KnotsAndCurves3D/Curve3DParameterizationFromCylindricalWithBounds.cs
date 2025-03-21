@@ -53,8 +53,6 @@ namespace IGLib.Gr3D
                 rho * Cos(phi),
                 rho * Sin(phi),
                 z );
-            // ToDo: Implement this!
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
