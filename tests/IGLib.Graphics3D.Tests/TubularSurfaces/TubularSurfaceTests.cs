@@ -11,6 +11,7 @@ using System.IO;
 using IGLib.Gr3D;
 using IG.Num;
 
+
 namespace IG.SandboxTests
 {
 
@@ -35,12 +36,16 @@ namespace IG.SandboxTests
         #region Examples
 
 
+
+        #region BasicExamples
+
+
         /// <summary>Creates the first test of tubular surface generation and export.</summary>
         [Theory]
         [InlineData(100, 10, 0.1)]
         //[InlineData(400, 15, 0.1)]
         //[InlineData(1000, 20, 0.5)]
-        protected void Example_CreateAndExportTubularSurfaceTest(int numLongitudal, int numTransverse, double radius)
+        protected void Example_CreateAndExportTubularSurfaceTest(int numLongitudinal, int numTransverse, double radius)
         {
             try
             {
@@ -49,8 +54,8 @@ namespace IG.SandboxTests
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"0_TubularSurfaceFirstTest_{numLongitudal}.obj";
-                string mtlFile = exportDirectory + $"0_TubularSurfaceFirstTest_{numLongitudal}.obj.mtl";
+                string objFile = exportDirectory + $"00_TubularSurfaceFirstTest_{numLongitudinal}.obj";
+                string mtlFile = exportDirectory + $"00_TubularSurfaceFirstTest_{numLongitudinal}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
@@ -68,7 +73,7 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(helix, 0.0, 6 * Math.PI, radius, numLongitudal, numTransverse);
+                var mesh = TubularMeshGenerator.Generate(helix, 0.0, 6 * Math.PI, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); // Blue color
@@ -84,9 +89,6 @@ namespace IG.SandboxTests
                 throw;
             }
         }
-
-
-        #region BasicExamples
 
 
         #endregion BasicExamples
@@ -113,32 +115,36 @@ namespace IG.SandboxTests
         #region Examples:KnotGroups
 
 
-
-        #endregion Examples:KnotGroups
-
-
         /// <summary>Creates the first test of tubular surface generation and export.</summary>
         [Theory]
-        [InlineData(100, 10, 0.1)]
-        //[InlineData(400, 15, 0.1)]
-        //[InlineData(1000, 20, 0.5)]
-        protected void Example_ExportToricKnot(int numLongitudal, int numTransverse, double radius)
+        [InlineData(400, 15, 0.6, 2, 3)]  // the trefoil knot
+        [InlineData(400, 15, 0.6, 3, 7)]  // (3, 7) torus knot
+        [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus link
+        [InlineData(400, 15, 0.1, 3, 4)]  // (3, 4) torus knot
+        //[InlineData(400, 15, 0.1, 3, 5)]  // (3, 5) torus knot
+        //[InlineData(1000, 15, 0.1, 5, 6)]  // (3, 5) torus knot
+        //[InlineData(1500, 15, 0.1, 3, 11)]  // (3, 5) torus knot
+        //[InlineData(2000, 15, 0.1, 8, 9)]  // (7, 9) torus knot
+        protected void Example_ExportTorusKnot(int numLongitudinal, int numTransverse, double radius,
+            int p, int q)
         {
             try
             {
-                Output.WriteLine("Example / Semi-manual test:");
-                Output.WriteLine("  Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software:");
+                Output.WriteLine($"Example / Semi-manual test: TORUS ({p}, {q}) knot:");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"0_TubularSurfaceFirstTest_{numLongitudal}.obj";
-                string mtlFile = exportDirectory + $"0_TubularSurfaceFirstTest_{numLongitudal}.obj.mtl";
+                string objFile = exportDirectory + $"01_TorusKnot_{p}_{q}_{numLongitudinal}.obj";
+                string mtlFile = exportDirectory + $"01_TorusKnot_{p}_{q}_{numLongitudinal}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
                 Stopwatch sw = Stopwatch.StartNew();
-                // Define a 3D helical curve:
-                Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), t / 5.0);
+                // Define the torus knot parameterization:
+                var knot = new TorusKnot3D(p, q);
+                // Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), t / 5.0);
                 // Generate the tubular mesh
                 try
                 {
@@ -150,12 +156,13 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(helix, 0.0, 6 * Math.PI, radius, numLongitudal, numTransverse);
+                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter, 
+                    radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); // Blue color
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); 
                 sw.Stop();
-                Console.WriteLine("\nSample mesh (Helix) exported successfully.");
+                Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
                 // ** Assert:
                 1.Should().Be(1); // just a dummy asserrtion
@@ -166,6 +173,10 @@ namespace IG.SandboxTests
                 throw;
             }
         }
+
+
+        #endregion Examples:KnotGroups
+
 
 
         #region Examples:SpecificKnots

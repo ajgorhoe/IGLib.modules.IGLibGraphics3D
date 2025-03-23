@@ -27,7 +27,7 @@ namespace IGLib.Gr3D
     /// Toric solenoid, knot and link (MathCurve)</seealso></para>
     /// </summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    class TorusKnot3D : ICurve3DParameterizationWithBounds
+    public class TorusKnot3D : ICurve3DParameterizationWithBounds
     {
 
         /// <summary>Empty constructor.</summary>
