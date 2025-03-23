@@ -121,10 +121,12 @@ namespace IG.SandboxTests
         [InlineData(400, 15, 0.6, 3, 7)]  // (3, 7) torus knot
         [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus link
         [InlineData(400, 15, 0.1, 3, 4)]  // (3, 4) torus knot
-        //[InlineData(400, 15, 0.1, 3, 5)]  // (3, 5) torus knot
-        //[InlineData(1000, 15, 0.1, 5, 6)]  // (3, 5) torus knot
-        //[InlineData(1500, 15, 0.1, 3, 11)]  // (3, 5) torus knot
-        //[InlineData(2000, 15, 0.1, 8, 9)]  // (7, 9) torus knot
+        [InlineData(400, 15, 0.1, 3, 5)]  // (3, 5) torus knot
+        [InlineData(1000, 15, 0.1, 5, 6)]  // (3, 5) torus knot
+        [InlineData(1500, 15, 0.1, 3, 11)]  // (3, 5) torus knot
+        [InlineData(2000, 15, 0.1, 8, 9)]  // (7, 9) torus knot
+        [InlineData(2000, 15, 0.1, 3, 17)]  // (7, 9) torus knot
+        [InlineData(2000, 15, 0.1, 5, 19)]  // (7, 9) torus knot
         protected void Example_ExportTorusKnot(int numLongitudinal, int numTransverse, double radius,
             int p, int q)
         {
