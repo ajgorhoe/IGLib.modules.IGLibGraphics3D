@@ -117,6 +117,68 @@ namespace IG.SandboxTests
 
         /// <summary>Creates the first test of tubular surface generation and export.</summary>
         [Theory]
+        [InlineData(600 /* long */, 15 /* trans */, 0.05 /* r */, 3 /* n1 */, 2 /* n2 */, 7 /* n3 */,
+            0.7 /* fi1 */, 0.2 /* fi2 */)]    // the three-twist knot
+        [InlineData(600 /* long */, 15 /* trans */, 0.05 /* r */, 3 /* n1 */, 2 /* n2 */, 5 /* n3 */,
+            1.5 /* fi1 */, 0.2 /* fi2 */)]    // the Stevedore knot
+        [InlineData (600 /* long */, 15 /* trans */, 0.05 /* r */, 3 /* n1 */, 5 /* n2 */, 7 /* n3 */, 
+            0.7 /* fi1 */, 1.0 /* fi2 */)]    // square knot
+        [InlineData (600 /* long */, 15 /* trans */, 0.05 /* r */, 3 /* n1 */, 4 /* n2 */, 7 /* n3 */, 
+            0.1 /* fi1 */, 0.7 /* fi2 */)]    // the 8_21 knot
+        protected void Example_ExportLissajousKnot(int numLongitudinal, int numTransverse, double radius,
+            int n1 = 3, int n2 = 4, int n3 = 7, double fi1 = 0, double fi2 = 0)
+        {
+            double fi3 = 0;
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: LISSAJOUS ({n1}, {n2}, {n3} / {fi1}, {fi2}, {fi3}) knot:");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string objFile = exportDirectory + $"01_LissajousKnot_{n1}-{n2}-{n3}_{fi1}-{fi2}-{fi3}_{numLongitudinal}.obj";
+                string mtlFile = exportDirectory + $"01_LissajousKnot_n1.{n1}_n2.{n2}_n3.{n3}_fi1.{fi1}_fi2.{fi2}_{numLongitudinal}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the torus knot parameterization:
+                var knot = new LissajousKnot3D(n1, n2, n3, fi1, fi2);
+                // Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), t / 5.0);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+        /// <summary>Creates the first test of tubular surface generation and export.</summary>
+        [Theory]
         [InlineData(400, 15, 0.6, 2, 3)]  // the trefoil knot
         [InlineData(400, 15, 0.6, 3, 7)]  // (3, 7) torus knot
         [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus link
@@ -145,8 +207,7 @@ namespace IG.SandboxTests
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
                 Stopwatch sw = Stopwatch.StartNew();
                 // Define the torus knot parameterization:
-                var knot = new TorusKnot3D(p, q);
-                // Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), t / 5.0);
+                var knot = new LissajousKnot3D(p, q);
                 // Generate the tubular mesh
                 try
                 {
@@ -155,6 +216,7 @@ namespace IG.SandboxTests
                 catch (Exception ex)
                 {
                     Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
