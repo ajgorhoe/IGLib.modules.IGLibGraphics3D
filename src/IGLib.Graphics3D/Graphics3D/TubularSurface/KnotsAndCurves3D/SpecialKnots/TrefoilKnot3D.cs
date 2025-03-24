@@ -15,7 +15,7 @@ namespace IGLib.Gr3D
     /// Trefoill knot (MathCurve)</seealso></para>
     /// </summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    class TrefoilKnot3D : ICurve3DParameterizationWithBounds
+    public class TrefoilKnot3D : ICurve3DParameterizationWithBounds
     {
 
 

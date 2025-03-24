@@ -24,13 +24,13 @@ namespace IGLib.Gr3D
     /// 2D Lissajous curvee (MathCurve)</seealso></para>
     /// </summary>
     /// <seealso cref="ICurveParameterization3D"/>
-    class LissajousKnot3D : ICurve3DParameterizationWithBounds
+    public class LissajousKnot3D : ICurve3DParameterizationWithBounds
     {
 
         /// <summary>Constructor, initializes additional parameters that define the specific
         /// knot out of a family and phase shifts.</summary>
         public LissajousKnot3D(int n1 = 3, int n2 = 4, int n3 = 7,
-            double fi1 = 0, double fi2 = 0, double fi3 = 0)
+            double fi1 = 0.1, double fi2 = 0.7)
         {
             this.n1 = n1;
             this.n2 = n2;

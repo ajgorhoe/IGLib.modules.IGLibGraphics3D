@@ -16,7 +16,7 @@ namespace IGLib.Gr3D
     /// Figure 8 Knot, Granny Knot, Square Knot (Virtual Math Museum)</seealso></para>
     /// </summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    class FigureEightKnot3D_MathCurve2 : ICurve3DParameterizationWithBounds
+    public class FigureEightKnot3D_MathCurve2 : ICurve3DParameterizationWithBounds
     {
 
 

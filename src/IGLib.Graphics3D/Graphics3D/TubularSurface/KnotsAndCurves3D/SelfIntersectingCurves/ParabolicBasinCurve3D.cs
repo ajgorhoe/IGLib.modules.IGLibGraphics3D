@@ -9,7 +9,7 @@ namespace IGLib.Gr3D
     /// <para><seealso href="https://mathcurve.com/courbes3d.gb/vasque3d/vasque3d.shtml"/></para></summary>
     /// 
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    class ParabolicBasinCurve3D : ICurve3DParameterizationWithBounds
+    public class ParabolicBasinCurve3D : ICurve3DParameterizationWithBounds
     {
 
         /// <summary>Constructor.</summary>

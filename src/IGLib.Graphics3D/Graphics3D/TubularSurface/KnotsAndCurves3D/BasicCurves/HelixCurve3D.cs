@@ -13,7 +13,7 @@ namespace IGLib.Gr3D
     /// <para><seealso href="https://mathcurve.com/courbes3d.gb/vasque3d/vasque3d.shtml"/>
     /// Base for implementation.</para></summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    class HelixCurve3D : ICurve3DParameterizationWithBounds
+    public class HelixCurve3D : ICurve3DParameterizationWithBounds
     {
 
         /// <summary>Constructor.</summary>
