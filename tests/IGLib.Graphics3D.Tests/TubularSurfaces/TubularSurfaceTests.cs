@@ -247,8 +247,8 @@ namespace IG.SandboxTests
         /// The other method with the _WrongParameterization suffix should ALSO BE KEPT because it 
         /// produces interesting curves)</summary>
         [Theory]
-        [InlineData(400, 15, 0.1, 2, 3)]  // 
-        [InlineData(1000, 15, 0.05, 5, 17)]  // 
+        [InlineData(400, 15, 0.05, 3, 8, 0.3)]  // 
+        [InlineData(1000, 15, 0.05, 5, 17, 0.3)]  // 
         protected void Example_ExportCylindricalBilliardKnot(int numLongitudinal, int numTransverse, double radius,
             int N, int P, double A = 1.0)
         {

@@ -19,8 +19,16 @@ namespace IGLib.Gr3D
     public class CylindricalBilliardKnot : Curve3DParameterizationFromCylindricalWithBounds,
         ICurve3DCylindricalParameterization, ICurve3DParameterizationWithBounds
     {
+
+        /// <summary>Number of couls (how many times a point on the knot circles around axis of the cylinder)</summary>
         public int N { get; }
+
+        /// <summary>Number of times the point touches upper and lower surface of the cylinder.</summary>
         public int P { get; }
+
+        /// <summary>The relative amplituude (w.r. the radius, which is 1) of oscillations perpendicular to the rounded 
+        /// surface of the cylinder around which the curve coils. Should be positive and strictly less than 0.5, 0.1 may 
+        /// be a good value, this also depends on the thickness of the tube.</summary>
         public double A { get; }
 
         public CylindricalBilliardKnot(int n, int p, double a = 0.3)
@@ -37,7 +45,8 @@ namespace IGLib.Gr3D
         /// <inheritdoc/>
         public override (double rho, double phi, double z) CurveCylindrical(double t)
         {
-            double rho = 1 + A * Cos(N * P * t);
+            // double rho = 1 + A * Cos(N * P * t);
+            double rho = 1 + A * Cos(P * t);
             double phi = N * t;
             double z = Sin(P * t);
             return (rho, phi, z);
