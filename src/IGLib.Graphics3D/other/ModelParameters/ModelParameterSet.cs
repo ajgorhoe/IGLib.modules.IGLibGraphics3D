@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//#if !NET8_0_OR_GREATER
-//using System.Collections.Specialized; // Fallback to non-generic OrderedDictionary
-//#endif
-namespace IG.Graphics3D.other.ModelParameters
+
+namespace IGLib.Core
 {
 
     /// <summary>Contains a set of model parameters as <see cref="ModelParameter"/> objects.

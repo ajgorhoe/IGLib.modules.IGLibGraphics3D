@@ -10,7 +10,7 @@
 		<TargetFrameworks>net8.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<IsPackable>true</IsPackable>
-		<RootNamespace>IG.Graphics3D</RootNamespace>
+		<RootNamespace>IGLib.Graphics3D</RootNamespace>
 
 	</PropertyGroup>
 
