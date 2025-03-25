@@ -140,7 +140,7 @@ namespace IGLib.Core
         public string Name { get; protected set; }
 
         /// <inheritdoc/>
-        public string Title { get; protected set; }
+        public string Title { get; init; }
 
         /// <inheritdoc/>
         public string Description { get; protected set; }

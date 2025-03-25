@@ -9,6 +9,7 @@
     -->
 		<TargetFrameworks>net8.0; netstandard2.0;</TargetFrameworks>
 		<OutputType>Library</OutputType>
+		<LangVersion>12.0</LangVersion>
 		<IsPackable>true</IsPackable>
 		<RootNamespace>IGLib.Graphics3D</RootNamespace>
 
@@ -34,6 +35,11 @@
 		<PackageIconUrl>https://ajgorhoe.github.io/icons/IGLibIcon_64x64.png</PackageIconUrl>
 		<PackageTags>3D Graphics, IGLib</PackageTags>
 		<PackageReleaseNotes>Normal Release</PackageReleaseNotes>
+		<!--
+		Generate XML documentation file and disable warnings about missing documentation comments:
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<NoWarn>CS1591</NoWarn>
+		-->
 		<!--
     <PackageLicenseExpression>IGLib Binary Redistributable Licence</PackageLicenseExpression>
 	-->
