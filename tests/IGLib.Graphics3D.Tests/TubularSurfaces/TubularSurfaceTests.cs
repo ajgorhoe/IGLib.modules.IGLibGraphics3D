@@ -240,7 +240,12 @@ namespace IG.SandboxTests
 
 
 
-        /// <summary>Creates the first test of tubular surface generation and export.</summary>
+        // ToDo: Correct the parameterization (find the correct one!)
+        /// <summary>Generates and exports (as .obj) tubular surface created form smooth parameterizaion of cylindric
+        /// billiard knot.
+        /// <para>IMPORTANT: The parameterization used here is still wrong and it needs to be corrected.
+        /// The other method with the _WrongParameterization suffix should ALSO BE KEPT because it 
+        /// produces interesting curves)</summary>
         [Theory]
         [InlineData(400, 15, 0.1, 2, 3)]  // 
         [InlineData(1000, 15, 0.05, 5, 17)]  // 
@@ -263,6 +268,65 @@ namespace IG.SandboxTests
                 Stopwatch sw = Stopwatch.StartNew();
                 // Define the cylindrical billiard knot parameterization:
                 var knot = new CylindricalBilliardKnot(N, P, A);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+
+
+        // ToDo: Correct the parameterization (find the correct one!)
+        /// <summary>Generates and exports (as .obj) tubular surface created form smooth parameterizaion of cylindric
+        /// billiard knot (wrong, but the wrong parameterization should be kept because it  produces interesting curves).
+        /// The other parameterization and its corresponding test will be kept.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.1, 2, 3)]  // 
+        [InlineData(1000, 15, 0.05, 5, 17)]  // 
+        protected void Example_ExportCylindricalBilliardKnot_WrongParameterization(int numLongitudinal, int numTransverse, double radius,
+            int N, int P, double A = 1.0)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: CYLINDRICAL BILLIARD ({N}, {P}) knot:");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string objFile = exportDirectory + $"01_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}.obj";
+                string mtlFile = exportDirectory + $"01_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the cylindrical billiard knot parameterization:
+                var knot = new CylindricalBilliardKnot_WrongParameterization(N, P, A);
                 // Generate the tubular mesh
                 try
                 {
