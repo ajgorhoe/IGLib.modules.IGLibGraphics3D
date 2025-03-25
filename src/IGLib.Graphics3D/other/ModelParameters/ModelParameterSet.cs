@@ -16,7 +16,7 @@ namespace IGLib.Core
     /// <para>Stating parameter of certain name twice throws exception.</para>
     /// <para>Order in which parameters are added is kept. <see cref="ParameterList"/> returns a readonly list
     /// of parameters sorted in the orded in which paremeters were specified in constructors.</para></remarks>
-    class ModelParameterSet
+    class ModelParameterSet : IModelParameterSet
     {
 
         /// <summary>Constructor, initializes the current model parameters set.</summary>
@@ -89,6 +89,7 @@ namespace IGLib.Core
             .Select(name => ParametersDictionaryInbternal[name]).ToList();
 
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -113,7 +114,7 @@ namespace IGLib.Core
                 new ModelParameter(
                     "Param1", typeof(double), "Parameter Φ1, phase shift in the first direction.",
                     "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction X.",
-                    (double) 0, Math.PI/4.0
+                    (double)0, Math.PI / 4.0
                 )
                 {
                     //Title = "Parameter Φ1, phase shift in the first direction.",
@@ -123,7 +124,7 @@ namespace IGLib.Core
                 },
                 new ModelParameter<double>("Param2", "Parameter Φ2, phase shift in the second direction.",
                     "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction Y.",
-                    (double)0, 22.44 )
+                    (double)0, 22.44)
                 {
                     //Title = "Parameter Φ2, phase shift in the first direction.",
                     //Description = "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction Y.",

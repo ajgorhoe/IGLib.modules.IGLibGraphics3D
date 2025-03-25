@@ -44,7 +44,7 @@ namespace IGLib.Core
         /// <summary>Parameter type.</summary>
         Type Type { get; }
 
-        /// <summary>Title when introducing the parameter, for exampe as title in 
+        /// <summary>Title when introducing the parameter, for example as title in 
         /// documentation, as label in user interfaces where parameter is displayed or 
         /// where it could be set, etc.</summary>
         string Title { get; }
