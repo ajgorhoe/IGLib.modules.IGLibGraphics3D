@@ -100,7 +100,7 @@ namespace IGLib.Gr3D
 
 
 
-    public class MaterialPropertiesExamples()
+    public class MaterialPropertiesExamples
     {
 
         public void Example_SaveMaterialProperrties()

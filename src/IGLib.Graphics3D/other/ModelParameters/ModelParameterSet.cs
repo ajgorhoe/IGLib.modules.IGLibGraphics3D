@@ -22,8 +22,28 @@ namespace IGLib.Core
 //                    new Dictionary<string, ModelParameter>();
 //#endif
 
-        protected SortedDictionary<string, ModelParameter> Parameters { get; } =
-            new SortedDictionary<string, ModelParameter>();
+        protected Dictionary<string, IModelParameter> ParametersDictionary { get; } =
+            new Dictionary<string, IModelParameter>();
+
+        protected List<string> ParameterNamesList { get; } = new List<string>();
+
+        /// <summary>Number of parameters currently contained in this set.</summary>
+        public int Ckount => ParametersDictionary.Count;
+
+        public IReadOnlyList<IModelParameter> ParameterList => ParametersDictionary.Values.ToList();
+
+        protected void AddParameter(string name, IModelParameter parameter)
+        {
+            if (ParametersDictionary.ContainsKey("name"))
+            {
+                throw new InvalidOperationException($"Parameter {name} is already contained in the set, you can only add a parameter once.");
+                // Parameters[name] = parameter;
+            } else
+            {
+
+            }
+
+        }
 
     }
 }

@@ -1,7 +1,5 @@
 ﻿using IG.Num;
-using Microsoft.VisualBasic;
 using static System.Math;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace IGLib.Gr3D
 {
