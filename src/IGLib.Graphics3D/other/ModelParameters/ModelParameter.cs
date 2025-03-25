@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace IGLib.Core
 {
 
-
-    class ModelParameter<ParameterType>: ModelParameter
+    class ModelParameter<ParameterType> : ModelParameter, IModelParameter1<ParameterType>
     {
         public ModelParameter(string name, string title, string description,
             ParameterType defaultValue, ParameterType value) : base(name, typeof(ParameterType),
