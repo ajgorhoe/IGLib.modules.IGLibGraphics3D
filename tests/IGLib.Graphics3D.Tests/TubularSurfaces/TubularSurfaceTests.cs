@@ -73,7 +73,7 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(helix, 0.0, 6 * Math.PI, radius, numLongitudinal, numTransverse);
+                var mesh = TubularMeshGenerator_05.Generate(helix, 0.0, 6 * Math.PI, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); // Blue color
@@ -158,7 +158,7 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -220,7 +220,7 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter, 
+                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter, 
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -280,7 +280,7 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -339,7 +339,7 @@ namespace IG.SandboxTests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
