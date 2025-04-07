@@ -12,11 +12,14 @@ using IGLib.Gr3D;
 using IG.Num;
 
 
-namespace IG.SandboxTests
+namespace IGLib.Graphics3D.Tests
 {
 
-    /// <summary>Testing of C# script execution with classes created for this.</summary>
-    public class TubularSurfaceTests : TestBase<TubularSurfaceTests>
+    /// <summary>These tests create and export meshes for tubular surfaces created from 3D parametric
+    /// curves, including various knot parameterizations, knot groups (torus knots, Lissajous knots, 
+    /// cylindrical billiard knots), selected individual konts, etc. Regions are arranged by the type 
+    /// of the exported curve or knot.</summary>
+    public class TubularSurfaceExportExamplesTests : TestBase<TubularSurfaceExportExamplesTests>
     {
 
         /// <summary>Calling base constructor initializes things like Output property to 
@@ -25,7 +28,7 @@ namespace IG.SandboxTests
         /// constructor) by the test framework. I is also stored to Console property, such that
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
-        public TubularSurfaceTests(ITestOutputHelper output) : base(output)
+        public TubularSurfaceExportExamplesTests(ITestOutputHelper output) : base(output)
         {
             
         }
@@ -39,13 +42,15 @@ namespace IG.SandboxTests
 
         #region BasicExamples
 
+        // Prefixes: 00, 01, 02, ...
 
-        /// <summary>Creates the first test of tubular surface generation and export.</summary>
+        /// <summary>Creates the first test of tubular surface generation and export, taking custom
+        /// parameterization of a helix curve as example.</summary>
         [Theory]
         [InlineData(100, 10, 0.1)]
         //[InlineData(400, 15, 0.1)]
         //[InlineData(1000, 20, 0.5)]
-        protected void Example_CreateAndExportTubularSurfaceTest(int numLongitudinal, int numTransverse, double radius)
+        protected void Example00_CreateAndExportTubularSurfaceTest(int numLongitudinal, int numTransverse, double radius)
         {
             try
             {
@@ -94,18 +99,74 @@ namespace IG.SandboxTests
         #endregion BasicExamples
 
 
+        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.2, 1.0, 0.2, true)]   // right-handed 
+        [InlineData(400, 15, 0.2, 1.0, 0.2, false)]  // lef-handed , similar as above
+        protected void Example01_1_ExportHelixCurve3DTube(int numLongitudinal, int numTransverse, double radius,
+            double a = 1.0, double b = 0.2, bool righthanded = true)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: helix, a = {a}, b = ({b}, right-handed: {righthanded}");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string objFile = exportDirectory + $"01.1_Helix_{a}_{b}_{righthanded}_{numLongitudinal}.obj";
+                string mtlFile = exportDirectory + $"01.1_Helix_{a}_{b}_{righthanded}_{numLongitudinal}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                var curveDef = new HelixCurve3D(a, b, righthanded);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
 
 
         #region Examples:BasicCurves
 
+        // Prefixes: 10, 11, 12, ..., 20, 21, ...
 
         #endregion Examples:BasicCurves
 
-
+        // Prefixes: 30, 31, 32, ..., 40, 41, ...
 
 
         #region Examples:AdvancedCurves
 
+        // Prefixes: 50, 51, 52, ..., 50, 51, ...
 
         #endregion Examples:AdvancedCurves
 
@@ -114,6 +175,7 @@ namespace IG.SandboxTests
 
         #region Examples:KnotGroups
 
+        // Prefixes: 50, 51, 52, ..., 50, 51, ...
 
         /// <summary>Creates the first test of tubular surface generation and export.</summary>
         [Theory]
@@ -181,14 +243,14 @@ namespace IG.SandboxTests
         [Theory]
         [InlineData(400, 15, 0.6, 2, 3)]  // the trefoil knot
         [InlineData(400, 15, 0.6, 3, 7)]  // (3, 7) torus knot
-        [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus link
+        [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus LINK
         [InlineData(400, 15, 0.1, 3, 4)]  // (3, 4) torus knot
         [InlineData(400, 15, 0.1, 3, 5)]  // (3, 5) torus knot
         [InlineData(1000, 15, 0.1, 5, 6)]  // (3, 5) torus knot
-        [InlineData(1500, 15, 0.1, 3, 11)]  // (3, 5) torus knot
-        [InlineData(2000, 15, 0.1, 8, 9)]  // (7, 9) torus knot
-        [InlineData(2000, 15, 0.1, 3, 17)]  // (7, 9) torus knot
-        [InlineData(2000, 15, 0.1, 5, 19)]  // (7, 9) torus knot
+        [InlineData(1500, 15, 0.1, 3, 11)]  // (3, 11) torus knot
+        [InlineData(2000, 15, 0.1, 8, 9)]  // (8, 9) torus knot
+        [InlineData(2000, 15, 0.1, 3, 17)]  // (3, 17) torus knot
+        [InlineData(2000, 15, 0.1, 5, 19)]  // (5, 19) torus knot
         protected void Example_ExportTorusKnot(int numLongitudinal, int numTransverse, double radius,
             int p, int q)
         {
@@ -207,7 +269,7 @@ namespace IG.SandboxTests
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
                 Stopwatch sw = Stopwatch.StartNew();
                 // Define the torus knot parameterization:
-                var knot = new LissajousKnot3D(p, q);
+                var knot = new TorusKnot3D(p, q);
                 // Generate the tubular mesh
                 try
                 {

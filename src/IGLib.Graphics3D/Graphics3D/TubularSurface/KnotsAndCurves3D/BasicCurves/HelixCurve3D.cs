@@ -19,11 +19,12 @@ namespace IGLib.Gr3D
         /// <summary>Constructor.</summary>
         public HelixCurve3D(double a = 1.0, double b = 0, bool righthanded = true)
         {
-            if (b == 0)
-            {
-                b = 0.5 * a / (2 * PI);
-            }
+            //if (b == 0)
+            //{
+            //    b = 0.5 * a / (2 * PI);
+            //}
             this.a = a;
+            this.b = b;
             this.righthanded = righthanded;
         }
 
