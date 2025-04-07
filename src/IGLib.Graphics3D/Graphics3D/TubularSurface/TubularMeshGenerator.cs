@@ -34,10 +34,31 @@ namespace IGLib.Gr3D
 
         #region Parallel Transport Frame
 
-        /// <summary>
-        /// Generates a tubular mesh using the Parallel Transport Frame (PTF) and numerical tangent vectors.
-        /// </summary>
-        public StructuredMesh3D GeneratePTF(
+        /// <summary>Generates a tubular mesh using the Parallel Transport Frame (PTF) and 
+        /// numerical tangent vectors.</summary>
+        /// <param name="curve">Definition of the parametric curve used to generate the tubular surface.</param>
+        /// <param name="tStart">Starting parameter.</param>
+        /// <param name="tEnd">Ending parameter.</param>
+        /// <param name="radius">Radius of the circular tube.</param>
+        /// <param name="numCurvePoints">Number of mesh points along the curve.</param>
+        /// <param name="numCirclePoints">Number of mesh points around the circumference of the tube.</param>
+        /// <param name="hrel">Specification of step for numerical differentiation, relative to the 
+        /// meshing step (difference in parameter between meshing points).</param>
+        /// <param name="eps">Specifies how close to parallel to a tangent can a unit vector be at most,
+        /// to still be eligible to generate the first normal to the tangent via orthogonalization.
+        /// Should be less than 0.5; normally it should be less than 0.2, also 0.05 could be 
+        /// a good value. If scalar product of the tangential unit vector and the candidate unit 
+        /// vector minus 1.0 is less than <paramref name="eps"/> then the candidate vector is not taken 
+        /// into account because it is too parallel to the tangent.</param>
+        /// <param name="normalizeFromPrevious">If true then the second normal is calculated from previous
+        /// normal by orthogonalization. Otherwise, it is calculated by a vector product of the tangent
+        /// and the first normal. Default is false.</param>
+        /// <param name="restrictToInterval">Whether evaluations of the curve points must be limited 
+        /// to the meshing interval. If true then the step for numerical differentiation must be taken
+        /// in such a way that all vurve evaluations fall within the meshing interval, end ponts 
+        /// inclusive. Ths is useful when the function has a singularity or sidcontinuity just
+        /// outside the meshing interval.</param>
+        public StructuredMesh3D GenerateMesh(
             Func<double, vec3> curve,
             double tStart,
             double tEnd,
@@ -53,13 +74,17 @@ namespace IGLib.Gr3D
             double h = hrel * step;
 
             Func<double, vec3> tangent = t => NumericalDerivative(curve, t, tStart, tEnd, h, restrictToInterval);
-            return GeneratePTF(curve, tangent, tStart, tEnd, radius, numCurvePoints, numCirclePoints, eps, normalizeFromPrevious);
+            return GenerateMesh(curve, tangent, tStart, tEnd, radius, numCurvePoints, numCirclePoints, eps, normalizeFromPrevious);
         }
 
-        /// <summary>
-        /// Generates a tubular mesh using the Parallel Transport Frame (PTF) and analytical tangent vectors.
-        /// </summary>
-        public StructuredMesh3D GeneratePTF(
+        /// <summary>Generates a tubular mesh using the Parallel Transport Frame (PTF) and analytical 
+        /// tangent vectors.</summary>
+        /// <param name="tangent">Function that defines derivative of <paramref name="curve"/> with
+        /// respect to parameter.</param>
+        /// <remarks>For undocumented parameters, see 
+        /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.
+        /// </remarks>
+        public StructuredMesh3D GenerateMesh(
             Func<double, vec3> curve,
             Func<double, vec3> tangent,
             double tStart,
@@ -73,7 +98,7 @@ namespace IGLib.Gr3D
             if (tangent == null)
             {
                 double step = (tEnd - tStart) / (numCurvePoints - 1);
-                return GeneratePTF(curve, tStart, tEnd, radius, numCurvePoints, numCirclePoints, hrel: 1e-2, eps: eps, normalizeFromPrevious: normalizeFromPrevious, restrictToInterval: true);
+                return GenerateMesh(curve, tStart, tEnd, radius, numCurvePoints, numCirclePoints, hrel: 1e-2, eps: eps, normalizeFromPrevious: normalizeFromPrevious, restrictToInterval: true);
             }
 
             var mesh = new StructuredMesh3D(numCurvePoints, numCirclePoints);
@@ -135,9 +160,14 @@ namespace IGLib.Gr3D
 
         #region Frenet Frame
 
-        /// <summary>
-        /// Generates a tubular mesh using the Frenet frame and numerical tangent vector.
+        /// <summary>Generates a tubular mesh from the specified parametric curve using the Frenet frame 
+        /// and numerically calculated tangent vector.
+        /// <para>This method of generating the mesh will lead to a "pinched pipe mesh" in ponts where the
+        /// swcond derivative changes direction because the normals that define meshning around circumberence
+        /// change direections by full angle (180 degrees).</para>
         /// </summary>
+        /// <remarks>For parameter descriprions, see 
+        /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
         public StructuredMesh3D GenerateFrenet(
             Func<double, vec3> curve,
             double tStart,
@@ -155,9 +185,12 @@ namespace IGLib.Gr3D
             return GenerateFrenet(curve, tangent, tStart, tEnd, radius, numCurvePoints, numCirclePoints, h);
         }
 
-        /// <summary>
-        /// Generates a tubular mesh using the Frenet frame and analytical or fallback tangent function.
-        /// </summary>
+        /// <summary>Generates a tubular mesh using the Frenet frame and analytical or fallback tangent function.
+        /// <para>The same as <see cref="GenerateFrenet(Func{double, vec3}, Func{double, vec3}, double, double, double, int, int, double)"/>,
+        /// except that analytical curve derivative (tangent) is used (specified by <paramref name="tangent"/>) and we
+        /// don't need to calculate derivatives numerically.</para></summary>
+        /// <remarks>For parameter descriprions, see 
+        /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
         public StructuredMesh3D GenerateFrenet(
             Func<double, vec3> curve,
             Func<double, vec3> tangent,

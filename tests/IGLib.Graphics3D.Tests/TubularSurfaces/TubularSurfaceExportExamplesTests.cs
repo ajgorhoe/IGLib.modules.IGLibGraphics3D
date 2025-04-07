@@ -326,8 +326,8 @@ namespace IGLib.Graphics3D.Tests
 
         /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
         [Theory]
-        [InlineData(400, 15, 0.2, 1.0, 1.0)]
-        [InlineData(400, 15, 0.2, 2.0, 2.0)]
+        [InlineData(400, 15, 0.06, 1.0, 1.0)]
+        [InlineData(400, 15, 0.06, 2.0, 2.0)]
         protected void Example11_4_ExportConicalSpiralHyperbolic3DTube(int numLongitudinal, int numTransverse, double radius,
             double alpha = 1.5, double a = 1.0)
         {

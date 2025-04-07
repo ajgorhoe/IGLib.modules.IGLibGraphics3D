@@ -42,7 +42,7 @@ namespace IGLib.Gr3D
         public override bool HasDerivativePolar => true;
 
         /// <inheritdoc/>
-        public override double StartParameter => 1.0 / (2 * PI);
+        public override double StartParameter => 1.0 / (1 * PI);
 
         /// <inheritdoc/>
         public override double EndParameter => 10 * PI;
