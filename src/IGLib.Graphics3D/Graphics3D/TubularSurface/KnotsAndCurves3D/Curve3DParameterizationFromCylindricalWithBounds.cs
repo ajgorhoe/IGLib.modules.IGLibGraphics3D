@@ -40,7 +40,6 @@ namespace IGLib.Gr3D
         public abstract double EndParameter { get; }
 
 
-
         #endregion ICurve3DCylindricalParameterization
 
         #region ICurve3DParameterizationWithBounds

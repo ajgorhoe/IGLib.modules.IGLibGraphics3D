@@ -10,8 +10,10 @@ namespace IGLib.Gr3D
     /// 2 * π * b (b is sometimes called reduced shift of the helix). The angle of the helix is constant
     /// and equal to atan(b/a).</para>
     /// <para>Additional parameters mentioned above: <see cref="a"/>, <see cref="b"/>, <see cref="righthanded"/></para>
-    /// <para><seealso href="https://mathcurve.com/courbes3d.gb/vasque3d/vasque3d.shtml"/>
-    /// Base for implementation.</para></summary>
+    /// <para>Basis for implementation: <see href="https://en.wikipedia.org/wiki/Helix"/></para>
+    /// <para>See also:</para>
+    /// <para><seealso href="https://mathcurve.com/courbes3d.gb/helicecirculaire/helicecirculaire.shtml">
+    /// Cylindrical Helix.</seealso></para></summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
     public class HelixCurve3D : ICurve3DParameterizationWithBounds
     {
@@ -19,10 +21,6 @@ namespace IGLib.Gr3D
         /// <summary>Constructor.</summary>
         public HelixCurve3D(double a = 1.0, double b = 0, bool righthanded = true)
         {
-            //if (b == 0)
-            //{
-            //    b = 0.5 * a / (2 * PI);
-            //}
             this.a = a;
             this.b = b;
             this.righthanded = righthanded;
@@ -31,6 +29,7 @@ namespace IGLib.Gr3D
         /// <summary>Whether the helix orientation is right-handed (true) or left-handed (false).</summary>
         public bool righthanded { get; }
 
+        /// <summary>1 if <see cref="righthanded"/>, -1 if not (for the left-handed helix curve).</summary>
         public double epsilon => righthanded ? 1 : -1;
 
         /// <summary>Radius of the helix.</summary>

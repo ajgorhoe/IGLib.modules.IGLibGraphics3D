@@ -41,8 +41,8 @@ namespace IGLib.Graphics3D.Tests
 
         // Prefixes: 00, 01, 02, ...
 
-        /// <summary>Creates the first test of tubular surface generation and export, taking custom
-        /// parameterization of a helix curve as example.</summary>
+        /// <summary>Creates the first test of tubular surface generation and export, using a 
+        /// custom parameterization of a helix curve as example.</summary>
         [Theory]
         [InlineData(100, 10, 0.1)]
         //[InlineData(400, 15, 0.1)]
@@ -157,6 +157,227 @@ namespace IGLib.Graphics3D.Tests
         #region Examples:BasicCurves
 
         // Prefixes: 10, 11, 12, ..., 20, 21, ...
+
+
+        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.2, 1.0, 0.2)]
+        [InlineData(400, 15, 0.2, 2.0, 0.3)]
+        protected void Example11_1_ExportConicalSpiralArchimedian3DTube(int numLongitudinal, int numTransverse, double radius,
+            double alpha = 1.5, double a = 1.0)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: conical Archimedean spiral, slope = {alpha}, a = {a}");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string fileName = $"11.1_ConicalSpiralArchimedean_{alpha}_{a}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                var curveDef = new ConicalSpiralArchimedean3D(alpha, a);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.2, 1.0, 1.0, 0.15)]
+        [InlineData(400, 15, 0.2, 2.0, 2.0, 0.06)]
+        protected void Example11_2_ExportConicalSpiralLogarithmic3DTube(int numLongitudinal, int numTransverse, double radius,
+            double alpha = 1.5, double a = 1.0, double k = 0.01)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: conical logarithmic spiral, slope = {alpha}, a = {a}, k = {k}");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string fileName = $"11.2_ConicalSpiralLogarithmic_{alpha}_{a}_{k}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                var curveDef = new ConicalSpiralLogarithmic3D(alpha, a, k);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.2, 1.0, 1.0)]
+        [InlineData(400, 15, 0.2, 2.0, 2.0)]
+        protected void Example11_3_ExportConicalSpiralFermats3DTube(int numLongitudinal, int numTransverse, double radius,
+            double alpha = 1.5, double a = 1.0)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: conical Fermat's spiral, slope = {alpha}, a = {a}");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string fileName = $"11.3_ConicalSpiralFermats_{alpha}_{a}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                var curveDef = new ConicalSpiralFermats3D(alpha, a);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.2, 1.0, 1.0)]
+        [InlineData(400, 15, 0.2, 2.0, 2.0)]
+        protected void Example11_4_ExportConicalSpiralHyperbolic3DTube(int numLongitudinal, int numTransverse, double radius,
+            double alpha = 1.5, double a = 1.0)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: conical Fermat's spiral, slope = {alpha}, a = {a}");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string fileName = $"11.4_ConicalSpiralHyperbolic_{alpha}_{a}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                var curveDef = new ConicalSpiralHyperbolic3D(alpha, a);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
 
         #endregion Examples:BasicCurves
 
