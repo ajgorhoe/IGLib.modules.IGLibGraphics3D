@@ -34,10 +34,7 @@ namespace IGLib.Graphics3D.Tests
         }
 
 
-
-
         #region Examples
-
 
 
         #region BasicExamples
@@ -59,8 +56,9 @@ namespace IGLib.Graphics3D.Tests
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"00_TubularSurfaceFirstTest_{numLongitudinal}.obj";
-                string mtlFile = exportDirectory + $"00_TubularSurfaceFirstTest_{numLongitudinal}.mtl";
+                string fileName = $"00_TubularSurfaceFirstTest_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
@@ -114,8 +112,9 @@ namespace IGLib.Graphics3D.Tests
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"01.1_Helix_{a}_{b}_{righthanded}_{numLongitudinal}.obj";
-                string mtlFile = exportDirectory + $"01.1_Helix_{a}_{b}_{righthanded}_{numLongitudinal}.mtl";
+                string fileName = $"01.1_Helix_{a}_{b}_{righthanded}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
@@ -177,6 +176,70 @@ namespace IGLib.Graphics3D.Tests
 
         // Prefixes: 50, 51, 52, ..., 50, 51, ...
 
+
+        /// <summary>Creates the first test of tubular surface generation and export.</summary>
+        [Theory]
+        [InlineData(400, 15, 0.6, 2, 3)]  // the trefoil knot
+        [InlineData(400, 15, 0.6, 3, 7)]  // (3, 7) torus knot
+        [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus LINK
+        [InlineData(400, 15, 0.1, 3, 4)]  // (3, 4) torus knot
+        [InlineData(400, 15, 0.1, 3, 5)]  // (3, 5) torus knot
+        [InlineData(1000, 15, 0.1, 5, 6)]  // (3, 5) torus knot
+        [InlineData(1500, 15, 0.1, 3, 11)]  // (3, 11) torus knot
+        [InlineData(2000, 15, 0.1, 8, 9)]  // (8, 9) torus knot
+        [InlineData(2000, 15, 0.1, 3, 17)]  // (3, 17) torus knot
+        [InlineData(2000, 15, 0.1, 5, 19)]  // (5, 19) torus knot
+        protected void Example50_ExportTorusKnot(int numLongitudinal, int numTransverse, double radius,
+            int p, int q)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: TORUS ({p}, {q}) knot:");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                string fileName = $"50_TorusKnot_{p}_{q}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Define the torus knot parameterization:
+                var knot = new TorusKnot3D(p, q);
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
         /// <summary>Creates the first test of tubular surface generation and export.</summary>
         [Theory]
         [InlineData(600 /* long */, 15 /* trans */, 0.05 /* r */, 3 /* n1 */, 2 /* n2 */, 7 /* n3 */,
@@ -187,7 +250,7 @@ namespace IGLib.Graphics3D.Tests
             0.7 /* fi1 */, 1.0 /* fi2 */)]    // square knot
         [InlineData (600 /* long */, 15 /* trans */, 0.05 /* r */, 3 /* n1 */, 4 /* n2 */, 7 /* n3 */, 
             0.1 /* fi1 */, 0.7 /* fi2 */)]    // the 8_21 knot
-        protected void Example_ExportLissajousKnot(int numLongitudinal, int numTransverse, double radius,
+        protected void Example51_ExportLissajousKnot(int numLongitudinal, int numTransverse, double radius,
             int n1 = 3, int n2 = 4, int n3 = 7, double fi1 = 0, double fi2 = 0)
         {
             double fi3 = 0;
@@ -199,8 +262,9 @@ namespace IGLib.Graphics3D.Tests
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"01_LissajousKnot_{n1}-{n2}-{n3}_{fi1}-{fi2}-{fi3}_{numLongitudinal}.obj";
-                string mtlFile = exportDirectory + $"01_LissajousKnot_n1.{n1}_n2.{n2}_n3.{n3}_fi1.{fi1}_fi2.{fi2}_{numLongitudinal}.mtl";
+                string fileName = $"51_LissajousKnot_{n1}_{n2}_{n3}__{fi1}_{fi2}__{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
@@ -239,67 +303,6 @@ namespace IGLib.Graphics3D.Tests
         }
 
 
-        /// <summary>Creates the first test of tubular surface generation and export.</summary>
-        [Theory]
-        [InlineData(400, 15, 0.6, 2, 3)]  // the trefoil knot
-        [InlineData(400, 15, 0.6, 3, 7)]  // (3, 7) torus knot
-        [InlineData(400, 15, 0.1, 2, 8)]  // (2, 8) torus LINK
-        [InlineData(400, 15, 0.1, 3, 4)]  // (3, 4) torus knot
-        [InlineData(400, 15, 0.1, 3, 5)]  // (3, 5) torus knot
-        [InlineData(1000, 15, 0.1, 5, 6)]  // (3, 5) torus knot
-        [InlineData(1500, 15, 0.1, 3, 11)]  // (3, 11) torus knot
-        [InlineData(2000, 15, 0.1, 8, 9)]  // (8, 9) torus knot
-        [InlineData(2000, 15, 0.1, 3, 17)]  // (3, 17) torus knot
-        [InlineData(2000, 15, 0.1, 5, 19)]  // (5, 19) torus knot
-        protected void Example_ExportTorusKnot(int numLongitudinal, int numTransverse, double radius,
-            int p, int q)
-        {
-            try
-            {
-                Output.WriteLine($"Example / Semi-manual test: TORUS ({p}, {q}) knot:");
-                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
-                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
-                // ** Arrange: 
-                // Export paths for mesh and material files
-                string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"01_TorusKnot_{p}_{q}_{numLongitudinal}.obj";
-                string mtlFile = exportDirectory + $"01_TorusKnot_{p}_{q}_{numLongitudinal}.mtl";
-                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
-                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
-                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
-                Stopwatch sw = Stopwatch.StartNew();
-                // Define the torus knot parameterization:
-                var knot = new TorusKnot3D(p, q);
-                // Generate the tubular mesh
-                try
-                {
-                    Directory.CreateDirectory(exportDirectory);
-                }
-                catch (Exception ex)
-                {
-                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
-                    throw;
-                }
-                // ** Act:
-                // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter, 
-                    radius, numLongitudinal, numTransverse);
-                // Export mesh and material to a file:
-                mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); 
-                sw.Stop();
-                Console.WriteLine("Mesh exported successfully.");
-                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
-                // ** Assert:
-                1.Should().Be(1); // just a dummy asserrtion
-            }
-            catch (Exception ex)
-            {
-                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
-                throw;
-            }
-        }
-
 
 
         // ToDo: Correct the parameterization (find the correct one!)
@@ -311,7 +314,7 @@ namespace IGLib.Graphics3D.Tests
         [Theory]
         [InlineData(400, 15, 0.05, 3, 8, 0.3)]  // 
         [InlineData(1000, 15, 0.05, 5, 17, 0.3)]  // 
-        protected void Example_ExportCylindricalBilliardKnot(int numLongitudinal, int numTransverse, double radius,
+        protected void Example52_0_ExportCylindricalBilliardKnot(int numLongitudinal, int numTransverse, double radius,
             int N, int P, double A = 1.0)
         {
             try
@@ -322,8 +325,9 @@ namespace IGLib.Graphics3D.Tests
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"01_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}.obj";
-                string mtlFile = exportDirectory + $"01_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}.mtl";
+                string fileName = $"52.0_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
@@ -370,7 +374,7 @@ namespace IGLib.Graphics3D.Tests
         [Theory]
         [InlineData(400, 15, 0.1, 2, 3)]  // 
         [InlineData(1000, 15, 0.05, 5, 17)]  // 
-        protected void Example_ExportCylindricalBilliardKnot_WrongParameterization(int numLongitudinal, int numTransverse, double radius,
+        protected void Example52_1_ExportCylindricalBilliardKnot_WrongParameterization(int numLongitudinal, int numTransverse, double radius,
             int N, int P, double A = 1.0)
         {
             try
@@ -381,8 +385,9 @@ namespace IGLib.Graphics3D.Tests
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
-                string objFile = exportDirectory + $"01_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}.obj";
-                string mtlFile = exportDirectory + $"01_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}.mtl";
+                string fileName = $"52.1_CylindricalBilliardKnot_{N}_{P}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
                 Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
