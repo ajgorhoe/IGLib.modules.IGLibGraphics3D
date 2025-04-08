@@ -58,7 +58,7 @@ namespace IGLib.Gr3D
         /// in such a way that all vurve evaluations fall within the meshing interval, end ponts 
         /// inclusive. Ths is useful when the function has a singularity or sidcontinuity just
         /// outside the meshing interval.</param>
-        public StructuredMesh3D GenerateMesh(
+        public StructuredMesh3D GenerateMeshByFrenet(
             Func<double, vec3> curve,
             double tStart,
             double tEnd,
@@ -82,7 +82,7 @@ namespace IGLib.Gr3D
         /// <param name="tangent">Function that defines derivative of <paramref name="curve"/> with
         /// respect to parameter.</param>
         /// <remarks>For undocumented parameters, see 
-        /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.
+        /// <see cref="GenerateMeshByFrenet(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.
         /// </remarks>
         public StructuredMesh3D GenerateMesh(
             Func<double, vec3> curve,
@@ -98,7 +98,7 @@ namespace IGLib.Gr3D
             if (tangent == null)
             {
                 double step = (tEnd - tStart) / (numCurvePoints - 1);
-                return GenerateMesh(curve, tStart, tEnd, radius, numCurvePoints, numCirclePoints, hrel: 1e-2, eps: eps, normalizeFromPrevious: normalizeFromPrevious, restrictToInterval: true);
+                return GenerateMeshByFrenet(curve, tStart, tEnd, radius, numCurvePoints, numCirclePoints, hrel: 1e-2, eps: eps, normalizeFromPrevious: normalizeFromPrevious, restrictToInterval: true);
             }
 
             var mesh = new StructuredMesh3D(numCurvePoints, numCirclePoints);
@@ -167,7 +167,7 @@ namespace IGLib.Gr3D
         /// change direections by full angle (180 degrees).</para>
         /// </summary>
         /// <remarks>For parameter descriprions, see 
-        /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
+        /// <see cref="GenerateMeshByFrenet(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
         public StructuredMesh3D GenerateFrenet(
             Func<double, vec3> curve,
             double tStart,
@@ -180,18 +180,17 @@ namespace IGLib.Gr3D
         {
             double step = (tEnd - tStart) / (numCurvePoints - 1);
             double h = hrel * step;
-
             Func<double, vec3> tangent = t => NumericalDerivative(curve, t, tStart, tEnd, h, restrictToInterval);
-            return GenerateFrenet(curve, tangent, tStart, tEnd, radius, numCurvePoints, numCirclePoints, h);
+            return GenerateMeshByFrenet(curve, tangent, tStart, tEnd, radius, numCurvePoints, numCirclePoints, h);
         }
 
         /// <summary>Generates a tubular mesh using the Frenet frame and analytical or fallback tangent function.
-        /// <para>The same as <see cref="GenerateFrenet(Func{double, vec3}, Func{double, vec3}, double, double, double, int, int, double)"/>,
+        /// <para>The same as <see cref="GenerateMeshByFrenet(Func{double, vec3}, Func{double, vec3}, double, double, double, int, int, double)"/>,
         /// except that analytical curve derivative (tangent) is used (specified by <paramref name="tangent"/>) and we
         /// don't need to calculate derivatives numerically.</para></summary>
         /// <remarks>For parameter descriprions, see 
-        /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
-        public StructuredMesh3D GenerateFrenet(
+        /// <see cref="GenerateMeshByFrenet(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
+        public StructuredMesh3D GenerateMeshByFrenet(
             Func<double, vec3> curve,
             Func<double, vec3> tangent,
             double tStart,
