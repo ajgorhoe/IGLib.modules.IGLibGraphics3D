@@ -95,26 +95,28 @@ namespace IGLib.Graphics3D.Tests
         }
 
 
-        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>.</summary>
+        /// <summary>Creeates a tubular surface mesh from a trefoil knot parameterization, <see cref="TrefoilKnot3D"/>,
+        /// in different ways, and exports it for viewing in Blender or similar.
+        /// <para>With trefoil knot, mesh abnormalitis when using the Frenet frame are not shown because the
+        /// curve's second derivative does not change direction (it s actually constant).</para></summary>
         [Theory]
-        [InlineData(400, 15, 0.2, 1.0, 0.2, true)]   // right-handed 
-        [InlineData(400, 15, 0.2, 1.0, 0.2, false)]  // lef-handed , similar as above
-        protected void Example01_ExportHelixCurve3DTube(int numLongitudinal, int numTransverse, double radius,
-            double a = 1.0, double b = 0.2, bool righthanded = true)
+        [InlineData(400, 15, 0.2)]   // right-handed 
+        [InlineData(400, 15, 0.4)]  // lef-handed , similar as above
+        protected void Example01_ExportTrefoilKnot3DTube(int numLongitudinal, int numTransverse, double radius)
         {
             try
             {
-                Output.WriteLine($"Example / Semi-manual test: helix, a = {a}, b = ({b}, right-handed: {righthanded}");
+                Output.WriteLine($"Example / Semi-manual test: trefoil knot");
                 Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
                 Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
                 // ** Arrange: 
                 // Export paths for mesh and material files
                 string exportDirectory = ExportPathIGLib;
                 // Define the curve parameterization:
-                var curveDef = new HelixCurve3D(a, b, righthanded);
+                var curveDef = new TrefoilKnot3D();
 
                 Console.WriteLine("\nUsing parallel transport frame (PTF) and numerical derivatives:");
-                string fileName = $"01.1_Helix_PFT_NumDev_{a}_{b}_{righthanded}_{numLongitudinal}";
+                string fileName = $"01.1_TrefoilKnot__PFT_NumDev__{numLongitudinal}";
                 string objFile = exportDirectory + $"{fileName}.obj";
                 string mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
@@ -143,7 +145,7 @@ namespace IGLib.Graphics3D.Tests
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
 
                 Console.WriteLine("\nUsing parallel transport frame (PTF) and analytical derivatives:");
-                fileName = $"01.2_Helix_PFT_Analytical_{a}_{b}_{righthanded}_{numLongitudinal}";
+                fileName = $"01.2_TrefoilKnot__PFT_Analytical__{numLongitudinal}";
                 objFile = exportDirectory + $"{fileName}.obj";
                 mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
@@ -174,7 +176,7 @@ namespace IGLib.Graphics3D.Tests
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
 
                 Console.WriteLine("\nUsing Frenet frame and numerical derivatives:");
-                fileName = $"01.3_Helix_Frenet_NumDev_{a}_{b}_{righthanded}_{numLongitudinal}";
+                fileName = $"01.3_TrefoilKnot__Frenet_NumDev__{numLongitudinal}";
                 objFile = exportDirectory + $"{fileName}.obj";
                 mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
@@ -203,7 +205,313 @@ namespace IGLib.Graphics3D.Tests
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
 
                 Console.WriteLine("\nUsing Parallel Transport Frame (PTF) and analytical derivatives:");
-                fileName = $"01.4_Helix_Frenet_Analytical_{a}_{b}_{righthanded}_{numLongitudinal}";
+                fileName = $"01.4_TrefoilKnot__Frenet_Analytical__{numLongitudinal}";
+                objFile = exportDirectory + $"{fileName}.obj";
+                mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.CurveDerivative,
+                    curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+
+        /// <summary>Creeates a tubular surface mesh from a helix parameterization, <see cref="HelixCurve3D"/>,
+        /// in different ways, and exports it for viewing in Blender or similar.
+        /// <para>With helix curve, mesh abnormalitis when using the Frenet frame are not shown because the
+        /// curve's second derivative does not change direction (it s actually constant).</para></summary>
+        [Theory]
+        [InlineData(400, 15, 0.2, 1.0, 0.2, true)]   // right-handed 
+        [InlineData(400, 15, 0.2, 1.0, 0.2, false)]  // lef-handed , similar as above
+        protected void Example02_ExportHelixCurve3DTube(int numLongitudinal, int numTransverse, double radius,
+            double a = 1.0, double b = 0.2, bool righthanded = true)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: helix, a = {a}, b = ({b}, right-handed: {righthanded}");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                // Define the curve parameterization:
+                var curveDef = new HelixCurve3D(a, b, righthanded);
+
+                Console.WriteLine("\nUsing parallel transport frame (PTF) and numerical derivatives:");
+                string fileName = $"02.1_Helix_PFT_NumDev_{a}_{b}_{righthanded}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.StartParameter,
+                    2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                Console.WriteLine("\nUsing parallel transport frame (PTF) and analytical derivatives:");
+                fileName = $"02.2_Helix_PFT_Analytical_{a}_{b}_{righthanded}_{numLongitudinal}";
+                objFile = exportDirectory + $"{fileName}.obj";
+                mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.CurveDerivative,
+                    curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                Console.WriteLine("\nUsing Frenet frame and numerical derivatives:");
+                fileName = $"02.3_Helix_Frenet_NumDev_{a}_{b}_{righthanded}_{numLongitudinal}";
+                objFile = exportDirectory + $"{fileName}.obj";
+                mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                sw = Stopwatch.StartNew();
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.StartParameter,
+                    2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                Console.WriteLine("\nUsing Parallel Transport Frame (PTF) and analytical derivatives:");
+                fileName = $"02.4_Helix_Frenet_Analytical_{a}_{b}_{righthanded}_{numLongitudinal}";
+                objFile = exportDirectory + $"{fileName}.obj";
+                mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.CurveDerivative,
+                    curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                // ** Assert:
+                1.Should().Be(1); // just a dummy asserrtion
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"\n\n======\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}");
+                throw;
+            }
+        }
+
+
+
+
+        /// <summary>Creeates a tubular surface mesh from a Granny knot parameterization, <see cref="GrannyKnot3D"/>,
+        /// in different ways, and exports it for viewing in Blender or similar.
+        /// <para>With Granny knot, mesh abnormalitis when using the Frenet frame are not shown because the
+        /// curve's second derivative does not change direction (it s actually constant).</para></summary>
+        [Theory]
+        [InlineData(400, 15, 0.2)]   // right-handed 
+        [InlineData(400, 15, 0.4)]  // lef-handed , similar as above
+        protected void Example03_ExportGrannyKnot3DTube(int numLongitudinal, int numTransverse, double radius)
+        {
+            try
+            {
+                Output.WriteLine($"Example / Semi-manual test: granny knot");
+                Output.WriteLine($"Mesh: {numLongitudinal} x {numTransverse}, radius: {radius}");
+                Output.WriteLine("Creation and export of TUBULAR SURFACE mesh\n  to view in Blender or similar software...");
+                // ** Arrange: 
+                // Export paths for mesh and material files
+                string exportDirectory = ExportPathIGLib;
+                // Define the curve parameterization:
+                var curveDef = new GrannyKnot3D();
+
+                Console.WriteLine("\nUsing parallel transport frame (PTF) and numerical derivatives:");
+                string fileName = $"03.1_GrannyKnot__PFT_NumDev__{radius}_{numLongitudinal}";
+                string objFile = exportDirectory + $"{fileName}.obj";
+                string mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                Stopwatch sw = Stopwatch.StartNew();
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                var mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.StartParameter,
+                    2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                Console.WriteLine("\nUsing parallel transport frame (PTF) and analytical derivatives:");
+                fileName = $"03.2_GrannyKnot__PFT_Analytical__{radius}_{numLongitudinal}";
+                objFile = exportDirectory + $"{fileName}.obj";
+                mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                sw = Stopwatch.StartNew();
+                // Define the curve parameterization:
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.CurveDerivative,
+                    curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                Console.WriteLine("\nUsing Frenet frame and numerical derivatives:");
+                fileName = $"03.3_GrannyKnot__Frenet_NumDev__{radius}_{numLongitudinal}";
+                objFile = exportDirectory + $"{fileName}.obj";
+                mtlFile = exportDirectory + $"{fileName}.mtl";
+                Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
+                Console.WriteLine($"Export dir.: {Path.GetFullPath(exportDirectory)}");
+                Console.WriteLine($"Exported files: \n  {Path.GetFileName(objFile)} \n  {Path.GetFileName(mtlFile)}");
+                sw = Stopwatch.StartNew();
+                // Generate the tubular mesh
+                try
+                {
+                    Directory.CreateDirectory(exportDirectory);
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"\n\nERROR: {ex.GetType().Name} thrown:\n  {ex.Message}\n");
+                    throw;
+                }
+                // ** Act:
+                // Generate tubular mesh from curve definition:
+                mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.StartParameter,
+                    2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                // Export mesh and material to a file:
+                mesh.ExportToObj(objFile, mtlFile);
+                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                sw.Stop();
+                Console.WriteLine("Mesh exported successfully.");
+                Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
+
+                Console.WriteLine("\nUsing Parallel Transport Frame (PTF) and analytical derivatives:");
+                fileName = $"03.4_GrannyKnot__Frenet_Analytical__{radius}_{numLongitudinal}";
                 objFile = exportDirectory + $"{fileName}.obj";
                 mtlFile = exportDirectory + $"{fileName}.mtl";
                 Console.WriteLine($"Current dir.: {Directory.GetCurrentDirectory()}");
