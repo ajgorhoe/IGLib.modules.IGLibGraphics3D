@@ -9,7 +9,7 @@ using System.Text;
 namespace IGLib.Gr3D
 {
 
-    public static class MeshExportExtensions
+    public static class MeshExportExtensions_06
     {
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace IGLib.Gr3D
         /// <param name="exportWireframe">If true, wireframe lines are exported.</param>
         /// <param name="surfaceMaterialName">Material name for surfaces.</param>
         /// <param name="wireframeMaterialName">Material name for wireframe.</param>
-        public static void ExportMeshToObj(this StructuredMesh3D mesh,
+        public static void ExportMeshToObj(StructuredMesh3D mesh,
             string objFilePath,
             string mtlFileName,
             bool exportSurfaces = true,
@@ -89,7 +89,7 @@ namespace IGLib.Gr3D
         /// <summary>
         /// Exports only the surface mesh to an OBJ file.
         /// </summary>
-        public static void ExportMeshSurfaceToObj(this StructuredMesh3D mesh,
+        public static void ExportMeshSurfaceToObj(StructuredMesh3D mesh,
             string objFilePath,
             string mtlFileName,
             string surfaceMaterialName = "SurfaceMaterial") =>
@@ -98,7 +98,7 @@ namespace IGLib.Gr3D
         /// <summary>
         /// Exports only the wireframe of the mesh to an OBJ file.
         /// </summary>
-        public static void ExportMeshWireframeToObj(this StructuredMesh3D mesh,
+        public static void ExportMeshWireframeToObj(StructuredMesh3D mesh,
             string objFilePath,
             string mtlFileName,
             string wireframeMaterialName = "WireframeMaterial") =>

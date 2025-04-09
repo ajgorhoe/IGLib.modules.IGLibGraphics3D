@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,60 @@ namespace IGLib.Gr3D
     class TubularSurfaceExamples
     {
 
+
+        public static void Example_06()
+        {
+            // Helix curve definition
+            Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), 0.1 * t);
+
+            // Create tubular mesh
+            var mesh = TubularMeshGenerator_06.Global.GenerateMesh(helix, 0, 6 * Math.PI, 0.1, 100, 40);
+
+            // File paths
+            string objPath = "helix.obj";
+            string mtlPath = "helix.mtl";
+            string mtlFileName = "helix.mtl";
+
+            // Surface material: LightSkyBlue (#87CEFA)
+            var surfaceMaterial = new MaterialProperties
+            {
+                Name = "SurfaceLightSkyBlue",
+                DiffuseColor = new vec3(135 / 255.0, 206 / 255.0, 250 / 255.0),
+                AmbientColor = new vec3(0.2, 0.2, 0.3),
+                SpecularColor = new vec3(1, 1, 1),
+                Shininess = 80,
+                Transparency = 1
+            };
+
+            // Wireframe material: DarkRed (#8B0000)
+            var wireframeMaterial = new MaterialProperties
+            {
+                Name = "WireframeDarkRed",
+                DiffuseColor = new vec3(139 / 255.0, 0, 0),
+                AmbientColor = new vec3(0.1, 0.0, 0.0),
+                SpecularColor = new vec3(0.5, 0.5, 0.5),
+                Shininess = 10,
+                Transparency = 1
+            };
+
+            // Export OBJ with wireframe and surfaces
+            mesh.ExportMeshToObj(objPath, mtlFileName,
+                exportSurfaces: true,
+                exportWireframe: true,
+                surfaceMaterialName: surfaceMaterial.Name,
+                wireframeMaterialName: wireframeMaterial.Name);
+
+            // Save both materials into same MTL file
+            using (var writer = new StreamWriter(mtlPath))
+            {
+                writer.Write(surfaceMaterial.ToStringMtl());
+                writer.WriteLine();
+                writer.Write(wireframeMaterial.ToStringMtl());
+            }
+
+            Console.WriteLine("Helix mesh with surface and wireframe exported.");
+        }
+        
 
         public static void Example_03()
         {

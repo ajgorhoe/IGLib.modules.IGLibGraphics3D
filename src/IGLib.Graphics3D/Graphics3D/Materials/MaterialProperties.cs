@@ -64,13 +64,27 @@ namespace IGLib.Gr3D
         /// </summary>
         public string BumpMap { get; set; } = null;
 
-        /// <summary>
-        /// Converts material properties into an .mtl file string.
-        /// </summary>
+        /// <summary>Just calls <see cref="ToStringMtl"/>.</summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            StringWriter writer = new StringWriter();
+            return ToStringMtl();
+        }
 
+        /// <summary>Converts material properties to a .mtl file string.</summary>
+        /// <param name="materialName">Name of the material when exported to a material file (.mtl).
+        /// If not specified (null or empty string) then null is taken.</param>
+        public virtual string ToStringMtl(string materialName = null)
+        {
+            StringWriter writer = new StringWriter();
+            if (string.IsNullOrEmpty(materialName))
+            {
+                materialName = Name;
+                if (string.IsNullOrEmpty(materialName))
+                {
+                    materialName = "UnknownMaterial";
+                }
+            }
             writer.WriteLine($"newmtl {Name}");
             writer.WriteLine($"Ka {AmbientColor.x} {AmbientColor.y} {AmbientColor.z}");
             writer.WriteLine($"Kd {DiffuseColor.x} {DiffuseColor.y} {DiffuseColor.z}");
@@ -89,12 +103,15 @@ namespace IGLib.Gr3D
         }
 
         /// <summary>
-        /// Saves the material properties to an .mtl file.
+        /// Saves the material properties to a .mtl file.
         /// </summary>
-        public void SaveToMaterialFile(string filePath)
+        public void SaveToMaterialFile(string filePath, string materialName = null)
         {
-            File.WriteAllText(filePath, ToString());
+            File.WriteAllText(filePath, ToStringMtl(materialName));
         }
+
+
+
     }
 
 

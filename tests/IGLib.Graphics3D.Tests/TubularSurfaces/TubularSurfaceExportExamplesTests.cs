@@ -35,6 +35,29 @@ namespace IGLib.Graphics3D.Tests
         }
 
 
+        /// <summary>Surface material: LightSkyBlue (#87CEFA)</summary>
+        protected MaterialProperties MaterialSurfaceLightSkyBlue { get; } = new MaterialProperties
+        {
+            Name = "SurfaceLightSkyBlue",
+            DiffuseColor = new vec3(135 / 255.0, 206 / 255.0, 250 / 255.0),
+            AmbientColor = new vec3(0.2, 0.2, 0.3),
+            SpecularColor = new vec3(1, 1, 1),
+            Shininess = 80,
+            Transparency = 1
+        };
+
+        /// <summary>Wireframe material: DarkRed (#8B0000)</summary>
+        protected MaterialProperties MaterialWireframeDarkRed { get; } = new MaterialProperties
+        {
+            Name = "WireframeDarkRed",
+            DiffuseColor = new vec3(139 / 255.0, 0, 0),
+            AmbientColor = new vec3(0.1, 0.0, 0.0),
+            SpecularColor = new vec3(0.5, 0.5, 0.5),
+            Shininess = 10,
+            Transparency = 1
+        };
+
+
         #region Examples
 
 
@@ -80,7 +103,7 @@ namespace IGLib.Graphics3D.Tests
                 var mesh = TubularMeshGenerator.Global.GenerateMesh(helix, 0.0, 6 * Math.PI, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); // Blue color
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("\nSample mesh (Helix) exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -139,7 +162,7 @@ namespace IGLib.Graphics3D.Tests
                     curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -170,7 +193,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -204,7 +227,7 @@ namespace IGLib.Graphics3D.Tests
                 */
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -235,7 +258,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -297,7 +320,7 @@ namespace IGLib.Graphics3D.Tests
                     2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -328,7 +351,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -357,7 +380,7 @@ namespace IGLib.Graphics3D.Tests
                     2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -388,7 +411,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -448,7 +471,7 @@ namespace IGLib.Graphics3D.Tests
                     2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -479,7 +502,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -508,7 +531,7 @@ namespace IGLib.Graphics3D.Tests
                     2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -539,7 +562,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -600,7 +623,7 @@ namespace IGLib.Graphics3D.Tests
                     curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -631,7 +654,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -666,7 +689,7 @@ namespace IGLib.Graphics3D.Tests
                 */
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -697,7 +720,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -764,7 +787,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -819,7 +842,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -874,7 +897,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -929,7 +952,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -1011,7 +1034,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -1074,7 +1097,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -1136,7 +1159,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
@@ -1196,7 +1219,7 @@ namespace IGLib.Graphics3D.Tests
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
-                MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
+                MeshExportExtensions.ExportMaterial(mtlFile, MaterialSurfaceLightSkyBlue);
                 sw.Stop();
                 Console.WriteLine("Mesh exported successfully.");
                 Console.WriteLine($"Elapsed time: {sw.ElapsedMilliseconds} ms.");
