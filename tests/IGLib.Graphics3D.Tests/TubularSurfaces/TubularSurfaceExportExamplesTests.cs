@@ -77,7 +77,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(helix, 0.0, 6 * Math.PI, radius, numLongitudinal, numTransverse);
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(helix, 0.0, 6 * Math.PI, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1)); // Blue color
@@ -136,7 +136,7 @@ namespace IGLib.Graphics3D.Tests
                 // ** Act:
                 // Generate tubular mesh from curve definition:
                 var mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter, 
-                    2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                    curveDef.EndParameter, radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
@@ -166,7 +166,7 @@ namespace IGLib.Graphics3D.Tests
                 // ** Act:
                 // Generate tubular mesh from curve definition:
                 mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.CurveDerivative, 
-                    curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    curveDef.StartParameter, curveDef.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -196,7 +196,12 @@ namespace IGLib.Graphics3D.Tests
                 // ** Act:
                 // Generate tubular mesh from curve definition:
                 mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter,
-                    2 * curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                    curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                /*
+                 * The old way of generating mesh (does not produce mesh abnormalities with trefoil knot):
+                 * mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter,
+                 *     curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                */
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
@@ -226,7 +231,7 @@ namespace IGLib.Graphics3D.Tests
                 // ** Act:
                 // Generate tubular mesh from curve definition:
                 mesh = TubularMeshGenerator.Global.GenerateMeshByFrenet(curveDef.Curve, curveDef.CurveDerivative,
-                    curveDef.StartParameter, 2 * curveDef.EndParameter,
+                    curveDef.StartParameter, curveDef.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -653,6 +658,12 @@ namespace IGLib.Graphics3D.Tests
                 // Generate tubular mesh from curve definition:
                 mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter,
                     curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                /*
+                 * The old way of generating the mesh using the Frenet frame (this reproduces the
+                 * mesh abnormaliry because the normal direction jumps by 180 degrees):
+                 * mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter,
+                 *     curveDef.EndParameter, radius, numLongitudinal, numTransverse);
+                */
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
                 MeshExportExtensions.ExportMaterial(mtlFile, new vec3(0, 0, 1));
@@ -749,7 +760,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -804,7 +815,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -859,7 +870,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -914,7 +925,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(curveDef.Curve, curveDef.StartParameter, curveDef.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -996,7 +1007,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -1059,7 +1070,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -1121,7 +1132,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
@@ -1181,7 +1192,7 @@ namespace IGLib.Graphics3D.Tests
                 }
                 // ** Act:
                 // Generate tubular mesh from curve definition:
-                var mesh = TubularMeshGenerator_05.Generate(knot.Curve, knot.StartParameter, knot.EndParameter,
+                var mesh = TubularMeshGenerator.Global.GenerateMesh(knot.Curve, knot.StartParameter, knot.EndParameter,
                     radius, numLongitudinal, numTransverse);
                 // Export mesh and material to a file:
                 mesh.ExportToObj(objFile, mtlFile);
