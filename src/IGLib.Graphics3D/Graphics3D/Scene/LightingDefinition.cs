@@ -5,59 +5,13 @@ using System.Globalization;
 using System.IO;
 
 using IG.Num;
+using System.Text;
 
 namespace IGLib.Gr3D
 {
 
-    /// <summary>
-    /// Defines different types of lights for 3D rendering.
-    /// </summary>
-    public class LightingDefinition
-    {
-        /// <summary> Type of the light source (Ambient, Directional, Point, Spot, Area). </summary>
-        public LightType Type { get; set; }
 
-        /// <summary> Light color (RGB values between 0 and 1). </summary>
-        public vec3 Color { get; set; }
-
-        /// <summary> Intensity (brightness of the light). Default = 1.0 </summary>
-        public double Intensity { get; set; } = 1.0;
-
-        /// <summary> Position of the light (for Point, Spot, and Area lights). </summary>
-        public vec3 Position { get; set; }
-
-        /// <summary> Direction of the light (for Directional and Spot lights). </summary>
-        public vec3 Direction { get; set; }
-
-        /// <summary> Angle of the spotlight cone (only for Spot lights, in degrees). </summary>
-        public double SpotAngle { get; set; }
-
-        /// <summary> Size of the light source (only for Area lights). </summary>
-        public vec3 AreaSize { get; set; }
-
-        /// <summary> Creates a new light with default values (white light at intensity 1.0). </summary>
-        public LightingDefinition(LightType type)
-        {
-            Type = type;
-            Color = new vec3(1.0, 1.0, 1.0); // Default to white light
-            Intensity = 1.0;
-            Position = new vec3(0, 0, 0);
-            Direction = new vec3(0, 0, -1);
-            SpotAngle = 45.0;
-            AreaSize = new vec3(1, 1, 0);
-        }
-
-        /// <summary> Exports the light definition as a readable string (useful for debugging). </summary>
-        public override string ToString()
-        {
-            return $"Light Type: {Type}, Color: {Color}, Intensity: {Intensity}, " +
-                   $"Position: {Position}, Direction: {Direction}, SpotAngle: {SpotAngle}, AreaSize: {AreaSize}";
-        }
-    }
-
-    /// <summary>
-    /// Enum representing different light types used in 3D rendering.
-    /// </summary>
+    /// <summary>Enum representing different light types used in 3D rendering.</summary>
     public enum LightType
     {
         Ambient,
@@ -67,30 +21,77 @@ namespace IGLib.Gr3D
         Area
     }
 
-    ///// <summary>
-    ///// Simple 3D vector struct.
-    ///// </summary>
-    //public struct vec3
-    //{
-    //    public double x, y, z;
 
-    //    public vec3(double x, double y, double z)
-    //    {
-    //        this.x = x;
-    //        this.y = y;
-    //        this.z = z;
-    //    }
+    /// <summary>Defines properties of a light source used in rendering.</summary>
+    public class LightingDefinition
+    {
 
-    //    public override string ToString()
-    //    {
-    //        return $"({x.ToString(CultureInfo.InvariantCulture)}, " +
-    //               $"{y.ToString(CultureInfo.InvariantCulture)}, " +
-    //               $"{z.ToString(CultureInfo.InvariantCulture)})";
-    //    }
-    //}
+        /// <summary> Creates a new light with default values (white light at intensity 1.0). </summary>
+        public LightingDefinition(LightType type)
+        {
+            Type = type;
+        }
+
+        /// <summary> Type of the light source (Ambient, Directional, Point, Spot, Area). </summary>
+        public LightType Type { get; set; }
+
+        /// <summary> Light color (RGB values between 0 and 1). </summary>
+        public vec3 Color { get; set; } = new vec3(1, 1, 1);
+
+        /// <summary> Intensity (brightness of the light). Default = 1.0 </summary>
+        public double Intensity { get; set; } = 1.0;
+
+        /// <summary> Position of the light (for Point, Spot, and Area lights). </summary>
+        public vec3 Position { get; set; } = new vec3(0, 0, 0);
+
+        /// <summary> Direction of the light (for Directional and Spot lights). </summary>
+        public vec3 Direction { get; set; } = new vec3(0, 0, -1);
+
+        /// <summary> Angle of the spotlight cone (only for Spot lights, in degrees). </summary>
+        public double SpotAngle { get; set; } = 45;
+
+        /// <summary> Size of the light source (only for Area lights). </summary>
+        public vec3 AreaSize { get; set; } = new vec3(1, 1, 0);
+
+        /// <summary>Generates a GLTF-compatible JSON snippet for the light.</summary>
+        public string ToGltfJson(int index)
+        {
+            string type = Type switch
+            {
+                LightType.Directional => "directional",
+                LightType.Point => "point",
+                LightType.Spot => "spot",
+                _ => "ambient" // fallback
+            };
+
+            string colorStr = $"[{Color.x}, {Color.y}, {Color.z}]";
+            string lightJson = $@"
+        {{
+            ""name"": ""Light_{index}"",
+            ""type"": ""{type}"",
+            ""color"": {colorStr},
+            ""intensity"": {Intensity}
+        }}";
+
+            return lightJson;
+        }
 
 
-
+        /// <summary> Exports the light definition as a readable string (useful for debugging). </summary>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Light source:");
+            sb.AppendLine($"  Type: {Type}");
+            sb.AppendLine($"  Color: {Color}");
+            sb.AppendLine($"  Intensity: {Intensity}");
+            sb.AppendLine($"  Position: {Position}");
+            sb.AppendLine($"  Direction: {Direction}");
+            sb.AppendLine($"  SpotAngle: {SpotAngle}");
+            sb.AppendLine($"  AreaSize: {AreaSize}");
+            return sb.ToString();
+        }
+    }
 
     public class LightingDefinitionExamples
     {

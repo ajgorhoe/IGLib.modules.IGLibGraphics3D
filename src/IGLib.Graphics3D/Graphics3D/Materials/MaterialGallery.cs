@@ -9,7 +9,6 @@ using IG.Num;
 namespace IGLib.Gr3D
 {
 
-
     public class MaterialGallery
     {
 
