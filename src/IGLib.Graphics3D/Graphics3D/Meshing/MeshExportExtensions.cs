@@ -113,6 +113,50 @@ namespace IGLib.Gr3D
         {
             material.SaveToMaterialFile(filePath);
         }
+
+
+        /// <summary>Exports the mesh surface to an ASCII STL file.</summary>
+        public static void ExportToStl(this StructuredMesh3D mesh, string stlFilePath)
+        {
+            using StreamWriter writer = new StreamWriter(stlFilePath);
+            writer.WriteLine("solid mesh");
+
+            for (int i = 0; i < mesh.NumPoints1 - 1; i++)
+            {
+                for (int j = 0; j < mesh.NumPoints2 - 1; j++)
+                {
+                    vec3 v1 = mesh.Nodes[i][j];
+                    vec3 v2 = mesh.Nodes[i][j + 1];
+                    vec3 v3 = mesh.Nodes[i + 1][j + 1];
+                    vec3 v4 = mesh.Nodes[i + 1][j];
+
+                    WriteFacet(writer, v1, v2, v3);
+                    WriteFacet(writer, v1, v3, v4);
+                }
+            }
+
+            writer.WriteLine("endsolid mesh");
+        }
+
+        private static void WriteFacet(StreamWriter writer, vec3 v1, vec3 v2, vec3 v3)
+        {
+            vec3 normal = vec3.Cross(v2 - v1, v3 - v1).Normalize();
+            writer.WriteLine($"facet normal {normal.x} {normal.y} {normal.z}");
+            writer.WriteLine("  outer loop");
+            writer.WriteLine($"    vertex {v1.x} {v1.y} {v1.z}");
+            writer.WriteLine($"    vertex {v2.x} {v2.y} {v2.z}");
+            writer.WriteLine($"    vertex {v3.x} {v3.y} {v3.z}");
+            writer.WriteLine("  endloop");
+            writer.WriteLine("endfacet");
+        }
+        
+
+
+
+
+
+
+
     }
 
 }
