@@ -149,10 +149,60 @@ namespace IGLib.Gr3D
             writer.WriteLine("  endloop");
             writer.WriteLine("endfacet");
         }
-        
 
 
 
+
+        public static void ExportToGltf(this StructuredMesh3D mesh, string gltfPath, MaterialProperties material, LightingDefinition[] lights = null)
+        {
+            using StreamWriter writer = new StreamWriter(gltfPath);
+            writer.WriteLine("{");
+            writer.WriteLine("\"asset\": { \"version\": \"2.0\" },");
+
+            // Nodes (only geometry, can add transform/camera/light as needed)
+            writer.WriteLine("\"nodes\": [ { \"mesh\": 0 } ],");
+
+            // Mesh data placeholder (in practice needs buffer/indices)
+            writer.WriteLine("\"meshes\": [");
+            writer.WriteLine("{");
+            writer.WriteLine("\"primitives\": [");
+            writer.WriteLine("{ \"attributes\": { \"POSITION\": 0 }, \"material\": 0 }");
+            writer.WriteLine("]");
+            writer.WriteLine("}");
+            writer.WriteLine("],");
+
+            // Materials
+            writer.WriteLine("\"materials\": [");
+            writer.WriteLine("{");
+            writer.WriteLine($"\"name\": \"{material.Name}\",");
+            writer.WriteLine("\"pbrMetallicRoughness\": {");
+            writer.WriteLine($"\"baseColorFactor\": [{material.DiffuseColor.x}, {material.DiffuseColor.y}, {material.DiffuseColor.z}, {material.Transparency}]");
+            writer.WriteLine("}");
+            writer.WriteLine("}");
+            writer.WriteLine("],");
+
+            // Lights (KHR extension)
+            if (lights != null && lights.Length > 0)
+            {
+                writer.WriteLine("\"extensions\": {");
+                writer.WriteLine("\"KHR_lights_punctual\": {");
+                writer.WriteLine("\"lights\": [");
+                for (int i = 0; i < lights.Length; i++)
+                {
+                    writer.Write(lights[i].ToGltfJson(i));
+                    if (i < lights.Length - 1)
+                        writer.WriteLine(",");
+                    else
+                        writer.WriteLine();
+                }
+                writer.WriteLine("]");
+                writer.WriteLine("}");
+                writer.WriteLine("},");
+            }
+
+            writer.WriteLine("\"scene\": 0");
+            writer.WriteLine("}");
+        }
 
 
 

@@ -76,7 +76,6 @@ namespace IGLib.Gr3D
             return lightJson;
         }
 
-
         /// <summary> Exports the light definition as a readable string (useful for debugging). </summary>
         public override string ToString()
         {
