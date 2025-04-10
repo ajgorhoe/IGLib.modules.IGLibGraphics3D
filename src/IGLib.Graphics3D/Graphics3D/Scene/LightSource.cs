@@ -58,22 +58,19 @@ namespace IGLib.Gr3D
         {
             string type = Type switch
             {
-                LightType.Directional => "directional",
                 LightType.Point => "point",
+                LightType.Directional => "directional",
                 LightType.Spot => "spot",
-                _ => "ambient" // fallback
+                _ => "ambient"
             };
 
-            string colorStr = $"[{Color.x}, {Color.y}, {Color.z}]";
-            string lightJson = $@"
-        {{
-            ""name"": ""Light_{index}"",
-            ""type"": ""{type}"",
-            ""color"": {colorStr},
-            ""intensity"": {Intensity}
-        }}";
-
-            return lightJson;
+            return $@"
+{{
+  ""name"": ""Light_{index}"",
+  ""type"": ""{type}"",
+  ""color"": [{Color.x}, {Color.y}, {Color.z}],
+  ""intensity"": {Intensity}
+}}";
         }
 
         /// <summary> Exports the light definition as a readable string (useful for debugging). </summary>
