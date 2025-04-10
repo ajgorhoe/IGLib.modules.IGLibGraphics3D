@@ -125,11 +125,10 @@ namespace IGLib.Gr3D
             {
                 for (int j = 0; j < mesh.NumPoints2 - 1; j++)
                 {
-                    vec3 v1 = mesh.Nodes[i][j];
-                    vec3 v2 = mesh.Nodes[i][j + 1];
-                    vec3 v3 = mesh.Nodes[i + 1][j + 1];
-                    vec3 v4 = mesh.Nodes[i + 1][j];
-
+                    vec3 v1 = mesh[i, j];
+                    vec3 v2 = mesh[i, j + 1];
+                    vec3 v3 = mesh[i + 1, j + 1];
+                    vec3 v4 = mesh[i + 1, j];
                     WriteFacet(writer, v1, v2, v3);
                     WriteFacet(writer, v1, v3, v4);
                 }
