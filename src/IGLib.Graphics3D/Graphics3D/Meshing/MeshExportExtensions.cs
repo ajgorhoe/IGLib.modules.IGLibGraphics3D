@@ -5,6 +5,7 @@ using System.Globalization;
 
 using IG.Num;
 using System.Text;
+using System.Collections.Generic;
 
 namespace IGLib.Gr3D
 {
@@ -137,6 +138,8 @@ namespace IGLib.Gr3D
             writer.WriteLine("endsolid mesh");
         }
 
+        /// <summary>Auxiliary method for <see cref="ExportToStl(StructuredSurfaceMesh3D, string)"/>,
+        /// writes a single facet to the stream.</summary>
         private static void WriteFacet(StreamWriter writer, vec3 v1, vec3 v2, vec3 v3)
         {
             vec3 normal = vec3.Cross(v2 - v1, v3 - v1).Normalize();
@@ -150,60 +153,168 @@ namespace IGLib.Gr3D
         }
 
 
-
-
-        public static void ExportToGltf(this StructuredSurfaceMesh3D mesh, string gltfPath, MaterialProperties material, LightSource[] lights = null)
+        /// <summary>Exports the mesh to GLF format.
+        /// <para>Features:</para>
+        /// <para>* Embedded base64 buffer (ASCII .gltf)</para>
+        /// <para>* Vertex positions</para>
+        /// <para>* Triangle indices</para>
+        /// <para>* Normals (optional, from VertexNormals)</para>
+        /// <para>* Vertex colors (optional, from VertexColors)</para>
+        /// <para>* Material reference</para>
+        /// <para>* Optional lights (LightSource)</para>
+        /// <para>* </para>
+        /// <para>* </para>
+        /// </summary>
+        /// <param name="mesh">Mesh to be exported.</param>
+        /// <param name="gltfPath">Name of the export file.</param>
+        /// <param name="material">Material to be assigned to the surface.</param>
+        /// <param name="lights">Lights used in rendering the surface, will be written to
+        /// the file if specified.</param>
+        public static void ExportToGltf(this StructuredSurfaceMesh3D mesh, string gltfPath,
+            MaterialProperties material, LightSource[] lights = null)
         {
+            var positions = new List<float>();
+            var normals = new List<float>();
+            var colors = new List<float>();
+            var indices = new List<ushort>();
+
+            int rows = mesh.NumPoints1;
+            int cols = mesh.NumPoints2;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    var v = mesh.Vertices[i][j];
+                    positions.Add((float)v.x);
+                    positions.Add((float)v.y);
+                    positions.Add((float)v.z);
+
+                    if (mesh.VertexNormals != null)
+                    {
+                        var n = mesh.VertexNormals[i][j];
+                        normals.Add((float)n.x);
+                        normals.Add((float)n.y);
+                        normals.Add((float)n.z);
+                    }
+
+                    if (mesh.VertexColors != null)
+                    {
+                        var c = mesh.VertexColors[i][j];
+                        colors.Add(c.R);
+                        colors.Add(c.G);
+                        colors.Add(c.B);
+                        colors.Add(c.A);
+                    }
+                }
+            }
+
+            for (int i = 0; i < rows - 1; i++)
+            {
+                for (int j = 0; j < cols - 1; j++)
+                {
+                    int v0 = i * cols + j;
+                    int v1 = v0 + 1;
+                    int v2 = v0 + cols;
+                    int v3 = v2 + 1;
+
+                    indices.Add((ushort)v0);
+                    indices.Add((ushort)v1);
+                    indices.Add((ushort)v3);
+
+                    indices.Add((ushort)v0);
+                    indices.Add((ushort)v3);
+                    indices.Add((ushort)v2);
+                }
+            }
+
+            string base64Positions = Convert.ToBase64String(ToBytes(positions));
+            string base64Normals = normals.Count > 0 ? Convert.ToBase64String(ToBytes(normals)) : null;
+            string base64Colors = colors.Count > 0 ? Convert.ToBase64String(ToBytes(colors)) : null;
+            string base64Indices = Convert.ToBase64String(ToBytes(indices));
+
             using StreamWriter writer = new StreamWriter(gltfPath);
             writer.WriteLine("{");
             writer.WriteLine("\"asset\": { \"version\": \"2.0\" },");
+            writer.WriteLine("\"scene\": 0,");
+            writer.WriteLine("\"scenes\": [{ \"nodes\": [0] }],");
+            writer.WriteLine("\"nodes\": [{ \"mesh\": 0 }],");
+            writer.WriteLine("\"buffers\": [");
 
-            // Nodes (only geometry, can add transform/camera/light as needed)
-            writer.WriteLine("\"nodes\": [ { \"mesh\": 0 } ],");
+            writer.WriteLine("{ \"uri\": \"data:application/octet-stream;base64," + base64Positions + "\",");
+            writer.WriteLine($"\"byteLength\": {positions.Count * 4} }}");
 
-            // Mesh data placeholder (in practice needs buffer/indices)
-            writer.WriteLine("\"meshes\": [");
-            writer.WriteLine("{");
-            writer.WriteLine("\"primitives\": [");
-            writer.WriteLine("{ \"attributes\": { \"POSITION\": 0 }, \"material\": 0 }");
-            writer.WriteLine("]");
-            writer.WriteLine("}");
+            if (base64Normals != null)
+            {
+                writer.WriteLine(",{ \"uri\": \"data:application/octet-stream;base64," + base64Normals + "\",");
+                writer.WriteLine($"\"byteLength\": {normals.Count * 4} }}");
+            }
+
+            if (base64Colors != null)
+            {
+                writer.WriteLine(",{ \"uri\": \"data:application/octet-stream;base64," + base64Colors + "\",");
+                writer.WriteLine($"\"byteLength\": {colors.Count * 4} }}");
+            }
+
+            writer.WriteLine(",{ \"uri\": \"data:application/octet-stream;base64," + base64Indices + "\",");
+            writer.WriteLine($"\"byteLength\": {indices.Count * 2} }}");
+
             writer.WriteLine("],");
+
+            // Mesh and materials
+            writer.WriteLine("\"meshes\": [{");
+            writer.WriteLine("\"primitives\": [{");
+            writer.WriteLine("\"attributes\": {");
+            writer.WriteLine("\"POSITION\": 0,");
+
+            if (base64Normals != null)
+                writer.WriteLine("\"NORMAL\": 1,");
+            if (base64Colors != null)
+                writer.WriteLine("\"COLOR_0\": 2,");
+
+            writer.WriteLine("\"indices\": 3");
+            writer.WriteLine("},");
+            writer.WriteLine("\"material\": 0 }]}],");
 
             // Materials
             writer.WriteLine("\"materials\": [");
             writer.WriteLine("{");
             writer.WriteLine($"\"name\": \"{material.Name}\",");
             writer.WriteLine("\"pbrMetallicRoughness\": {");
-            writer.WriteLine($"\"baseColorFactor\": [{material.DiffuseColor.x}, {material.DiffuseColor.y}, {material.DiffuseColor.z}, {material.Transparency}]");
+            writer.WriteLine($"\"baseColorFactor\": [{material.DiffuseColor.x}, {material.DiffuseColor.y}, {material.DiffuseColor.z}, {material.Transparency}],");
+            writer.WriteLine("\"metallicFactor\": 0.1, \"roughnessFactor\": 0.6");
             writer.WriteLine("}");
             writer.WriteLine("}");
-            writer.WriteLine("],");
+            writer.WriteLine("]");
 
-            // Lights (KHR extension)
             if (lights != null && lights.Length > 0)
             {
-                writer.WriteLine("\"extensions\": {");
-                writer.WriteLine("\"KHR_lights_punctual\": {");
-                writer.WriteLine("\"lights\": [");
+                writer.WriteLine(",\"extensions\": {");
+                writer.WriteLine("\"KHR_lights_punctual\": { \"lights\": [");
                 for (int i = 0; i < lights.Length; i++)
                 {
                     writer.Write(lights[i].ToGltfJson(i));
-                    if (i < lights.Length - 1)
-                        writer.WriteLine(",");
-                    else
-                        writer.WriteLine();
+                    if (i < lights.Length - 1) writer.WriteLine(",");
                 }
-                writer.WriteLine("]");
-                writer.WriteLine("}");
-                writer.WriteLine("},");
+                writer.WriteLine("] } }");
             }
 
-            writer.WriteLine("\"scene\": 0");
             writer.WriteLine("}");
         }
 
+        private static byte[] ToBytes(List<float> list)
+        {
+            byte[] bytes = new byte[list.Count * 4];
+            Buffer.BlockCopy(list.ToArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
 
+        private static byte[] ToBytes(List<ushort> list)
+        {
+            byte[] bytes = new byte[list.Count * 2];
+            Buffer.BlockCopy(list.ToArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
 
 
     }
