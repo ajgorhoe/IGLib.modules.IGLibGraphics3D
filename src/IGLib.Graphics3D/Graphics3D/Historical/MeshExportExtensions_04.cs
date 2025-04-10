@@ -14,7 +14,7 @@ namespace IGLib.Gr3D
 
     public static class MeshExportExtensions_04
     {
-        public static void ExportToObj_04(this StructuredMesh3D mesh, string filePath, string materialFileName)
+        public static void ExportToObj_04(this StructuredSurfaceMesh3D mesh, string filePath, string materialFileName)
         {
             using (StreamWriter writer = new StreamWriter(filePath))
             {
@@ -28,7 +28,7 @@ namespace IGLib.Gr3D
                 // Write normals
                 for (int i = 0; i < mesh.NumPoints1; i++)
                     for (int j = 0; j < mesh.NumPoints2; j++)
-                        writer.WriteLine($"vn {mesh.NodeNormals[i][j].x} {mesh.NodeNormals[i][j].y} {mesh.NodeNormals[i][j].z}");
+                        writer.WriteLine($"vn {mesh.VertexNormals[i][j].x} {mesh.VertexNormals[i][j].y} {mesh.VertexNormals[i][j].z}");
 
                 // Write faces
                 for (int i = 0; i < mesh.NumPoints1 - 1; i++)

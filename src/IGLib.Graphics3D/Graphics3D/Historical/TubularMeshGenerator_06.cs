@@ -58,7 +58,7 @@ namespace IGLib.Gr3D
         /// in such a way that all vurve evaluations fall within the meshing interval, end ponts 
         /// inclusive. Ths is useful when the function has a singularity or sidcontinuity just
         /// outside the meshing interval.</param>
-        public StructuredMesh3D GenerateMesh(
+        public StructuredSurfaceMesh3D GenerateMesh(
             Func<double, vec3> curve,
             double tStart,
             double tEnd,
@@ -84,7 +84,7 @@ namespace IGLib.Gr3D
         /// <remarks>For undocumented parameters, see 
         /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.
         /// </remarks>
-        public StructuredMesh3D GenerateMesh(
+        public StructuredSurfaceMesh3D GenerateMesh(
             Func<double, vec3> curve,
             Func<double, vec3> tangent,
             double tStart,
@@ -101,7 +101,7 @@ namespace IGLib.Gr3D
                 return GenerateMesh(curve, tStart, tEnd, radius, numCurvePoints, numCirclePoints, hrel: 1e-2, eps: eps, normalizeFromPrevious: normalizeFromPrevious, restrictToInterval: true);
             }
 
-            var mesh = new StructuredMesh3D(numCurvePoints, numCirclePoints);
+            var mesh = new StructuredSurfaceMesh3D(numCurvePoints, numCirclePoints);
 
             vec3[] unitAxes = {
             new vec3(1, 0, 0),
@@ -148,8 +148,8 @@ namespace IGLib.Gr3D
                     mesh.Params2[j] = theta;
 
                     vec3 radial = Math.Cos(theta) * N + Math.Sin(theta) * B;
-                    mesh.Nodes[i][j] = point + radius * radial;
-                    mesh.NodeNormals[i][j] = radial;
+                    mesh.Vertices[i][j] = point + radius * radial;
+                    mesh.VertexNormals[i][j] = radial;
                 }
             }
 
@@ -168,7 +168,7 @@ namespace IGLib.Gr3D
         /// </summary>
         /// <remarks>For parameter descriprions, see 
         /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
-        public StructuredMesh3D GenerateFrenet(
+        public StructuredSurfaceMesh3D GenerateFrenet(
             Func<double, vec3> curve,
             double tStart,
             double tEnd,
@@ -190,7 +190,7 @@ namespace IGLib.Gr3D
         /// don't need to calculate derivatives numerically.</para></summary>
         /// <remarks>For parameter descriprions, see 
         /// <see cref="GenerateMesh(Func{double, vec3}, double, double, double, int, int, double, double, bool, bool)"/>.</remarks>
-        public StructuredMesh3D GenerateMeshByFrenet(
+        public StructuredSurfaceMesh3D GenerateMeshByFrenet(
             Func<double, vec3> curve,
             Func<double, vec3> tangent,
             double tStart,
@@ -207,7 +207,7 @@ namespace IGLib.Gr3D
                 return GenerateFrenet(curve, tStart, tEnd, radius, numCurvePoints, numCirclePoints, hrel, restrictToInterval: true);
             }
 
-            var mesh = new StructuredMesh3D(numCurvePoints, numCirclePoints);
+            var mesh = new StructuredSurfaceMesh3D(numCurvePoints, numCirclePoints);
 
             for (int i = 0; i < numCurvePoints; ++i)
             {
@@ -227,8 +227,8 @@ namespace IGLib.Gr3D
                     mesh.Params2[j] = theta;
 
                     vec3 radial = Math.Cos(theta) * N + Math.Sin(theta) * B;
-                    mesh.Nodes[i][j] = p + radius * radial;
-                    mesh.NodeNormals[i][j] = radial;
+                    mesh.Vertices[i][j] = p + radius * radial;
+                    mesh.VertexNormals[i][j] = radial;
                 }
             }
 

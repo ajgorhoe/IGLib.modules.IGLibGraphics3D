@@ -22,7 +22,7 @@ namespace IGLib.Gr3D
         /// <param name="exportWireframe">If true, wireframe lines are exported.</param>
         /// <param name="surfaceMaterialName">Material name for surfaces.</param>
         /// <param name="wireframeMaterialName">Material name for wireframe.</param>
-        public static void ExportMeshToObj(StructuredMesh3D mesh,
+        public static void ExportMeshToObj(StructuredSurfaceMesh3D mesh,
             string objFilePath,
             string mtlFileName,
             bool exportSurfaces = true,
@@ -45,7 +45,7 @@ namespace IGLib.Gr3D
                 // Normals
                 for (int i = 0; i < numRows; i++)
                     for (int j = 0; j < numCols; j++)
-                        writer.WriteLine($"vn {mesh.NodeNormals[i][j].x} {mesh.NodeNormals[i][j].y} {mesh.NodeNormals[i][j].z}");
+                        writer.WriteLine($"vn {mesh.VertexNormals[i][j].x} {mesh.VertexNormals[i][j].y} {mesh.VertexNormals[i][j].z}");
 
                 // Surfaces
                 if (exportSurfaces)
@@ -89,7 +89,7 @@ namespace IGLib.Gr3D
         /// <summary>
         /// Exports only the surface mesh to an OBJ file.
         /// </summary>
-        public static void ExportMeshSurfaceToObj(StructuredMesh3D mesh,
+        public static void ExportMeshSurfaceToObj(StructuredSurfaceMesh3D mesh,
             string objFilePath,
             string mtlFileName,
             string surfaceMaterialName = "SurfaceMaterial") =>
@@ -98,7 +98,7 @@ namespace IGLib.Gr3D
         /// <summary>
         /// Exports only the wireframe of the mesh to an OBJ file.
         /// </summary>
-        public static void ExportMeshWireframeToObj(StructuredMesh3D mesh,
+        public static void ExportMeshWireframeToObj(StructuredSurfaceMesh3D mesh,
             string objFilePath,
             string mtlFileName,
             string wireframeMaterialName = "WireframeMaterial") =>

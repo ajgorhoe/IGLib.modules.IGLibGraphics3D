@@ -23,11 +23,11 @@ namespace IGLib.Gr3D
 
 
     /// <summary>Defines properties of a light source used in rendering.</summary>
-    public class LightingDefinition
+    public class LightSource
     {
 
         /// <summary> Creates a new light with default values (white light at intensity 1.0). </summary>
-        public LightingDefinition(LightType type)
+        public LightSource(LightType type)
         {
             Type = type;
         }
@@ -98,20 +98,20 @@ namespace IGLib.Gr3D
         public void Exapmle_CreateLightingDefinition()
         {
 
-                var ambientLight = new LightingDefinition(LightType.Ambient)
+                var ambientLight = new LightSource(LightType.Ambient)
                 {
                     Color = new vec3(0.3, 0.3, 0.3), // Soft gray ambient light
                     Intensity = 0.5
                 };
 
-                var sunLight = new LightingDefinition(LightType.Directional)
+                var sunLight = new LightSource(LightType.Directional)
                 {
                     Color = new vec3(1, 1, 0.8), // Warm sunlight
                     Intensity = 1.5,
                     Direction = new vec3(-1, -1, -0.5) // Sunlight coming from an angle
                 };
 
-                var pointLight = new LightingDefinition(LightType.Point)
+                var pointLight = new LightSource(LightType.Point)
                 {
                     Color = new vec3(1, 0.5, 0.5), // Reddish light
                     Intensity = 2.0,

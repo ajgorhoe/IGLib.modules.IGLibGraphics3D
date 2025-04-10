@@ -10,9 +10,9 @@ namespace IGLib.Gr3D
 
     public static class TubularMeshGenerator_05
     {
-        public static StructuredMesh3D Generate(Func<double, vec3> curve, double tStart, double tEnd, double radius, int numT, int numTheta)
+        public static StructuredSurfaceMesh3D Generate(Func<double, vec3> curve, double tStart, double tEnd, double radius, int numT, int numTheta)
         {
-            StructuredMesh3D mesh = new StructuredMesh3D(numT, numTheta);
+            StructuredSurfaceMesh3D mesh = new StructuredSurfaceMesh3D(numT, numTheta);
             double dt = (tEnd - tStart) / (numT - 1);
             double dTheta = 2 * Math.PI / (numTheta - 1);
 
@@ -30,8 +30,8 @@ namespace IGLib.Gr3D
                     double theta = j * dTheta;
                     mesh.Params2[j] = theta;
                     vec3 point = p + normal * (radius * Math.Cos(theta)) + binormal * (radius * Math.Sin(theta));
-                    mesh.Nodes[i][j] = point;
-                    mesh.NodeNormals[i][j] = (normal * Math.Cos(theta) + binormal * Math.Sin(theta)).Normalize();
+                    mesh.Vertices[i][j] = point;
+                    mesh.VertexNormals[i][j] = (normal * Math.Cos(theta) + binormal * Math.Sin(theta)).Normalize();
                 }
             }
             return mesh;
