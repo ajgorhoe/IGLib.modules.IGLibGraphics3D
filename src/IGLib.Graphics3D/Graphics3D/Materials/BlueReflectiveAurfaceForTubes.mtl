@@ -1,0 +1,7 @@
+newmtl TubeMaterial
+Kd 0 0 1
+Ka 0.0 0.0 0.5
+Ks 1.0 0.0 0.0
+Ns 800
+d 1
+illum 2
