@@ -18,9 +18,10 @@ namespace IGLib.Gr3D
     interface ICurve3DParameterizationWithBounds
     {
 
-        /// <summary>3D vector function of scalar argument, which gives a 3D representation of the curve.
-        /// Properties <see cref="StartParameter"/> and <see cref="EndParameter"/> determine the starting
-        /// and ending parameter that the curve closed.</summary>
+        /// <summary>3D vector function of scalar argument, which represents a parameterization of the
+        /// curve in 3D Euclidean space.
+        /// Properties <see cref="StartParameter"/> and <see cref="EndParameter"/> determine the typical 
+        /// starting and end parameter values for use cases like plotting the curve.</summary>
         vec3 Curve(double t);
 
         /// <summary>3D vector function of scalar argument, which represents the derivative of 

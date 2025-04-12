@@ -15,7 +15,8 @@ namespace IGLib.Gr3D
     /// <para><seealso href="https://en.wikipedia.org/wiki/Fermat%27s_spiral">
     /// Cylindrical Billiard Knot.</seealso></para></summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    public class ConicalSpiralFermats3D : ConicalCurve3DParameterizationFromPolarWithBounds
+    public class ConicalSpiralFermats3D : ConicalCurve3DParameterizationFromPolarWithBounds,
+        ICurve3DParameterizationWithBounds
     {
 
         /// <summary>Constructor.</summary>

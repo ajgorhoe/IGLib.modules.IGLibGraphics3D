@@ -13,7 +13,8 @@ namespace IGLib.Gr3D
     /// <para><seealso href="https://en.wikipedia.org/wiki/Logarithmic_spiral">
     /// Cylindrical Billiard Knot.</seealso></para></summary>
     /// <seealso cref="ICurve3DParameterizationWithBounds"/>
-    public class ConicalSpiralLogarithmic3D : ConicalCurve3DParameterizationFromPolarWithBounds
+    public class ConicalSpiralLogarithmic3D : ConicalCurve3DParameterizationFromPolarWithBounds,
+        ICurve3DParameterizationWithBounds
     {
 
         /// <summary>Constructor.</summary>

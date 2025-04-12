@@ -54,4 +54,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\IGLibCore\src\IGLib.Core\IGLib.Core.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Graphics3D\ObjectDefinitions\ParametricSurfaces\MinimalSurfaces\" />
+	  <Folder Include="Graphics3D\ObjectDefinitions\ParametricSurfaces\Topology\" />
+	</ItemGroup>
 </Project>

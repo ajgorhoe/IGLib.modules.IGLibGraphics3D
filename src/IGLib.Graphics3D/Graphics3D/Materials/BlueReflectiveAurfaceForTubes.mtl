@@ -1,7 +1,7 @@
-newmtl TubeMaterial
-Kd 0 0 1
-Ka 0.0 0.0 0.5
-Ks 1.0 0.0 0.0
-Ns 800
-d 1
-illum 2
+newmtl TubeMaterialBlue
+Kd 0 0 1  # Diffuse color (blue)
+Ka 0.0 0.0 0.5  # Ambient color (darker blue)
+Ks 1.0 0.0 0.0  # Specular reflection
+Ns 800          # Shininess
+d 1             # 0 transparent, 1 opaque
+illum 2         # illuminatio nmodl 2

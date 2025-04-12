@@ -87,7 +87,6 @@ namespace IGLib.Gr3D
 
         }
 
-
         public static void Example_02()
         {
             Func<double, vec3> helix = t => new vec3(Math.Cos(t), Math.Sin(t), t / 5);
