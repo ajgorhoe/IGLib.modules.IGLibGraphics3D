@@ -15,9 +15,9 @@ namespace IGLib.Gr3D
     {
 
         /// <summary>Constructor - ellipsoid with half-axes <paramref name="a"/>, <paramref name="b"/>
-        /// and <paramref name="c"/>, whivh define ptoperties <see cref="a"/>, <see cref="b"/>
+        /// and <paramref name="c"/>, which define ptoperties <see cref="a"/>, <see cref="b"/>
         /// and <see cref="c"/>.</summary>
-        public Ellipsoid(double a, double b, double c) 
+        public Ellipsoid(double a = aDefault, double b = bDefault, double c = cDefault) 
         {
             this.a = a;
             this.b = b;
