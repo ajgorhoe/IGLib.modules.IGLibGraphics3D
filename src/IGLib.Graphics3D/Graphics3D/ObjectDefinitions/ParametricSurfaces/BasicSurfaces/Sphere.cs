@@ -1,4 +1,5 @@
 ﻿using IG.Num;
+using System.Text.Json.Serialization.Metadata;
 using static System.Math;
 
 namespace IGLib.Gr3D
@@ -13,15 +14,18 @@ namespace IGLib.Gr3D
     {
 
         /// <summary>Constructor - sphere with radius R, centered at coordinate origin.</summary>
-        /// <param name="R">Radius of the sphere.</param>
-        public Sphere(double R) 
+        /// <param name="R">Radius of the sphere. Default is <see cref="RDefault"/></param>
+        public Sphere(double R = RDefault) 
         {
             this.R = R;
         }
 
 
-        /// <summary>Radius of the sphere.</summary>
-        public double R { get; init; }
+        public const double RDefault = 1.0;
+
+
+        /// <summary>Radius of the sphere. Default is <see cref="RDefault"/></summary>
+        public double R { get; protected set; } = RDefault;
 
         /// <inheritdoc/>
         public vec3 Surface(double u, double v)

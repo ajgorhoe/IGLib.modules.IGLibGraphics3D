@@ -1,4 +1,6 @@
 ﻿using IG.Num;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using static System.Math;
 
 namespace IGLib.Gr3D
@@ -12,8 +14,9 @@ namespace IGLib.Gr3D
     public class Ellipsoid: IParametricSurfaceWithBounds
     {
 
-        /// <summary>Constructor - ellipsoid with galf-axes <paramref name="a"/>, <paramref name="b"/>
-        /// and <paramref name="c"/>.</summary>
+        /// <summary>Constructor - ellipsoid with half-axes <paramref name="a"/>, <paramref name="b"/>
+        /// and <paramref name="c"/>, whivh define ptoperties <see cref="a"/>, <see cref="b"/>
+        /// and <see cref="c"/>.</summary>
         public Ellipsoid(double a, double b, double c) 
         {
             this.a = a;
@@ -21,15 +24,26 @@ namespace IGLib.Gr3D
             this.c = c;
         }
 
+        
+        /// <summary>Default value of <see cref="a"/>.</summary>
+        public const double aDefault = 0.5;
 
-        /// <summary>Half axis of the ellipsoid in the x direction.</summary>
+        /// <summary>Default valur of <see cref="b"/>.</summary>
+        public const double bDefault = 0.375;
+
+        /// <summary>Default valur of <see cref="c"/>.</summary>
+        public const double cDefault = 0.25;
+
+
+        /// <summary>Half axis of the ellipsoid in the x direction. Default is <see cref="aDefault"/>.</summary>
         public double a { get; init; }
 
-        /// <summary>Half axis of the ellipsoid in the y direction.</summary>
+        /// <summary>Half axis of the ellipsoid in the y direction. Default is <see cref="bDefault"/>.</summary>
         public double b { get; init; }
 
-        /// <summary>Half axis of the ellipsoid in the z direction.</summary>
+        /// <summary>Half axis of the ellipsoid in the z direction. Default is <see cref="cDefault"/>.</summary>
         public double c { get; init; }
+
 
         /// <inheritdoc/>
         public vec3 Surface(double u, double v)
@@ -68,11 +82,11 @@ namespace IGLib.Gr3D
         public double EndParameter1 { get; } = PI;
 
         /// <inheritdoc/>
-        public double StartParameter2 { get; init; } = -PI / 2.0;
+        public double StartParameter2 { get; init; } = - 0.5 * PI;
 
 
         /// <inheritdoc/>
-        public double EndParameter2 { get; init; } = PI / 2.0;
+        public double EndParameter2 { get; init; } = 0.5 * PI;
 
     }
 
