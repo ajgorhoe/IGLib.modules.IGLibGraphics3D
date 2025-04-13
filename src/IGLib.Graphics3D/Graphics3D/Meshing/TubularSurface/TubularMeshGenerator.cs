@@ -8,15 +8,16 @@ using IG.Num;
 namespace IGLib.Gr3D
 {
 
-    /// <summary>
-    /// Generates tubular surface meshes around space curves using Frenet or Parallel Transport Frames.
-    /// </summary>
+    /// <summary>Generates structured and regular tubular surface meshes around space curves using, using either the 
+    /// Frenet frames or Parallel Transport Frames.</summary>
     public class TubularMeshGenerator
     {
-        /// <summary>
-        /// Global lazy-initialized instance of the mesh generator.
-        /// </summary>
-        public static TubularMeshGenerator Global { get; } = new TubularMeshGenerator();
+
+        protected static Lazy<TubularMeshGenerator> _global = new Lazy<TubularMeshGenerator>(
+            () => new TubularMeshGenerator());
+
+        /// <summary>Global lazily initialized instance of the mesh generator.</summary>
+        public static TubularMeshGenerator Global => _global.Value;
 
         /// <summary>
         /// Numerically computes the derivative of a curve using central differences.
