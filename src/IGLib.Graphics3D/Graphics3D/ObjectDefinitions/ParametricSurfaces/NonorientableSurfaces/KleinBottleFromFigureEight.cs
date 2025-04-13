@@ -39,16 +39,22 @@ namespace IGLib.Gr3D
         public const double ffDefault = 1.0;
 
 
-        /// <summary>Radius of the circle around which the generating line is moved.</summary>
+        /// <summary>Radius of the circle around which the generating figure-eight curve is moved.</summary>
         public double aa { get; init; }
 
 
-        /// <summary>Half axis of the ellipsoid in the y direction. Default is <see cref="ffDefault"/>.</summary>
+        /// <summary>The number of half-twists by which the generating figure-eight curve is rotated by 180 degrees 
+        /// (π/2). before moving along the full circle (angle 2*π). Default is <see cref="ffDefault"/>.
+        /// <para>Only for odd integer values of <see cref="ff"/> the represented surface is non-orientable Klein
+        /// bottle (for odd values, we glue one surface of the curved stripes of annulus with the other, such that 
+        /// traveling on any side by two full angles reaches all segments of the surface, which has a single side). 
+        /// For <see cref="ff"/> = 0 we get an figure-eight torus. For even integer values (2, 4, 6, ...) the twisted
+        /// surface remains orientable.</para>
+        /// <para>This parameter is intentionally not an integer, such that we can use it as continuous
+        /// parameter in evolution of the surface from figure-eight torus (<see cref="ff"/> = 0) to 1 half-twist, 
+        /// 3 half-twists, etc., Kein bottles.</para></summary>
         public double ff { get; init; }
 
-
-        /// <summary>Half axis of the ellipsoid in the z direction. Default is <see cref="cDefault"/>.</summary>
-        public double c { get; init; }
 
 
         /// <inheritdoc/>

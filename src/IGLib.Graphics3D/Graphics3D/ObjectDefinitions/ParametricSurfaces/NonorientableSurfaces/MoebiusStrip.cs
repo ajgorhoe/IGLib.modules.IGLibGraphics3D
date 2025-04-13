@@ -45,7 +45,7 @@ namespace IGLib.Gr3D
         /// <summary>The number of half-twists by which the generating line is rotated by 180 degrees (π/2).
         /// Default is <see cref="ffDefault"/>.
         /// <para>Only for odd integer values of <see cref="ff"/> the represented surface is non-orientable (for odd
-        /// values, we glue one surface of the annulus with the other, uch that traveling on any side by two
+        /// values, we glue one surface of the annulus with the other, such that traveling on any side by two
         /// full angles reaches all segments of the surface, which has a single side). 
         /// For <see cref="ff"/> = 0 we get an <see href="https://en.wikipedia.org/wiki/Annulus_(mathematics)">
         /// annulus</see>. For even integer values (2, 4, 6, ...) the twisted surface remains orientable.</para>
@@ -53,10 +53,6 @@ namespace IGLib.Gr3D
         /// parameter in evolution of the strip from annulus (<see cref="ff"/> = 0) to 1 half-twist, 3 half-twists,
         /// etc.</para></summary>
         public double ff { get; init; }
-
-
-        /// <summary>Half axis of the ellipsoid in the z direction. Default is <see cref="cDefault"/>.</summary>
-        public double c { get; init; }
 
 
         /// <inheritdoc/>
