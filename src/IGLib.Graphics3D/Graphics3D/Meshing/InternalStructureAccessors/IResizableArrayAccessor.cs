@@ -11,6 +11,10 @@ namespace IGLib.Core
 
         void Resize(int newCount, bool keepElements = false);
 
+        void Nullify();
+
+        bool IsNullifiable();
+
     }
 
 }
