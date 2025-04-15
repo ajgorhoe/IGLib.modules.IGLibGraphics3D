@@ -55,8 +55,13 @@
 		<ProjectReference Include="..\..\..\IGLibCore\src\IGLib.Core\IGLib.Core.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="other\Core\" />
+	</ItemGroup>
+	<!--
+	<ItemGroup>
 	  <Folder Include="Graphics3D\ObjectDefinitions\ParametricSurfaces\MinimalSurfaces\" />
 	  <Folder Include="Graphics3D\ObjectDefinitions\ParametricSurfaces\InterestingSurfaces\" />
 	  <Folder Include="Graphics3D\ObjectDefinitions\ParametricSurfaces\PseudoSpheres\" />
 	</ItemGroup>
+	-->
 </Project>
