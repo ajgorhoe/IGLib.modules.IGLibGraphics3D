@@ -9,7 +9,7 @@ namespace IGLib.Core
     public interface IArrayAccessor<ElementType>: IReadonlyArrayAccessor<ElementType>
     {
 
-        new ElementType this[int index] { get; }
+        new ElementType this[int index] { get; set; }
 
     }
 
