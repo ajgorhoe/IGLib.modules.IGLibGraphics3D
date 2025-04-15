@@ -7,13 +7,8 @@ using static System.Math;
 namespace IGLib.Gr3D
 {
 
-    /// <summary>Parametric Klein bottle surface with mirror symmetry. 
-    /// 
-    /// <see cref="aa"/> and at the same time rotating it around the circle 
-    /// by linearly growing rotationn angle, which reaches the specified number of half-twists <see cref="ff"/> 
-    /// (which must be odd to generate non-orientable surface of a Klein bottle) after the angle on the larger circle
-    /// reaches the full angle (360 degrees or 2*π).
-    /// <para>No parameters.</para>
+    /// <summary>Parametric Klein bottle surface with mirror symmetry.
+    /// <para>Does not have any specifying parameters.</para>
     /// <para>Basis for Implementation: Wolfram Research, <seealso href="https://mathworld.wolfram.com/KleinBottle.html"/></para>
     /// <para>At wikipedia: <seealso cref="https://en.wikipedia.org/wiki/Klein_bottle#The_figure_8_immersion"/></para>
     /// <para>At MathCurve: <seealso cref="https://mathcurve.com/surfaces.gb/klein/klein.shtml"/></para>
@@ -23,23 +18,11 @@ namespace IGLib.Gr3D
     public class KleinBottle: IParametricSurfaceWithBounds
     {
 
-        /// <summary>Constructor - Klein bottle generated from figure eight curve, with radius 
-        /// <paramref name="aa"/> and number of half-twists <paramref name="ff"/>, which define 
-        /// properties <see cref="aa"/> and <see cref="ff"/>.</summary>
-        public KleinBottle(double aa = aaDefault, double ff = ffDefault)
+        /// <summary>Constructor, no parameters.</summary>
+        public KleinBottle()
         {
-            this.aa = aa;
-            this.ff = ff;
         }
-
         
-        /// <summary>Default value of <see cref="aa"/>.</summary>
-        public const double aaDefault = 1.0;
-
-        /// <summary>Default value of <see cref="ff"/>.</summary>
-        public const double ffDefault = 1.0;
-
-
         /// <summary>Radius of the circle around which the generating figure-eight curve is moved.</summary>
         public double aa { get; init; }
 
