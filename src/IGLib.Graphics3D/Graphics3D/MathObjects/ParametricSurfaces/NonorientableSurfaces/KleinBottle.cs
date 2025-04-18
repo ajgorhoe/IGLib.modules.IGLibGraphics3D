@@ -10,7 +10,9 @@ namespace IGLib.Gr3D
     /// <summary>Parametric Klein bottle surface with mirror symmetry.
     /// <para>Does not have any specifying parameters.</para>
     /// <para>Basis for Implementation: Wolfram Research, <seealso href="https://mathworld.wolfram.com/KleinBottle.html"/></para>
-    /// <para>At wikipedia: <seealso cref="https://en.wikipedia.org/wiki/Klein_bottle#The_figure_8_immersion"/></para>
+    /// <para>At Wikipedia: <seealso cref="https://en.wikipedia.org/wiki/Klein_bottle#Bottle_shape"/></para>
+    /// <para>At Math Stack Exchange ([arameterization; same as Wikipedia, able to copy): 
+    /// <seealso cref="https://math.stackexchange.com/questions/5005124/how-is-the-parameterization-of-the-klein-bottle-derived"/></para>
     /// <para>At MathCurve: <seealso cref="https://mathcurve.com/surfaces.gb/klein/klein.shtml"/></para>
     /// <para>At Virtual Math Museum: <seealso cref="https://virtualmathmuseum.org/docs/Moebius_Strip.pdf"/></para>
     /// </summary>
