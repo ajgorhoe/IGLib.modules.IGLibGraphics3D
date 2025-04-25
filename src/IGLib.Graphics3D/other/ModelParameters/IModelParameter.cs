@@ -8,7 +8,7 @@ namespace IGLib.Core
     /// and <see cref="DefaultValue"/>, respecrively, of the correct type.
     /// </summary>
     /// <typeparam name="ParameterType">Type of parameter's value.</typeparam>
-    interface IModelParameter<ParameterType>
+    public interface IModelParameter<ParameterType>
     {
 
         /// <summary>Typed default value of the parameter. </summary>
@@ -16,6 +16,12 @@ namespace IGLib.Core
 
         /// <summary>Typed value of the parameter.</summary>
         ParameterType Value { get; set; }
+
+        IModelParameter<ParameterType> UpdateValue(ParameterType newValue);
+
+        IModelParameter<ParameterType> UpdateDefaultValue(ParameterType newValue);
+
+
     }
 
 
@@ -35,7 +41,7 @@ namespace IGLib.Core
     /// parameterized with u and v being independent variables, and the actual surface can be adjusted
     /// (modified) by a set of other parameters such as half-aces of the ellipsoid, shift of the center
     /// from the origin of the coordinate system, and rotations)/</para></summary>
-    internal interface IModelParameter
+    public interface IModelParameter
     {
 
         /// <summary>Name of the parameter, as is used in the model.</summary>
@@ -59,16 +65,55 @@ namespace IGLib.Core
         /// <para>In some use cases, this may not be set.</para></summary>
         object DefaultValueObject { get; }
 
+        /// <summary>Whether default parameter vlaue is defined or not. This property has been added 
+        /// to the  class such that for non-nullable parameter types it is possible to tell whether 
+        /// the default parameter value has been set or not.</summary>
+        bool IsDefaultValueDefined { get; }
+
         /// <summary>Current value of the parameter, stored as object.
         /// <para>In many use cases this class will just hold metadata of the parameter and the
         /// value will not be set</para></summary>
-        object ValueObject { get; }
+        object ValueObject { get; set; }
 
+        /// <summary>If true then the current parameter is assumed to have the default value when
+        /// the value (<see cref="ValueObject"/>) is not defined (<see cref="IsValueDefined"/> = false),
+        /// but the default value is defined (<see cref="IsDefaultValueDefined"/> = true).
+        /// By default, value of this property is <see cref="ModelParameter.DefaultIsDefaultWhenValueNotDefined"/>.</summary>
+        bool IsDefaultWhenValueNotDefined { get; }
 
-        /// <summary>Whether parameter vlaue is defined or not. This property has been added to the 
-        /// class, such that there is a possibility for non-nullable parameter types it is possible
-        /// to tell whether the parameter value has been set.</summary>
+        /// <summary>Whether parameter vlaue is defined or not. This property has been added 
+        /// to the  class such that for non-nullable parameter types it is possible to tell whether 
+        /// the parameter value has been set or not.</summary>
         bool IsValueDefined { get; }
+
+        /// <summary>Clears the value of the current parameter, making it undefined (<see cref="IsValueDefined"/> becomes false).</summary>
+        /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>
+        IModelParameter ClearValue();
+
+        /// <summary>Updates the value of the current parameter object, setting it to <paramref name="newValue"/>.
+        /// <see cref="IsValueDefined"/> becomes true, even if it was false before the call.</summary>
+        /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>
+        IModelParameter UpdateValue(object newValue);
+
+        /// <summary>Clears the default value of the current parameter, making it undefined (<see cref="IsDefaultValueDefined"/> 
+        /// becomes false).</summary>
+        /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>
+        IModelParameter ClearDefaultValue();
+
+        /// <summary>Updates the default value of the current parameter object, setting it to <paramref name="newDefaultValue"/>.
+        /// <see cref="IsDefaultValueDefined"/> becomes true, even if it was false before the call.</summary>
+        /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>
+        IModelParameter UpdateDefaultValue(object newDefaultValue);
+
+        /// <summary>Updates the title of the current parameter (property <see cref="Title"/>).</summary>
+        /// <param name="newTitle">The new value of the title; null is allowed.</param>
+        /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>
+        IModelParameter UpdateTitle(string newTitle);
+
+        /// <summary>Updates the description of the current parameter (property <see cref="Description"/>).</summary>
+        /// <param name="newDescription">The new value of the description; null is allowed.</param>
+        /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>
+        IModelParameter UpdateDescription(string newDescription);
 
     }
 }

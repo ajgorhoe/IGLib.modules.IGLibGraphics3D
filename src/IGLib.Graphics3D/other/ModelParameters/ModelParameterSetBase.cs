@@ -16,35 +16,36 @@ namespace IGLib.Core
     /// <para>Stating parameter of certain name twice throws exception.</para>
     /// <para>Order in which parameters are added is kept. <see cref="ParameterList"/> returns a readonly list
     /// of parameters sorted in the orded in which paremeters were specified in constructors.</para></remarks>
-    class ModelParameterSet : IModelParameterSet
+    class ModelParameterSetBase<ModelParameterType> : IModelParameterSet<ModelParameterType>
+        where ModelParameterType: IModelParameter
     {
 
         /// <summary>Constructor, initializes the current model parameters set.</summary>
         /// <param name="title">Title of the parameters set, defines the <see cref="Title"/> property.</param>
         /// <param name="description">Descriptio nof the parameters set, defines the <see cref="Description"/> property.</param>
         /// <param name="modelParameters"></param>
-        public ModelParameterSet(string title, string description, params IModelParameter[] modelParameters)
+        public ModelParameterSetBase(string title, string description, params ModelParameterType[] modelParameters)
         {
             Title = title;
             Description = description;
             if (modelParameters != null && modelParameters.Length > 0)
             {
-                foreach (IModelParameter parameter in modelParameters)
+                foreach (ModelParameterType parameter in modelParameters)
                     AddParameter(parameter.Name, parameter);
             }
         }
 
-        protected Dictionary<string, IModelParameter> ParametersDictionaryInbternal { get; } =
-            new Dictionary<string, IModelParameter>();
+        protected Dictionary<string, ModelParameterType> ParametersDictionaryInternal { get; } =
+            new Dictionary<string, ModelParameterType>();
 
         protected List<string> ParameterNamesInternal { get; } = new List<string>();
 
-        protected void AddParameter(IModelParameter parameter)
+        protected void AddParameter(ModelParameterType parameter)
         {
             AddParameter(parameter?.Name, parameter);
         }
 
-        protected void AddParameter(string parameterName, IModelParameter parameter)
+        protected void AddParameter(string parameterName, ModelParameterType parameter)
         {
             if (parameterName == null)
             {
@@ -54,13 +55,13 @@ namespace IGLib.Core
             {
                 throw new ArgumentException("Cannot add a model parameter whose name is an empty string.", nameof(parameterName));
             }
-            if (ParametersDictionaryInbternal.ContainsKey("name"))
+            if (ParametersDictionaryInternal.ContainsKey("name"))
             {
                 throw new InvalidOperationException($"Parameter {parameterName} is already contained in the set, you can only add a parameter once.");
             }
             else
             {
-                ParametersDictionaryInbternal[parameterName] = parameter;
+                ParametersDictionaryInternal[parameterName] = parameter;
                 ParameterNamesInternal.Add(parameterName);
             }
         }
@@ -70,23 +71,23 @@ namespace IGLib.Core
         public string Description { get; protected set; }
 
         /// <summary>Number of parameters currently contained in this set.</summary>
-        public int Count => ParametersDictionaryInbternal.Count;
+        public int Count => ParametersDictionaryInternal.Count;
 
-        public IModelParameter this[string parameterName]
+        public ModelParameterType this[string parameterName]
         {
             get
             {
-                return ParametersDictionaryInbternal[parameterName];
+                return ParametersDictionaryInternal[parameterName];
             }
         }
 
-        public IModelParameter this[int whichParameter]
+        public ModelParameterType this[int whichParameter]
         {
-            get { return ParametersDictionaryInbternal[ParameterNamesInternal[whichParameter]]; }
+            get { return ParametersDictionaryInternal[ParameterNamesInternal[whichParameter]]; }
         }
 
-        public IReadOnlyList<IModelParameter> ParameterList => ParameterNamesInternal
-            .Select(name => ParametersDictionaryInbternal[name]).ToList();
+        public IReadOnlyList<ModelParameterType> ParameterList => ParameterNamesInternal
+            .Select(name => ParametersDictionaryInternal[name]).ToList();
 
 
         /// <inheritdoc/>
@@ -105,36 +106,44 @@ namespace IGLib.Core
             return sb.ToString();
         }
 
+
+
         /// <summary>Creates a sample <see cref="ModelParameterSet"/> object, prints its content to console,
         /// and returns it.</summary>
-        internal static ModelParameterSet CreateExampleParameterSet1()
+        public static ModelParameterSetBase<ModelParameterType> CreateExampleParameterSet2()
         {
-            ModelParameterSet param = new ModelParameterSet("Parameters of Lisajous curve",
-                "This parameter set defines parameters of the Lisajous curve in parametric form, in cartesian coordinates.",
-                new ModelParameter(
-                    "Param1", typeof(double), "Parameter Φ1, phase shift in the first direction.",
-                    "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction X.",
-                    (double)0, Math.PI / 4.0
-                )
-                {
-                    //Title = "Parameter Φ1, phase shift in the first direction.",
-                    //Description = "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction X.",
-                    //DefaultValueObject = (double)0,
-                    //IsValueDefined = false
-                },
-                new ModelParameter<double>("Param2", "Parameter Φ2, phase shift in the second direction.",
-                    "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction Y.",
-                    (double)0, 22.44)
-                {
-                    //Title = "Parameter Φ2, phase shift in the first direction.",
-                    //Description = "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction Y.",
-                    //DefaultValueObject = (double)0,
-                    //Value = 22.44,
-                    //IsValueDefined = true
-                }
-                );
-            Console.WriteLine($"Created {param.GetType()} ojbject:\n{param.ToString()}");
-            return param;
+            ModelParameterSetBase<ModelParameterType> paramSet = null;
+
+            // paramSet = 
+            //= new ModelParameterSetGeneric<ModelParameterType>(
+            //"Parameters of Lisajous curve",
+            //"This parameter set defines parameters of the Lisajous curve in parametric form, in cartesian coordinates.",
+            //new ModelParameter<ModelParameterType>(
+            //    "Param1", typeof(double), "Parameter Φ1, phase shift in the first direction.",
+            //    "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction X.",
+            //    (double)0, Math.PI / 4.0
+            //)
+            //{
+            //    //Title = "Parameter Φ1, phase shift in the first direction.",
+            //    //Description = "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction X.",
+            //    //DefaultValueObject = (double)0,
+            //    //IsValueDefined = false
+            //}
+            //,
+            //new ModelParameter<double>("Param2", "Parameter Φ2, phase shift in the second direction.",
+            //    "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction Y.",
+            //    (double)0, 22.44)
+            //{
+            //    //Title = "Parameter Φ2, phase shift in the first direction.",
+            //    //Description = "This parameter of type double specifies the phase shift of the 3D Lissajous curve in the direction Y.",
+            //    //DefaultValueObject = (double)0,
+            //    //Value = 22.44,
+            //    //IsValueDefined = true
+            //}
+            //);
+
+            Console.WriteLine($"Created {paramSet.GetType()} object:\n{paramSet.ToString()}");
+            return paramSet;
         }
 
 
