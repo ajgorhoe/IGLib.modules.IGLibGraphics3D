@@ -10,7 +10,6 @@ namespace IGLib.Core
         where ModelParameterType : IModelParameter
     {
 
-
         /// <summary>Title when introducing the parameter set, for example as title in 
         /// documentation, as label in user interfaces where parameter set is displayed or 
         /// where it could be edited, etc.</summary>
@@ -39,6 +38,9 @@ namespace IGLib.Core
         /// <returns>The parameter object corresponding to the <paramref name="parameterName"/>,
         /// containing information on that parameter.</returns>
         ModelParameterType this[string parameterName] { get; }
+
+        /// <summary>Whether or not parameters can be added after the parameter set has ben created.</summary>
+        bool CanAddParameters { get; }
 
     }
 }
