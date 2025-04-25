@@ -14,9 +14,7 @@ namespace IGLib.Gr3D
     namespace IGLib.Gr3D
     {
 
-        /// <summary>
-        /// Generates regular structured meshes of parametric surfaces in 3D space.
-        /// </summary>
+        /// <summary>Generates regular structured meshes of parametric surfaces in 3D space.</summary>
         public class ParametricSurfaceMeshGenerator : IParametricSurfaceMeshGenerator
         {
             protected static Lazy<ParametricSurfaceMeshGenerator> _global = new Lazy<ParametricSurfaceMeshGenerator>(() => new ParametricSurfaceMeshGenerator());
