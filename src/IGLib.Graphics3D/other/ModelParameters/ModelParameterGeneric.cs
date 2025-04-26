@@ -162,10 +162,6 @@ namespace IGLib.Core
         }
 
 
-
-
-
-
         /// <inheritdoc/>
         public override IModelParameter ClearValue()
         {
@@ -195,10 +191,6 @@ namespace IGLib.Core
             DefaultValue = newDefaultValue;
             return this;
         }
-
-
-
-
 
 
 

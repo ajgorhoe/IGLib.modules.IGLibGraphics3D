@@ -6,50 +6,158 @@ using System.Text;
 namespace IGLib.Core
 {
 
-    /// <summary>Contains a set of model parameters as <see cref="ModelParameter"/> objects.
-    /// <para>It contains metadata such as name, title, and description of the set.</para>
-    /// <para>Parameters can be referenced both by parameter name and parameter index. Therefore,
-    /// parameters can be ordered.</para></summary>
-    /// 
-    /// <inheritdoc/>
-    /// <remarks>Parameters can only be added to the set via constructors. Parameters cannot be removed from the set.
-    /// <para>Stating parameter of certain name twice throws exception.</para>
-    /// <para>Order in which parameters are added is kept. <see cref="ParameterList"/> returns a readonly list
-    /// of parameters sorted in the orded in which paremeters were specified in constructors.</para></remarks>
-    class ModelParameterSetBase<ModelParameterType> : IModelParameterSet<ModelParameterType>
-        where ModelParameterType: IModelParameter
+    /// <summary>Similar as <see cref="ModelParameterSetBaseFixed{ModelParameterType}"/>, except that 
+    /// parameter objects can be added, replaced or removed after the parameter set is created.</summary>
+    /// <typeparam name="ModelParameterType">Type of parameter objects contained in the set, must implement
+    /// the <see cref="IModelParameter"/> interface. Commonly, the <see cref="ModelParameter"/> and the
+    /// generic <see cref="ModelParameter{ParameterType}"/> are used.</typeparam>
+    public abstract class ModelParameterSetBase<ModelParameterType> : ModelParameterSetBaseFixed<ModelParameterType>,
+        IModelParameterSetBase<ModelParameterType>
+        where ModelParameterType : IModelParameter
     {
 
         /// <summary>Constructor, initializes the current model parameter set, optionally providing parameter
         /// objects that are added to the set.</summary>
+        /// <param name="canAddParameters">Whether parameters can be added after initialization, defines the <see cref="CanAddParameters"/> property.</param>
         /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
         /// <param name="description">Description of the parameter set, defines the <see cref="Description"/> property.</param>
         /// <param name="parameters">Parameter objects to initalize the parameter set. Name of eacch paremeter object
         /// (<see cref="ModelParameterType.Name"/>) is used as access key for that parameter.</param>
-        public ModelParameterSetBase(string title, string description, params ModelParameterType[] parameters)
+        public ModelParameterSetBase(string title, string description, params ModelParameterType[] parameters):
+            base(title, description, parameters)
         {
-            Title = title;
-            Description = description;
+            CanAddParameters = true;
         }
+
 
         /// <summary>Constructor, initializes the current model parameter set, optionally using tuples of names and 
         /// parameter objects that are added to the set.</summary>
         /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
         /// <param name="description">Description of the parameter set, defines the <see cref="Description"/> property.</param>
-        /// <param name="namesAndParameters">Tuples of names (used as keys keys) and the corresponding parameter objects 
+        /// <param name="keysAndParameters">Tuples of names (used as keys keys) and the corresponding parameter objects 
         /// to initalize the parameter set.</param>
-        public ModelParameterSetBase(string title, string description, 
-            params (string Name, ModelParameterType Parameter)[]  namesAndParameters)
+        public ModelParameterSetBase(string title, string description,
+            params (string Name, ModelParameterType Parameter)[] keysAndParameters):
+            base(title, description, keysAndParameters)
         {
-            Title = title;
-            Description = description;
-            if (namesAndParameters != null && namesAndParameters.Length > 0)
+            CanAddParameters = true;
+        }
+
+
+
+        /// <inheritdoc/>
+        public new ModelParameterType this[string parameterName]
+        {
+            get
             {
-                foreach ((string name, ModelParameterType parameter) in namesAndParameters)
-                    AddParameter(name, parameter, false /* replacement of parameters is not allowed during initialization */,
-                        true /* isInitializing */);
+                return ParametersDictionaryInternal[parameterName];
+            }
+            set
+            {
+                ParametersDictionaryInternal[parameterName] = value;
             }
         }
+
+        /// <inheritdoc/>
+        public new ModelParameterType this[int whichParameter]
+        {
+            get { return ParametersDictionaryInternal[ParameterNamesInternal[whichParameter]]; }
+            set
+            {
+                ParametersDictionaryInternal[ParameterNamesInternal[whichParameter]] = value;
+            }
+        }
+
+
+        /// <inheritdoc/>
+        public virtual void Add(params (string Key, ModelParameterType Parameter)[] keysAndParameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public virtual void AddOrReplace(params (string Key, ModelParameterType Parameter)[] keysAndParameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public virtual void Add(params ModelParameterType[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public virtual void AddOrReplace(params ModelParameterType[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+        /// <inheritdoc/>
+        public virtual void Remove(params string[] keys)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
+
+
+
+    /// <summary>Contains a set of model parameters as <typeparamref name="ModelParameterType"/> objects,
+    /// accessible by string keys, and some metadata such as name, title, and description of the set.
+    /// <para>Parameters can be accessed both by string key (usually parameter name) and integer
+    /// index. Parameters are indexed according to order in which they were added to the set.</para>
+    /// <para>In this class, parameters can only be added to the set via constructors, and cannot be removed 
+    /// from the set (therefore the "Fixed" suffix).</para>
+    /// <para>Order in which parameters are added is kept. <see cref="ParameterList"/> returns a readonly list
+    /// of parameters sorted in the orded in which paremeters were specified in constructors.</para></summary>
+    public abstract class ModelParameterSetBaseFixed<ModelParameterType> : IModelParameterSetBaseFixed<ModelParameterType>
+        where ModelParameterType: IModelParameter
+    {
+
+        /// <summary>Constructor, initializes the current model parameter set, optionally providing parameter
+        /// objects that are added to the set.</summary>
+        /// <param name="canAddParameters">Whether parameters can be added after initialization, defines the <see cref="CanAddParameters"/> property.</param>
+        /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
+        /// <param name="description">Description of the parameter set, defines the <see cref="Description"/> property.</param>
+        /// <param name="parameters">Parameter objects to initalize the parameter set. Name of eacch paremeter object
+        /// (<see cref="ModelParameterType.Name"/>) is used as access key for that parameter.</param>
+        public ModelParameterSetBaseFixed(bool canAddParameters, string title, string description, params ModelParameterType[] parameters)
+        {
+            CanAddParameters = canAddParameters;
+            Title = title;
+            Description = description;
+            AddParameters(false /* replacement of parameters is not allowed during initialization */,
+                true /* isInitializing */, parameters);
+        }
+
+        public ModelParameterSetBaseFixed(string title, string description, params ModelParameterType[] parameters): 
+            this(DefaultCanAddParemeters, title, description, parameters)
+        { }
+
+        /// <summary>Constructor, initializes the current model parameter set, optionally using tuples of names and 
+        /// parameter objects that are added to the set.</summary>
+        /// <param name="canAddParameters">Whether parameters can be added after initialization, defines the <see cref="CanAddParameters"/> property.</param>
+        /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
+        /// <param name="description">Description of the parameter set, defines the <see cref="Description"/> property.</param>
+        /// <param name="keysAndParameters">Tuples of names (used as keys keys) and the corresponding parameter objects 
+        /// to initalize the parameter set.</param>
+        public ModelParameterSetBaseFixed(bool canAddParameters, string title, string description, 
+            params (string Name, ModelParameterType Parameter)[]  keysAndParameters)
+        {
+            CanAddParameters = canAddParameters;
+            Title = title;
+            Description = description;
+            AddParameters(false /* replacement of parameters is not allowed during initialization */,
+                true /* isInitializing */, keysAndParameters);
+        }
+
+        /// <summary>The same as <see cref="ModelParameterSetBase(bool, string, string, 
+        /// (string Name, ModelParameterType Parameter)[])"/>, but with first boolean parameter (defining 
+        /// <see cref="CanAddParameters"/>) set to <see cref="DefaultCanAddParemeters"/>.</summary>
+        public ModelParameterSetBaseFixed(string title, string description,
+            params (string Name, ModelParameterType Parameter)[] keysAndParameters) :
+            this(DefaultCanAddParemeters, title, description, keysAndParameters)
+        { }
 
 
 
@@ -67,6 +175,18 @@ namespace IGLib.Core
             }
         }
 
+        protected void AddParameters(bool canReplaceParameter, bool isInitializing,
+            params (string Name, ModelParameterType Parameter)[] keysAndParameters)
+        {
+            if (keysAndParameters != null && keysAndParameters.Length > 0)
+            {
+                foreach ((string name, ModelParameterType parameter) in keysAndParameters)
+                {
+                    AddParameter(name, parameter, canReplaceParameter, isInitializing);
+                }
+            }
+        }
+
 
         /// <summary>Adds the specified parameter <paramref name="parameter"/> with access key <paramref name="parameterKey"/>
         /// to the current parameter set. Exception is thrown if adding paremeter cannot be performed.</summary>
@@ -75,11 +195,13 @@ namespace IGLib.Core
         /// <param name="canReplaceParameter">Whether or not this call is allowed to replace the paremeter that is already
         /// contained under the ket <paramref name="parameterKey"/>. If this paremeter is false and parameter under
         /// the key <paramref name="parameterKey"/> is already contained in the set then exception is thrown.</param>
-        /// <param name="isInitializing">Whether the object is currently initializing. This information is only used to form
+        /// <param name="isInitializing">Whether the object is currently initializing. This information is used to form
         /// more meaningful messages in case of exceptions.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentNullException">When  <paramref name="parameterKey"/> is null.</exception>
+        /// <exception cref="ArgumentException">When  <paramref name="parameterKey"/> is an empty string.</exception>
+        /// <exception cref="InvalidOperationException">When parameter with the key <paramref name="parameterKey"/>
+        /// is already contained in the set and replacing is not allowed (i.e., <paramref name="canReplaceParameter"/> 
+        /// is false)</exception>
         protected void AddParameter(string parameterKey, ModelParameterType parameter, bool canReplaceParameter, bool isInitializing)
         {
             if (parameterKey == null)
@@ -113,7 +235,8 @@ namespace IGLib.Core
         /// <summary>Number of parameters currently contained in this set.</summary>
         public int Count => ParametersDictionaryInternal.Count;
 
-        public ModelParameterType this[string parameterName]
+        /// <inheritdoc/>
+        public virtual ModelParameterType this[string parameterName]
         {
             get
             {
@@ -121,7 +244,8 @@ namespace IGLib.Core
             }
         }
 
-        public ModelParameterType this[int whichParameter]
+        /// <inheritdoc/>
+        public virtual ModelParameterType this[int whichParameter]
         {
             get { return ParametersDictionaryInternal[ParameterNamesInternal[whichParameter]]; }
         }
@@ -129,7 +253,7 @@ namespace IGLib.Core
         public IReadOnlyList<ModelParameterType> ParameterList => ParameterNamesInternal
             .Select(name => ParametersDictionaryInternal[name]).ToList();
 
-        /// <summary>The default value of <see cref="IModelParameterSet{ModelParameterType}.CanAddParameters"/>,
+        /// <summary>The default value of <see cref="IModelParameterSetBaseFixed{ModelParameterType}.CanAddParameters"/>,
         /// used for consistent initialization across different ways of initialization and accross types for 
         /// which this property is not predetermined (fixed).</summary>
         public const bool DefaultCanAddParemeters = true;
