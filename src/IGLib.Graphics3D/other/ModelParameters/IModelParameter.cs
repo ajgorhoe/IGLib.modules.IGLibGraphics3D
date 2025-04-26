@@ -7,19 +7,19 @@ namespace IGLib.Core
     /// but with additional typed propertis to hold the value and default value (<see cref="Value"/>
     /// and <see cref="DefaultValue"/>, respecrively, of the correct type.
     /// </summary>
-    /// <typeparam name="ParameterType">Type of parameter's value.</typeparam>
-    public interface IModelParameter<ParameterType>
+    /// <typeparam name="ValueType">Type of parameter's value.</typeparam>
+    public interface IModelParameter<ValueType>
     {
 
         /// <summary>Typed default value of the parameter. </summary>
-        ParameterType DefaultValue { get; }
+        ValueType DefaultValue { get; }
 
         /// <summary>Typed value of the parameter.</summary>
-        ParameterType Value { get; set; }
+        ValueType Value { get; set; }
 
-        IModelParameter<ParameterType> UpdateValue(ParameterType newValue);
+        IModelParameter<ValueType> UpdateValue(ValueType newValue);
 
-        IModelParameter<ParameterType> UpdateDefaultValue(ParameterType newValue);
+        IModelParameter<ValueType> UpdateDefaultValue(ValueType newValue);
 
 
     }
@@ -67,7 +67,8 @@ namespace IGLib.Core
 
         /// <summary>Whether default parameter vlaue is defined or not. This property has been added 
         /// to the  class such that for non-nullable parameter types it is possible to tell whether 
-        /// the default parameter value has been set or not.</summary>
+        /// the default parameter value has been set or not.
+        /// <para>Should be initialized to <see cref="ModelParameter.InitialIsDefaultValueDefined"/></para></summary>
         bool IsDefaultValueDefined { get; }
 
         /// <summary>Current value of the parameter, stored as object.
@@ -75,16 +76,24 @@ namespace IGLib.Core
         /// value will not be set</para></summary>
         object ValueObject { get; set; }
 
-        /// <summary>If true then the current parameter is assumed to have the default value when
-        /// the value (<see cref="ValueObject"/>) is not defined (<see cref="IsValueDefined"/> = false),
-        /// but the default value is defined (<see cref="IsDefaultValueDefined"/> = true).
-        /// By default, value of this property is <see cref="ModelParameter.DefaultIsDefaultWhenValueNotDefined"/>.</summary>
-        bool IsDefaultWhenValueNotDefined { get; }
-
         /// <summary>Whether parameter vlaue is defined or not. This property has been added 
         /// to the  class such that for non-nullable parameter types it is possible to tell whether 
-        /// the parameter value has been set or not.</summary>
+        /// the parameter value has been set or not.
+        /// <para>Should be initialized to <see cref="ModelParameter.InitialIsValueDefined"/></para></summary>
         bool IsValueDefined { get; }
+
+        /// <summary>If true then the current parameter is assumed to have the default value when
+        /// the value itself (property <see cref="ValueObject"/>) haws not been defined (i.e.,
+        /// <see cref="IsValueDefined"/> = false), but the default value is defined 
+        /// (<see cref="IsDefaultValueDefined"/> = true).
+        /// <para>Default value of this property in most implementations is
+        /// <see cref="ModelParameter.DefaultIsDefaultWhenValueNotDefined"/>.</para></summary>
+        bool IsDefaultWhenValueNotDefined { get; }
+
+        /// <summary>Whether the current parameter is a constant, i.e., it cannot change its value 
+        /// once it is set.
+        /// <para>Default value of this property is <see cref="ModelParameter.DefaultIsConstant"/>.</para></summary>
+        bool IsConstant { get; }
 
         /// <summary>Clears the value of the current parameter, making it undefined (<see cref="IsValueDefined"/> becomes false).</summary>
         /// <returns>The current parameter object, enabling method chaining (fluent API).</returns>

@@ -71,9 +71,21 @@ namespace IGLib.Core
             DefaultValueObject = defaultValue;
         }
 
-        /// <summary>A constant that provedes default value of <see cref="IModelParameter.IsDefaultWhenValueNotDefined"/>,
+        /// <summary>Default value of the property <see cref="IModelParameter.IsDefaultWhenValueNotDefined"/>,
         /// such that default initialization can be unified across implementations of <see cref="IModelParameter"/>.</summary>
         public const bool DefaultIsDefaultWhenValueNotDefined = true;
+
+        /// <summary>Default value of the property <see cref="IModelParameter.IsConstant"/>,
+        /// such that default initialization can be unified across implementations of <see cref="IModelParameter"/>.</summary>
+        public const bool DefaultIsConstant = false;
+
+        /// <summary>Default initial value of the property <see cref="IModelParameter.IsDefaultValueDefined"/>,
+        /// such that default initialization can be unified across implementations of <see cref="IModelParameter"/>.</summary>
+        public const bool InitialIsDefaultValueDefined = false;
+
+        /// <summary>Default initial value of the property <see cref="IModelParameter.IsValueDefined"/>,
+        /// such that default initialization can be unified across implementations of <see cref="IModelParameter"/>.</summary>
+        public const bool InitialIsValueDefined = false;
 
         /// <inheritdoc/>
         public string Name { get; init; }
@@ -114,7 +126,7 @@ namespace IGLib.Core
         }
 
         /// <inheritdoc/>
-        public virtual bool IsDefaultValueDefined { get; protected set; } = false;
+        public virtual bool IsDefaultValueDefined { get; protected set; } = InitialIsValueDefined;
 
         private object _valueObject = null;
 
@@ -154,12 +166,13 @@ namespace IGLib.Core
         }
 
         /// <inheritdoc/>
-        public virtual bool IsDefaultWhenValueNotDefined { get; protected set; } 
-            = ModelParameter.DefaultIsDefaultWhenValueNotDefined;
+        public virtual bool IsValueDefined { get; protected set; } = InitialIsValueDefined;
 
         /// <inheritdoc/>
-        public virtual bool IsValueDefined { get; protected set; } = false;
+        public virtual bool IsDefaultWhenValueNotDefined { get; protected set; } 
+            = DefaultIsDefaultWhenValueNotDefined;
 
+        public virtual bool IsConstant { get; init; } = DefaultIsConstant;
 
         /// <inheritdoc/>
         public virtual IModelParameter ClearValue()
