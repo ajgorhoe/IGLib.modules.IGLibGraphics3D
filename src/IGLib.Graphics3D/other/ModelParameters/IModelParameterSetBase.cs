@@ -94,6 +94,10 @@ namespace IGLib.Core
         /// <summary>Number of parameters contained in the set.</summary>
         int Count { get; }
 
+        /// <summary>Returns true if the current parameter set contains the specified key.</summary>
+        /// <param name="key">Tke key that is queried.</param>
+        bool ContainsKey(string key);
+
         /// <summary>Index operator, gets the specific parameter by its name.</summary>
         /// <param name="parameterName">Name of the parameter to be returned.</param>
         /// <returns>The parameter object corresponding to the <paramref name="parameterName"/>,
