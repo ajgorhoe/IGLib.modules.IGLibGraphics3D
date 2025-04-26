@@ -29,7 +29,6 @@ namespace IGLib.Core
             CanAddParameters = true;
         }
 
-
         /// <summary>Constructor, initializes the current model parameter set, optionally using tuples of names and 
         /// parameter objects that are added to the set.</summary>
         /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
@@ -42,8 +41,6 @@ namespace IGLib.Core
         {
             CanAddParameters = true;
         }
-
-
 
         /// <inheritdoc/>
         public new ModelParameterType this[string parameterName]
@@ -116,48 +113,43 @@ namespace IGLib.Core
 
         /// <summary>Constructor, initializes the current model parameter set, optionally providing parameter
         /// objects that are added to the set.</summary>
-        /// <param name="canAddParameters">Whether parameters can be added after initialization, defines the <see cref="CanAddParameters"/> property.</param>
         /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
         /// <param name="description">Description of the parameter set, defines the <see cref="Description"/> property.</param>
         /// <param name="parameters">Parameter objects to initalize the parameter set. Name of eacch paremeter object
         /// (<see cref="ModelParameterType.Name"/>) is used as access key for that parameter.</param>
-        public ModelParameterSetBaseFixed(bool canAddParameters, string title, string description, params ModelParameterType[] parameters)
+        public ModelParameterSetBaseFixed(string title, string description, params ModelParameterType[] parameters)
         {
-            CanAddParameters = canAddParameters;
+            CanAddParameters = false;
             Title = title;
             Description = description;
             AddParameters(false /* replacement of parameters is not allowed during initialization */,
                 true /* isInitializing */, parameters);
         }
 
-        public ModelParameterSetBaseFixed(string title, string description, params ModelParameterType[] parameters): 
-            this(DefaultCanAddParemeters, title, description, parameters)
-        { }
 
         /// <summary>Constructor, initializes the current model parameter set, optionally using tuples of names and 
         /// parameter objects that are added to the set.</summary>
-        /// <param name="canAddParameters">Whether parameters can be added after initialization, defines the <see cref="CanAddParameters"/> property.</param>
         /// <param name="title">Title of the parameter set, defines the <see cref="Title"/> property.</param>
         /// <param name="description">Description of the parameter set, defines the <see cref="Description"/> property.</param>
         /// <param name="keysAndParameters">Tuples of names (used as keys keys) and the corresponding parameter objects 
         /// to initalize the parameter set.</param>
-        public ModelParameterSetBaseFixed(bool canAddParameters, string title, string description, 
+        public ModelParameterSetBaseFixed(string title, string description, 
             params (string Name, ModelParameterType Parameter)[]  keysAndParameters)
         {
-            CanAddParameters = canAddParameters;
+            CanAddParameters = false;
             Title = title;
             Description = description;
             AddParameters(false /* replacement of parameters is not allowed during initialization */,
                 true /* isInitializing */, keysAndParameters);
         }
 
-        /// <summary>The same as <see cref="ModelParameterSetBase(bool, string, string, 
-        /// (string Name, ModelParameterType Parameter)[])"/>, but with first boolean parameter (defining 
-        /// <see cref="CanAddParameters"/>) set to <see cref="DefaultCanAddParemeters"/>.</summary>
-        public ModelParameterSetBaseFixed(string title, string description,
-            params (string Name, ModelParameterType Parameter)[] keysAndParameters) :
-            this(DefaultCanAddParemeters, title, description, keysAndParameters)
-        { }
+        ///// <summary>The same as <see cref="ModelParameterSetBase(bool, string, string, 
+        ///// (string Name, ModelParameterType Parameter)[])"/>, but with first boolean parameter (defining 
+        ///// <see cref="CanAddParameters"/>) set to <see cref="DefaultCanAddParemeters"/>.</summary>
+        //public ModelParameterSetBaseFixed(string title, string description,
+        //    params (string Name, ModelParameterType Parameter)[] keysAndParameters) :
+        //    this(DefaultCanAddParemeters, title, description, keysAndParameters)
+        //{ }
 
 
 
