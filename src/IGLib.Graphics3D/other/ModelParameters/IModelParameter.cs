@@ -3,10 +3,11 @@
 namespace IGLib.Core
 {
 
-    /// <summary>Contains data on a single model parameter, similar as <see cref="IModelParameter"/>,
-    /// but with additional typed propertis to hold the value and default value (<see cref="Value"/>
-    /// and <see cref="DefaultValue"/>, respecrively, of the correct type.
-    /// </summary>
+    /// <summary>Contains data for a single model parameter, similar as <see cref="IModelParameter"/>,
+    /// but with additional typed propertis to hold the strongly typed value and default value 
+    /// (properties <see cref="Value"/> and <see cref="DefaultValue"/>, respecrively.
+    /// <para>See also the <seealso cref="IModelParameter"/> base intrface (not typed) for more details.</para></summary>
+    /// 
     /// <typeparam name="ValueType">Type of parameter's value.</typeparam>
     public interface IModelParameter<ValueType>
     {
@@ -21,11 +22,10 @@ namespace IGLib.Core
 
         IModelParameter<ValueType> UpdateDefaultValue(ValueType newValue);
 
-
     }
 
 
-    /// <summary>Contains data on a single model parameter: parameter name (identifier) <see cref="Name"/>, 
+    /// <summary>Contains data for a single model parameter: parameter name (identifier) <see cref="Name"/>, 
     /// <see cref="Title"/>, <see cref="Description"/>, default value (<see cref="DefaultValueObject"/>), 
     /// current value (<see cref="ValueObject"/>, and whether value is defined (<see cref="IsValueDefined"/>).
     /// <para>Value and default value are properties of type object. The generic Interface 
@@ -92,6 +92,12 @@ namespace IGLib.Core
 
         /// <summary>Whether the current parameter is a constant, i.e., it cannot change its value 
         /// once it is set.
+        /// <para>Correct behavior is that when this property is true, neither the value (<see cref="ValueObject"/>)
+        /// nor the default value (<see cref="DefaultValueObject"/>) cannot be set if they are already defined (which
+        /// is checked via properties <see cref="IsValueDefined"/> and <see cref="IsDefaultValueDefined"/>).</para>
+        /// <para> The same is true for properties <see cref="ModelParameter{ValueType}.Value"/> and
+        /// <see cref="ModelParameter{ValueType}.DefaultValue"/> in strongly typed paremeter objects (interface 
+        /// <see cref="IModelParameter{ValueType}"/>).</para>
         /// <para>Default value of this property is <see cref="ModelParameter.DefaultIsConstant"/>.</para></summary>
         bool IsConstant { get; }
 

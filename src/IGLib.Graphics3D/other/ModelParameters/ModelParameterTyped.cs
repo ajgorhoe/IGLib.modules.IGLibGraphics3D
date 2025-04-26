@@ -23,56 +23,75 @@ namespace IGLib.Core
 
 
     /// <inheritdoc/>
-    class ModelParameter<ParameterType> : ModelParameter, IModelParameter<ParameterType>
+    public class ModelParameter<ValueType> : ModelParameter, IModelParameter<ValueType>
     {
 
-        /// <summary>Comprehensive constructor, initializes all fields of the type.</summary>
+        /// <summary>Comprehensive constructor, initializes all fields of the parameter object. It calls base constructor
+        /// <see cref="ModelParameter.ModelParameter(string, Type, string, string, object, object, bool, bool)"/> to
+        /// initialize most properties. The type propety is inferred from type parameter (<typeparamref name="ValueType"/>).</summary>
         /// <param name="name">Name of the current model parameter, as is used in models
         /// (defines the <see cref="Name"/>) property.</param>
-        /// <param name="type">Type of the current parameter (defines the <see cref="Type"/> property)</param>
         /// <param name="title">Title for parameter description, defines the <see cref="Title"/> property.</param>
         /// <param name="description">Parameter description, defines the <see cref="Description"/> property.</param>
         /// <param name="defaultValue">Default value of the parameter, defines the <see cref="DefaultValue"/> property.</param>
         /// <param name="value">Value of the parameter, defines the <see cref="Value"/> property.</param>
+        /// <param name="isConstant">Whether the constructed parameter object represents a constant parameter. Optional, 
+        /// default is <see cref="DefaultIsConstant"/>.</param>
+        /// <param name="isDefaultWhenValueNotDefined">Specifies whether default value can be returned as value when
+        /// the value is not defined but the default value is. Optional, default is <see cref="DefaultIsDefaultWhenValueNotDefined"/>.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public ModelParameter(string name, string title, string description, ParameterType defaultValue, ParameterType value, 
-            bool isDefaultWhenValueNotDefined = ModelParameter.DefaultIsDefaultWhenValueNotDefined) : 
-            base(name, typeof(ParameterType), title, description, defaultValue, value, isDefaultWhenValueNotDefined)
+        public ModelParameter(string name, string title, string description, ValueType defaultValue, ValueType value,
+            bool isConstant = DefaultIsConstant,
+            bool isDefaultWhenValueNotDefined = DefaultIsDefaultWhenValueNotDefined) : 
+            base(name, typeof(ValueType), title, description, defaultValue, value, 
+                isConstant, isDefaultWhenValueNotDefined)
         {
-            // also set typed values:
+            // Set typed values (setting other values is deferred to base constructor):
             DefaultValue = defaultValue;
+            IsDefaultValueDefined = true;
             Value = value;
             IsValueDefined = true;
         }
 
-        /// <summary>Constructor, with value undefined (sets <see cref="IsValueDefined"/> to false and
-        /// <see cref="ValueObject"/> to null). Meaning of parameters is the same as with
-        /// <see cref="ModelParameter{ParameterType}.ModelParameter(string, string, string, ParameterType, ParameterType)"/>,
-        /// except there is no parameter dor <see cref="Value"/>.</summary>
-        public ModelParameter(string name, string title, string description, ParameterType defaultValue) : 
-            this(name, title, description, defaultValue, default)
+        /// <summary>Minimal (very terse) constructor.
+        /// <paramref name="name"/>Meaning and behavior of parameters that are defined for this constructor is the same as for
+        /// <see cref="ModelParameter{ValueType}.ModelParameter(string name, string, string, ValueType, ValueType,
+        /// bool, bool)"/>.</summary>
+        public ModelParameter(string name,
+            bool isConstant = DefaultIsConstant,
+            bool isDefaultWhenValueNotDefined = DefaultIsDefaultWhenValueNotDefined) : 
+            this(name, null, null, (ValueType)default, (ValueType)default)
+        {
+            DefaultValueObject = null;
+            ValueObject = null;
+            IsDefaultValueDefined = false;
+            IsValueDefined = false;
+        }
+
+        /// <summary>Constructor, with value undefined (sets <see cref="IsValueDefined"/> to false and <see cref="ValueObject"/> to null)
+        /// but with default value specified.
+        /// <para>Meaning of parameters is the same as with
+        /// <see cref="ModelParameter{ParameterType}.ModelParameter(string, string, string, ParameterType, ParameterType, bool, bool)"/>,
+        /// except that some are not defined.</para></summary>
+        public ModelParameter(string name, ValueType defaultValue,
+            bool isConstant = DefaultIsConstant,
+            bool isDefaultWhenValueNotDefined = DefaultIsDefaultWhenValueNotDefined) : 
+            this(name, null, null, defaultValue, (ValueType)default,
+                isConstant, isDefaultWhenValueNotDefined)
         {
             // also set typed values:
             DefaultValue = defaultValue;
-            IsValueDefined = false;
+            IsDefaultValueDefined = true;
             ValueObject = null;
+            IsValueDefined = false;
         }
 
 
-        /// <summary>Minimal (terse) constructor.</summary>
-        /// <param name="name">Name of the current model parameter, as is used in models
-        /// (defines the <see cref="Name"/>) property.</param>
-        /// <param name="type">Type of the current parameter (defines the <see cref="Type"/> property)</param>
-        public ModelParameter(string name) : 
-            this(name, $"Parameter {name}",  $"Represents model parameter {name} of type ${typeof(ParameterType).Name}", 
-                default)
-        { }
 
-
-        private ParameterType _defaultValue = default;
+        private ValueType _defaultValue = default;
 
         /// <inheritdoc/>
-        public virtual ParameterType DefaultValue 
+        public virtual ValueType DefaultValue 
         { 
             get
             {
@@ -84,15 +103,19 @@ namespace IGLib.Core
             }
             protected set
             {
+                if (IsConstant && IsDefaultValueDefined)
+                {
+                    throw new InvalidOperationException($"Cannot redefine default value of parameter {Name} because it is constant.");
+                }
                 _defaultValue = value;
                 IsDefaultValueDefined = true;
             }
         }
 
-        ParameterType _value = default;
+        ValueType _value = default;
 
         /// <inheritdoc/>
-        public virtual ParameterType Value 
+        public virtual ValueType Value 
         {
             get
             {
@@ -114,6 +137,10 @@ namespace IGLib.Core
             }
             set
             {
+                if (IsConstant && IsDefaultValueDefined)
+                {
+                    throw new InvalidOperationException($"Cannot redefine value of parameter {Name} because it is constant.");
+                }
                 _value = value;
                     IsValueDefined = true;
             }
@@ -122,6 +149,8 @@ namespace IGLib.Core
 
 
         /// <inheritdoc/>
+        /// <remarks>Implementation from the base class <see cref="ModelParameter"/> is overriden here because
+        /// this property is bound to the new strongly typed property <see cref="DefaultValue"/>.</remarks>
         public override object DefaultValueObject
         {
             get
@@ -130,19 +159,25 @@ namespace IGLib.Core
             }
             protected set
             {
+                if (IsConstant && IsDefaultValueDefined)
+                {
+                    throw new InvalidOperationException($"Cannot redefine default value of parameter {Name} because it is constant.");
+                }
                 if (value == null)
                 {
                     DefaultValue = default;
                     IsDefaultValueDefined = false;
                     return;
                 }
-                DefaultValue = (ParameterType)value;
+                DefaultValue = (ValueType)value;
             }
         }
 
         private object _valueObject = null;
 
         /// <inheritdoc/>
+        /// <remarks>Implementation from the base class <see cref="ModelParameter"/> is overriden here because
+        /// this property is bound to the new strongly typed property <see cref="Value"/>.</remarks>
         public override object ValueObject
         {
             get
@@ -151,13 +186,17 @@ namespace IGLib.Core
             }
             set
             {
+                if (IsConstant && IsValueDefined)
+                {
+                    throw new InvalidOperationException($"Can not redefine value of parameter {Name} because it is constant.");
+                }
                 if (value == null)
                 {
                     Value = default;
                     IsValueDefined= false;
                     return;
                 }
-                Value = (ParameterType)value;
+                Value = (ValueType)value;
             }
         }
 
@@ -171,7 +210,7 @@ namespace IGLib.Core
         }
 
         /// <inheritdoc/>
-        public virtual IModelParameter<ParameterType> UpdateValue(ParameterType newValue)
+        public virtual IModelParameter<ValueType> UpdateValue(ValueType newValue)
         {
             Value = newValue;
             return this;
@@ -186,7 +225,7 @@ namespace IGLib.Core
         }
 
         /// <inheritdoc/>
-        public virtual IModelParameter<ParameterType> UpdateDefaultValue(ParameterType newDefaultValue)
+        public virtual IModelParameter<ValueType> UpdateDefaultValue(ValueType newDefaultValue)
         {
             DefaultValue = newDefaultValue;
             return this;
