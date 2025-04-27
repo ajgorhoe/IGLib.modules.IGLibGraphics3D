@@ -75,6 +75,19 @@ namespace IGLib.Graphics3D.Tests
         }
 
         [Fact]
+        public void ModelParameter_CreationWithNameAndType_DefaultValueShouldNotBeDefined()
+        {
+            // Arrange
+            string name = "TestParameter";
+            Type type = typeof(double);
+            // Act
+            ModelParameter parameterObject = new(name, type);
+            // Assert
+            parameterObject.Should().NotBeNull(because: "Precond: object was created.");
+            parameterObject.IsDefaultValueDefined.Should().BeFalse();
+        }
+
+        [Fact]
         public void ModelParameter_CreationWithNameAndType_ValueShouldNotBeDefined()
         {
             // Arrange
@@ -88,16 +101,85 @@ namespace IGLib.Graphics3D.Tests
         }
 
         [Fact]
-        public void ModelParameter_CreationWithNameAndType_DefaultValueShouldNotBeDefined()
+        public void ModelParameter_CreationWithNameAndType_ValueObjectThrowsCorrectException()
         {
             // Arrange
             string name = "TestParameter";
             Type type = typeof(double);
-            // Act
             ModelParameter parameterObject = new(name, type);
+            // Act & Assert
+            parameterObject.Should().NotBeNull(because: "Precond: object was created.");
+            parameterObject.IsValueDefined.Should().BeFalse(because: "Precond: since value was not set, IsValueDefined should be false.");
+            var exception = Assert.Throws<InvalidOperationException>(() => parameterObject.ValueObject);            
+            exception.Message.Should().Contain(name, because: "Exception message should contain parameter name.");
+        }
+
+        [Fact]
+        public void ModelParameter_CreationWithNameAndType_DefaultValueObjectThrowsCorrectException()
+        {
+            // Arrange
+            string name = "TestParameter";
+            Type type = typeof(double);
+            ModelParameter parameterObject = new(name, type);
+            // Act & Assert
+            parameterObject.Should().NotBeNull(because: "Precond: object was created.");
+            parameterObject.IsValueDefined.Should().BeFalse(because: "Precond: since value was not set, IsValueDefined should be false.");
+            var exception = Assert.Throws<InvalidOperationException>(() => parameterObject.DefaultValueObject);
+            exception.Message.Should().Contain(name, because: "Exception message should contain parameter name.");
+        }
+
+        [Fact]
+        public void ModelParameter_CreationWithTitle_TitleIsDefinedAndContinsName()
+        {
+            // Arrange
+            string name = "TestParameter";
+            Type type = typeof(double);
+            ModelParameter parameterObject = new(name, type);
+            // Act & Assert
+            parameterObject.Should().NotBeNull(because: "Precond: object was created.");
+            parameterObject.Title.Should().NotBeNull(because: "When title was not specified, default should be set.");
+            parameterObject.Title.Should().Contain(name, because: "When title was not specified, default title should be set and should contain parameter name.");
+        }
+
+        [Fact]
+        public void ModelParameter_CreationWithDescruotion_DescriptionIsDefinedAndContinsNameAndType()
+        {
+            // Arrange
+            string name = "TestParameter";
+            Type type = typeof(double);
+            ModelParameter parameterObject = new(name, type);
+            // Act & Assert
+            parameterObject.Should().NotBeNull(because: "Precond: object was created.");
+            parameterObject.Description.Should().NotBeNull(because: "When title was not specified, default should be set.");
+            parameterObject.Description.Should().Contain(name, because: "When title was not specified, default title should be set and should contain parameter name.");
+            parameterObject.Description.Should().Contain(type.Name, because: "When title was not specified, default title should be set and should also contain parameter type.");
+        }
+
+        [Fact]
+        public void ModelParameter_CreationWithTitleSpecified_TitleIsCorrect()
+        {
+            // Arrange
+            string name = "TestParameter";
+            Type type = typeof(double);
+            string parameterTitle = "Parameter Title";
+            ModelParameter parameterObject = new(name, type, title: parameterTitle);
+            // Act & Assert
+            parameterObject.Should().NotBeNull(because: "Precond: object was created.");
+            parameterObject.Title.Should().Be(parameterTitle, because: "Parameter's title should be as specified when creating the object.");
+        }
+
+        [Fact]
+        public void ModelParameter_CreationWithDescriptionSpecified_DescriptionIsCorrect()
+        {
+            // Arrange
+            string name = "TestParameter";
+            Type type = typeof(double);
+            string parameterDescription = "This is a test parameter.";
+            // Act
+            ModelParameter parameterObject = new(name, type, title: null, description: parameterDescription);
             // Assert
             parameterObject.Should().NotBeNull(because: "Precond: object was created.");
-            parameterObject.IsDefaultValueDefined.Should().BeFalse();
+            parameterObject.Description.Should().Be(parameterDescription, because: "Parameter's description should be as specified when creating the object.");
         }
 
         #endregion ModelParameter.Creation
