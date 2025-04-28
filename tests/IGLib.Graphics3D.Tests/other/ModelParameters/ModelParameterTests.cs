@@ -13,7 +13,7 @@ using IG.Num;
 using IGLib.Core;
 
 
-namespace IGLib.Graphics3D.Tests
+namespace IGLib.Core.Tests
 {
 
     /// <summary>This class contain tests for model parameter objects (which implement the
