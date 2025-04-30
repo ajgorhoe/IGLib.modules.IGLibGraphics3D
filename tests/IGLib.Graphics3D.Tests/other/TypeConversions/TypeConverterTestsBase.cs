@@ -13,7 +13,7 @@ namespace IGLib.Core.Tests
 {
 
     /// <summary>Tests for type conversion utilities.</summary>
-    public class TypeConverterTests : TestBase<TypeConverterTests>
+    public class TypeConverterTestsBase<TestClass> : TestBase<TestClass>
     {
 
         /// <summary>Calling base constructor initializes things like <see cref="TestBase{TestClass}.Output"/> 
@@ -22,15 +22,11 @@ namespace IGLib.Core.Tests
         /// constructor) by the test framework. I is also stored to Console property, such that
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
-        public TypeConverterTests(ITestOutputHelper output) : base(output)
+        public TypeConverterTestsBase(ITestOutputHelper output) : base(output)
         {  }
 
 
-
-        #region BasicTypeConverter
-
-        ITypeConverter BasicTypeConverter { get; } = new BasicTypeConverter();
-
+        #region GenericConversionTests
 
 
         /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
@@ -107,91 +103,109 @@ namespace IGLib.Core.Tests
             }
         }
 
-        // Conversons from int:
 
-        [Fact]
-        public void BasicTypeConverter_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<int>(BasicTypeConverter, 45);
-        }
+        #endregion GenericConversionTests
 
-        [Fact]
-        public void TypeConverter_RoundTripConversion_IntToDoubleObjectDouble_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<int, double, double>(BasicTypeConverter, 45, 45.0);
-        }
 
-        [Fact]
-        public void TypeConverter_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<int, double>(BasicTypeConverter, 45);
-        }
-
-        // Conversion from double:
-
-        [Fact]
-        public void TypeConverter_RoundTripConversion_DoubleToDoubleObjectToDouble_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<double>(BasicTypeConverter, 6.4);
-        }
-
-        [Fact]
-        public void TypeConverter_RoundTripConversion_IntegerDoubleToIntObjectToInt_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.0, 6);
-        }
-
-        [Fact]
-        public void TypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToInt_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.1, 6);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.9, 7);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.5, 6);
-        }
-
-        [Fact]
-        public void TypeConverter_RoundTripConversion_OwerflowDoubleToIntObjectToInt_IsCorrect()
-        {
-            try
-            {
-                Exception exception = Assert.Throws<InvalidOperationException>(() =>
-                    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 1.0e22, 6)
-                    );
-                Console.WriteLine($"Exception type: {exception.GetType().Name}, message: {exception.Message}");
-                if (exception.InnerException != null)
-                {
-                    Console.WriteLine("Inner exception is null.");
-                }
-                else
-                {
-                    Console.WriteLine($"Inner exception type: {exception.InnerException.GetType().Name}, message: {exception.InnerException.Message}");
-                }
-                // exception.InnerException.Should().NotBeNull();
-                //exception.InnerException.GetType().Should().Be(typeof());
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"Assert.Throws has thrown an exception, type = {ex.GetType().Name}, message: {ex.Message}.");
-                throw;
-            }
-        }
-
-        [Fact]
-        public void TypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToDouble_IsCorrect()
-        {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.1, 6.0);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.9, 7.0);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.5, 6.0);
-        }
+        #region GenericSpeedTests
 
 
 
+        #endregion GenercSpeedTests
+
+
+
+        //#region BasicTypeConverter
+
+        //ITypeConverter BasicTypeConverter { get; } = new BasicTypeConverter();
+
+
+
+        //// Conversons from int:
+
+        //[Fact]
+        //public void BasicTypeConverter_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<int>(BasicTypeConverter, 45);
+        //}
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_IntToDoubleObjectDouble_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<int, double, double>(BasicTypeConverter, 45, 45.0);
+        //}
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<int, double>(BasicTypeConverter, 45);
+        //}
+
+        //// Conversion from double:
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_DoubleToDoubleObjectToDouble_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<double>(BasicTypeConverter, 6.4);
+        //}
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_IntegerDoubleToIntObjectToInt_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.0, 6);
+        //}
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToInt_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.1, 6);
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.9, 7);
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.5, 6);
+        //}
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_OwerflowDoubleToIntObjectToInt_IsCorrect()
+        //{
+        //    try
+        //    {
+        //        Exception exception = Assert.Throws<InvalidOperationException>(() =>
+        //            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 1.0e22, 6)
+        //            );
+        //        Console.WriteLine($"Exception type: {exception.GetType().Name}, message: {exception.Message}");
+        //        if (exception.InnerException != null)
+        //        {
+        //            Console.WriteLine("Inner exception is null.");
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"Inner exception type: {exception.InnerException.GetType().Name}, message: {exception.InnerException.Message}");
+        //        }
+        //        // exception.InnerException.Should().NotBeNull();
+        //        //exception.InnerException.GetType().Should().Be(typeof());
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine($"Assert.Throws has thrown an exception, type = {ex.GetType().Name}, message: {ex.Message}.");
+        //        throw;
+        //    }
+        //}
+
+        //[Fact]
+        //public void TypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToDouble_IsCorrect()
+        //{
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.1, 6.0);
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.9, 7.0);
+        //    TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.5, 6.0);
+        //}
 
 
 
 
 
-        #endregion BasicTypeConverter
+
+
+
+        //#endregion BasicTypeConverter
 
 
 

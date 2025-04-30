@@ -13,7 +13,7 @@ namespace IGLib.Core.Tests
 {
 
     /// <summary>Tests for type conversion utilities.</summary>
-    public class TypeConversionTestsObsolete : TestBase<TypeConverterTests>
+    public class TypeConversionTestsObsolete : TestBase<BasicTypeConverterTests>
     {
 
         /// <summary>Calling base constructor initializes things like <see cref="TestBase{TestClass}.Output"/> 
