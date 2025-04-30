@@ -3,13 +3,9 @@ using FluentAssertions;
 using Xunit.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using IGLib.Tests.Base;
 using System.Linq;
-using System.IO;
-using IGLib.Gr3D;
-using IG.Num;
 using IGLib.Core;
 
 
@@ -184,13 +180,14 @@ namespace IGLib.Core.Tests
 
         #endregion ModelParameter.Creation
 
+        
 
         #endregion ModelParameter
 
 
 
 
-        #region MotelParameterTyped
+        #region ModelParameterTyped
 
 
 
