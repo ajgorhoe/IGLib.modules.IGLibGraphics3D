@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<LangVersion>latest</LangVersion>
 		<RootNamespace>IGLib.Graphic3D.Tests</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
