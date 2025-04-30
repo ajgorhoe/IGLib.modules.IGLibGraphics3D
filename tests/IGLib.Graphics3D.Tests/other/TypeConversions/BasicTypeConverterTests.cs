@@ -115,7 +115,7 @@ namespace IGLib.Core.Tests
 
 
 
-        #region BasicTypeConverter
+        #region BasicTypeConverterTests
 
         ITypeConverter BasicTypeConverter { get; } = new BasicTypeConverter();
 
@@ -199,8 +199,17 @@ namespace IGLib.Core.Tests
         }
 
 
+        #endregion BasicTypeConverterTests
 
-        #endregion BasicTypeConverter
+
+
+
+        #region BasicTypeConverterSpeedTests
+
+
+
+
+        #endregion BasicTypeConverterSpeedTests
 
 
 
