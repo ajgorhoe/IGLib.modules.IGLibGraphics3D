@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+// using System.Reflection;
 
 
 namespace IGLib.Core
@@ -31,7 +31,7 @@ namespace IGLib.Core
                 }
                 if (! targetType.IsAssignableFrom(resultType))
                 {
-                    throw new InvalidCastException();
+                    throw new InvalidCastException($"Cannot assign object of type {resultType.Name} to object that should be of type {targetType.Name}.");
                 }
 
 
