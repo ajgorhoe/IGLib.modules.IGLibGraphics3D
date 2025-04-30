@@ -7,7 +7,9 @@ using System.Reflection;
 
 namespace IGLib.Core
 {
-    public class TypeConversionHelper: TypeConversionHelperBase
+
+    [Obsolete("Teplaced by TypeConverter classes  implementing ITypeConverter.")]
+    public class TypeConversionHelper // : TypeConversionHelperBase
     {
 
         private static readonly Lazy<TypeConversionHelper> _instance = new(() => new TypeConversionHelper());
@@ -20,7 +22,7 @@ namespace IGLib.Core
         /// <summary>Used to cache <see cref="MethodInfo"/> objects used for type conversions.</summary>
         protected readonly ConcurrentDictionary<(Type SourceType, Type TargetType), MethodInfo> _castMethodCache = new();
 
-        private TypeConversionHelper() { }
+        public TypeConversionHelper() { }
 
 
         public object ConvertToType(
