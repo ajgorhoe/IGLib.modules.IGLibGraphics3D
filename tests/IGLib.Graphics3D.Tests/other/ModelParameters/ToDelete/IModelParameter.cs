@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace IGLib.Core.Experimental
+// namespace IGLib.Core.Experimental
+namespace YourNamespace
 {
 
     ///// <summary>Contains data for a single model parameter, similar as <see cref="IModelParameter"/>,
@@ -41,7 +42,7 @@ namespace IGLib.Core.Experimental
     /// parameterized with u and v being independent variables, and the actual surface can be adjusted
     /// (modified) by a set of other parameters such as half-aces of the ellipsoid, shift of the center
     /// from the origin of the coordinate system, and rotations)/</para></summary>
-    public interface IModelParameterExp
+    public interface IModelParameter
     {
 
         /// <summary>Name of the parameter, as is used in the model.</summary>
@@ -60,7 +61,7 @@ namespace IGLib.Core.Experimental
         /// <summary>Whether default parameter vlaue is defined or not. This property has been added 
         /// to the  class such that for non-nullable parameter types it is possible to tell whether 
         /// the default parameter value has been set or not.
-        /// <para>Should be initialized to <see cref="ModelParameterExp.InitialIsDefaultValueDefined"/></para></summary>
+        /// <para>Should be initialized to <see cref="ModelParameter.InitialIsDefaultValueDefined"/></para></summary>
         bool IsDefaultValueDefined { get; }
 
         /// <summary>Current value of the parameter, stored as object.
@@ -71,7 +72,7 @@ namespace IGLib.Core.Experimental
         /// <summary>Whether parameter vlaue is defined or not. This property has been added 
         /// to the  class such that for non-nullable parameter types it is possible to tell whether 
         /// the parameter value has been set or not.
-        /// <para>Should be initialized to <see cref="ModelParameterExp.InitialIsValueDefined"/></para></summary>
+        /// <para>Should be initialized to <see cref="ModelParameter.InitialIsValueDefined"/></para></summary>
         bool IsValueDefined { get; }
 
 

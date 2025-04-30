@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IGLib.Core.Experimental
+// namespace IGLib.Core.Experimental
+namespace YourNamespace
 {
 
 
     /// <inheritdoc/>
-    public class ModelParameterExp : IModelParameterExp
+    public class ModelParameter : IModelParameter
     {
 
         /// <inheritdoc/>
