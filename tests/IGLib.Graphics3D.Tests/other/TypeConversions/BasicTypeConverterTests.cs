@@ -156,7 +156,6 @@ namespace IGLib.Core.Tests
             }
         }
 
-
         [Fact]
         protected virtual void SpecificTypeConverter_RoundTripConversion_DoubleStringToDoubleObjectToInt_IsCorrect()
         {
@@ -169,7 +168,21 @@ namespace IGLib.Core.Tests
             TypeConverter_ConversionToObjectAndBackTest<double, string, string>(TypeConverter, 18.66, "18.66");
         }
 
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_ClassToClassObjectToClass_IsCorrect()
+        {
+            TypeConverter_ConversionToObjectAndBackTest<DerivedClass>(TypeConverter, 
+                new DerivedClass());
+        }
 
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_DerivedClassToBaseClassObjectToBaseClass_IsCorrect()
+        {
+            DerivedClass originalObject = new TypeConverterTestsBase<BasicTypeConverterTests>.DerivedClass();
+            DerivedClass expectedRestoredObject = originalObject;
+            TypeConverter_ConversionToObjectAndBackTest<DerivedClass, BaseClass, BaseClass>(TypeConverter, 
+                originalObject, expectedRestoredObject);
+        }
 
         #endregion BasicTypeConverterTests
 

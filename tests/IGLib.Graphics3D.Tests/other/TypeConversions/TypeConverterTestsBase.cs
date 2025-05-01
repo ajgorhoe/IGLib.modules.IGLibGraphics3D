@@ -77,11 +77,14 @@ namespace IGLib.Core.Tests
             OriginalType originalValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
         {
             // Arrange
-            Type targetType = typeof(TargetType);
-            RestoredType restored;
+            Type declaredOriginalType = typeof(OriginalType);
+            Type requestedTargetType = typeof(TargetType);
+            Type requestedRestoredType = typeof(RestoredType);
+            RestoredType restoredValue;
             Console.WriteLine($"Converting value of type {originalValue.GetType().Name}, value = {originalValue}. to object, and storing the object.");
             // Act
-            object assignedObject = typeConverter.ConvertToType(originalValue, targetType);
+            object assignedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
+            Console.WriteLine($"Assigned object: type = {assignedObject.GetType().Name}, value: {assignedObject}");
             if (assignedObject == null)
             {
                 Console.WriteLine("Warning: Converted object is null.");
@@ -91,21 +94,70 @@ namespace IGLib.Core.Tests
                 Console.WriteLine($"Converted object is of type {assignedObject.GetType().Name}, value: {assignedObject}");
             }
             // Assert
-            assignedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} value can be convertet to object of type {targetType.Name}.");
-            assignedObject.GetType().Should().Be(targetType, because: $"Type of the assigned object should mach the target typ {targetType.Name}.");
-            if (restoreObjectBackToValue)
+            if (originalValue == null)
             {
-                // restored = (RestoredType)assignedObject;
-                restored = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
-                if (restored == null)
+                if (assignedObject != null)
                 {
-                    Console.WriteLine("WARNING: Restored value is null.");
+                    Console.WriteLine($"Warning: the original value is null but the restored value is not null.");
+                }
+                assignedObject.Should().BeNull(because: "null original should produce null when converted to object.");
+            } else
+            {
+                // originalValue != null
+                if (assignedObject == null)
+                {
+                    Console.WriteLine("WARNING: the original value is not null but the assigned object is null.");
+                }
+                assignedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} should be convertet to object of type {requestedTargetType.Name}.");
+                Type actualTargetType = assignedObject.GetType();
+                if (requestedTargetType.IsClass)
+                {
+                    requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true, 
+                        because: "The requested target type should be assignable from the actual type of the assigned object.");
                 }
                 else
                 {
-                    Console.WriteLine($"Value of type {restored.GetType().Name} restored from the object: {restored}");
+                    assignedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the assigned object should mach the target type {requestedTargetType.Name}.");
                 }
-                restored.Should().Be(expectedRestoredValue, because: $"Restoring object that hods {targetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
+            }
+            if (restoreObjectBackToValue)
+            {
+                // Q: Should we do it like this in some cases?: restored = (RestoredType)assignedObject;
+                restoredValue = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
+                if (restoredValue == null)
+                {
+                    Console.WriteLine("Restored value is null.");
+                }
+                Console.WriteLine($"Restored value: type = {restoredValue.GetType().Name}, value: {restoredValue}");
+                if (assignedObject == null)
+                {
+                    if (restoredValue != null)
+                    {
+                        Console.WriteLine($"Warning: assigned object is null but the restored value is not null.");
+                    }
+                    restoredValue.Should().BeNull(because: "null assigned object should result in null restored value.");
+                }
+                else
+                {
+                    // assignedObject is NOT null
+                    if (restoredValue == null)
+                    {
+                        Console.WriteLine("WARNING: Restored value is null but assignd object from which value was resttored is not.");
+                    }
+                    restoredValue.Should().NotBeNull(because: "The assigned object is not null, therefore the restored object should also not be null.");
+                    Type actualRestoredType = restoredValue.GetType();
+                    Console.WriteLine($"Value of type {actualRestoredType.Name} restored from the object: {restoredValue}");
+                    if (requestedRestoredType.IsClass)
+                    {
+                        requestedRestoredType.IsAssignableFrom(actualRestoredType).Should().Be(true,
+                            because: "The requested target type should be assignable from the actual type of the assigned object.");
+                    }
+                    else
+                    {
+                        assignedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the assigned object should mach the target type {requestedTargetType.Name}.");
+                    }
+                    restoredValue.Should().Be(expectedRestoredValue, because: $"Restoring object that hods {requestedTargetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
+                }
             }
         }
 
@@ -622,67 +674,6 @@ namespace IGLib.Core.Tests
 
 
 
-
-        protected class ExplicitlyConvertibleFromItself
-        {
-            public ExplicitlyConvertibleFromItself()
-            {
-                MyId4 = 396;
-                MyName4 = $"{GetType().Name} object";
-                MyDescription4 = $"This is an instance of {GetType().Name}.";
-            }
-            public override string ToString()
-            {
-                return $"{GetType().Name}: MyId4 = {MyId4}, MyName4 = \"{MyName4}\", MyDescription4 \"{MyDescription4}\".";
-            }
-            public int MyId4 { get; set; }
-            public string MyName4 { get; set; }
-            public string MyDescription4 { get; set; }
-            public static explicit operator ExplicitlyConvertibleFromItself(ExplicitlyConvertibleFromItself source)
-            {
-                return new ExplicitlyConvertibleFromItself();
-            }
-
-            // Implementations for equality comparisson:
-            public override bool Equals(object obj) => this.Equals(obj as ExplicitlyConvertibleFromItself);
-            public bool Equals(ExplicitlyConvertibleFromItself compared)
-            {
-                if (compared is null)
-                {
-                    return false;
-                }
-                // Optimization for a common success case.
-                if (Object.ReferenceEquals(this, compared))
-                {
-                    return true;
-                }
-                // If run-time types are not exactly the same, return false.
-                if (this.GetType() != compared.GetType())
-                {
-                    return false;
-                }
-                // Return true if the fields match.
-                // Note that the base class is not invoked because it is
-                // System.Object, which defines Equals as reference equality.
-                return (MyId4 == compared.MyId4) && (MyName4 == compared.MyName4) && (MyDescription4 == compared.MyDescription4);
-            }
-            public override int GetHashCode() => (MyId4, MyName4, MyDescription4).GetHashCode();
-            public static bool operator ==(ExplicitlyConvertibleFromItself lhs, ExplicitlyConvertibleFromItself rhs)
-            {
-                if (lhs is null)
-                {
-                    if (rhs is null)
-                    {
-                        return true;
-                    }
-                    // Only the left side is null.
-                    return false;
-                }
-                // Equals handles case of null on right side.
-                return lhs.Equals(rhs);
-            }
-            public static bool operator !=(ExplicitlyConvertibleFromItself lhs, ExplicitlyConvertibleFromItself rhs) => !(lhs == rhs);
-        }
 
 
         #endregion ClassesForTests
