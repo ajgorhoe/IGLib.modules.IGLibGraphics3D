@@ -12,7 +12,8 @@ using IGLib.Core;
 namespace IGLib.Core.Tests
 {
 
-    /// <summary>Tests for type conversion utilities.</summary>
+    /// <summary>Tests of the basic type converter (<see cref="BasicTypeConverter"/>,
+    /// implementation of the <see cref="ITypeConverter"/> interface).</summary>
     public class BasicTypeConverterTests : TypeConverterTestsBase<BasicTypeConverterTests>
     {
 
@@ -88,7 +89,7 @@ namespace IGLib.Core.Tests
                     TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 1.0e22, 6)
                     );
                 Console.WriteLine($"Exception type: {exception.GetType().Name}, message: {exception.Message}");
-                if (exception.InnerException != null)
+                if (exception.InnerException == null)
                 {
                     Console.WriteLine("Inner exception is null.");
                 }
@@ -96,8 +97,8 @@ namespace IGLib.Core.Tests
                 {
                     Console.WriteLine($"Inner exception type: {exception.InnerException.GetType().Name}, message: {exception.InnerException.Message}");
                 }
-                // exception.InnerException.Should().NotBeNull();
-                //exception.InnerException.GetType().Should().Be(typeof());
+                exception.InnerException.Should().NotBeNull();
+                exception.InnerException.GetType().Should().Be(typeof(OverflowException));
             }
             catch(Exception ex)
             {
@@ -114,8 +115,59 @@ namespace IGLib.Core.Tests
             TypeConverter_ConversionToObjectAndBackTest<double, int, double>(TypeConverter, 6.5, 6.0);
         }
 
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_DoubleToStringObjectToDouble_IsCorrect()
+        {
+            TypeConverter_ConversionToObjectAndBackTest<double, string, double>(TypeConverter, 45.6, 45.6);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_StringToDoubleObjectToDouble_IsCorrect()
+        {
+            TypeConverter_ConversionToObjectAndBackTest<string, double, double>(TypeConverter, "123456.55e-16", 123_456.55e-16);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_StringWithUnderscoresToDoubleObjectToDouble_IsCorrect()
+        {
+
+            try
+            {
+                Exception exception = Assert.Throws<InvalidOperationException>(() =>
+                    TypeConverter_ConversionToObjectAndBackTest<string, double, double>(TypeConverter, 
+                        "123_456.55e-16", 123_456.55e-16)
+                    );
+                Console.WriteLine($"Exception type: {exception.GetType().Name}, message: {exception.Message}");
+                if (exception.InnerException == null)
+                {
+                    Console.WriteLine("Inner exception is null.");
+                }
+                else
+                {
+                    Console.WriteLine($"Inner exception type: {exception.InnerException.GetType().Name}, message: {exception.InnerException.Message}");
+                }
+                exception.InnerException.Should().NotBeNull();
+                exception.InnerException.GetType().Should().Be(typeof(FormatException));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Assert.Throws has thrown an exception, type = {ex.GetType().Name}, message: {ex.Message}.");
+                throw;
+            }
+        }
 
 
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_DoubleStringToDoubleObjectToInt_IsCorrect()
+        {
+            TypeConverter_ConversionToObjectAndBackTest<string, double, int>(TypeConverter, "12.21", 12);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_RoundTripConversion_DoubleToStringObjectToString_IsCorrect()
+        {
+            TypeConverter_ConversionToObjectAndBackTest<double, string, string>(TypeConverter, 18.66, "18.66");
+        }
 
 
 
