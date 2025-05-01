@@ -49,13 +49,13 @@ namespace IGLib.Core.Tests
         [Fact]
         protected virtual void SpecificTypeConverter_RoundTripConversion_IntToDoubleObjectToDouble_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<int, double, double>(TypeConverter, 45, 45.0);
+            TypeConverter_ConversionToObjectAndBackTest<int, double, double>(TypeConverter, 45, 45.0, 45.0);
         }
 
         [Fact]
         protected virtual void SpecificTypeConverter_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<int, double>(TypeConverter, 45);
+            TypeConverter_ConversionToObjectAndBackTest<int, double, int>(TypeConverter, 45, 45.0, 45);
         }
 
         // Conversion from double:
@@ -69,15 +69,15 @@ namespace IGLib.Core.Tests
         [Fact]
         protected virtual void SpecificTypeConverter_RoundTripConversion_IntegerDoubleToIntObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.0, 6);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.0, 6, 6);
         }
 
         [Fact]
         protected virtual void SpecificTypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.1, 6);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.9, 7);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.5, 6);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.1, 6, 6);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.9, 7, 7);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.5, 6, 6);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace IGLib.Core.Tests
             try
             {
                 Exception exception = Assert.Throws<InvalidOperationException>(() =>
-                    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 1.0e22, 6)
+                    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 1.0e22, 6, 6)
                     );
                 Console.WriteLine($"Exception type: {exception.GetType().Name}, message: {exception.Message}");
                 if (exception.InnerException == null)
