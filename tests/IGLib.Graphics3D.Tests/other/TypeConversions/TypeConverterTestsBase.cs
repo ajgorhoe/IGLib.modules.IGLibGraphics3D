@@ -39,33 +39,12 @@ namespace IGLib.Core.Tests
         /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
         /// but with target type and the type of restored variable both equal to type of the original variable, and also
         /// the expected restored value being equal to the original value.</summary>
-        protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType>(ITypeConverter typeConverter,
-            OriginalType original, bool restoreObjectBackToValue = true)
+        protected void TypeConverter_ConversionToObjectAndBackTest<CommonType>(ITypeConverter typeConverter,
+            CommonType original, bool restoreObjectBackToValue = true)
         {
-            TypeConverter_ConversionToObjectAndBackTest<OriginalType, OriginalType, OriginalType>(typeConverter,
-                original, original, restoreObjectBackToValue);
+            TypeConverter_ConversionToObjectAndBackTest<CommonType, CommonType, CommonType>(typeConverter,
+                original, original, original, restoreObjectBackToValue);
         }
-
-        /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        /// but with the type of restored variable equal to type of the original variable.</summary>
-        protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType>(ITypeConverter typeConverter,
-            OriginalType original, OriginalType expectedRestoredValue, bool restoreObjectBackToValue = true)
-        {
-            TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(typeConverter,
-                original, expectedRestoredValue, restoreObjectBackToValue);
-        }
-
-
-        /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        /// but with the type of restored variable equal to type of the original variable, and also with expected
-        /// restored value equal to the original value.</summary>
-        protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType>(ITypeConverter typeConverter,
-            OriginalType original, bool restoreObjectBackToValue = true)
-        {
-            TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(typeConverter,
-                original, original, restoreObjectBackToValue);
-        }
-
 
         /// <summary>Performs test of conversion via <see cref="TypeConversionHelper"/> from a value of type
         /// <typeparamref name="OriginalType"/> to an object variable of target type <typeparamref name="TargetType"/>
@@ -74,7 +53,7 @@ namespace IGLib.Core.Tests
         /// <param name="expectedRestoredValue">Expected restored value after conversion of original to object and restoring back to original.</param>
         /// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
         protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(ITypeConverter typeConverter,
-            OriginalType originalValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
+            OriginalType originalValue, TargetType expectedassignedObjectValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
         {
             // Arrange
             Type declaredOriginalType = typeof(OriginalType);
