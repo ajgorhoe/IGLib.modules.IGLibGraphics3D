@@ -26,150 +26,66 @@ namespace IGLib.Core.Tests
         {  }
 
 
-        //#region GenericConversionTests
-
-
-        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        ///// but with target type and the type of restored variable both equal to type of the original variable, and also
-        ///// the expected restored value being equal to the original value.</summary>
-        //protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType>(ITypeConverter typeConverter,
-        //    OriginalType original, bool restoreObjectBackToValue = true)
-        //{
-        //    TypeConverter_ConversionToObjectAndBackTest<OriginalType, OriginalType, OriginalType>(typeConverter,
-        //        original, original, restoreObjectBackToValue);
-        //}
-
-        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        ///// but with the type of restored variable equal to type of the original variable.</summary>
-        //protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType>(ITypeConverter typeConverter,
-        //    OriginalType original, OriginalType expectedRestoredValue, bool restoreObjectBackToValue = true)
-        //{
-        //    TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(typeConverter,
-        //        original, expectedRestoredValue, restoreObjectBackToValue);
-        //}
-
-
-        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        ///// but with the type of restored variable equal to type of the original variable, and also with expected
-        ///// restored value equal to the original value.</summary>
-        //protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType>(ITypeConverter typeConverter,
-        //    OriginalType original, bool restoreObjectBackToValue = true)
-        //{
-        //    TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(typeConverter,
-        //        original, original, restoreObjectBackToValue);
-        //}
-
-
-        ///// <summary>Performs test of conversion via <see cref="TypeConversionHelper"/> from a value of type
-        ///// <typeparamref name="OriginalType"/> to an object variable of target type <typeparamref name="TargetType"/>
-        ///// and back to value of type <typeparamref name="RestoredType"/>.</summary>
-        ///// <param name="originalValue">Original value that is converted to object.</param>
-        ///// <param name="expectedRestoredValue">Expected restored value after conversion of original to object and restoring back to original.</param>
-        ///// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
-        //protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(ITypeConverter typeConverter,
-        //    OriginalType originalValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
-        //{
-        //    // Arrange
-        //    Type targetType = typeof(TargetType);
-        //    // int original = 4353;
-        //    RestoredType restored;
-        //    Console.WriteLine($"Converting value of type {originalValue.GetType().Name}, value = {originalValue}. to object, and storing the object.");
-        //    // Act
-        //    object assignedObject = typeConverter.ConvertToType(originalValue, targetType);
-        //    if (assignedObject == null)
-        //    {
-        //        Console.WriteLine("Warning: Converted object is null.");
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine($"Converted object is of type {assignedObject.GetType().Name}, value: {assignedObject}");
-        //    }
-        //    // Assert
-        //    assignedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} value can be convertet to object of type {targetType.Name}.");
-        //    assignedObject.GetType().Should().Be(targetType, because: $"Type of the assigned object should mach the target typ {targetType.Name}.");
-        //    if (restoreObjectBackToValue)
-        //    {
-        //        // restored = (RestoredType)assignedObject;
-        //        restored = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
-        //        if (restored == null)
-        //        {
-        //            Console.WriteLine("WARNING: Restored value is null.");
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine($"Value of type {restored.GetType().Name} restored from the object: {restored}");
-        //        }
-        //        restored.Should().Be(expectedRestoredValue, because: $"Restoring object that hods {targetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
-        //    }
-        //}
-
-
-        //#endregion GenericConversionTests
-
-
-        //#region GenericSpeedTests
-
-
-
-        //#endregion GenercSpeedTests
-
-
-
         #region BasicTypeConverterTests
 
-        ITypeConverter BasicTypeConverter { get; } = new BasicTypeConverter();
+        /// <summary>The type converter that is under test.</summary>
+        protected virtual ITypeConverter TypeConverter { get; } = new BasicTypeConverter();
 
+        /// <summary>Number of executions in speed tests.</summary>
+        protected virtual int NumExecutions { get; } = 10_000;
 
+        /// <summary>Minimum required number of executions per second in speed tests.</summary>
+        protected virtual double MinPerSecond { get; } = 100_000;
 
         // Conversons from int:
 
         [Fact]
-        public void BasicTypeConverter_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<int>(BasicTypeConverter, 45);
+            TypeConverter_ConversionToObjectAndBackTest<int>(TypeConverter, 45);
         }
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_IntToDoubleObjectDouble_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_IntToDoubleObjectToDouble_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<int, double, double>(BasicTypeConverter, 45, 45.0);
+            TypeConverter_ConversionToObjectAndBackTest<int, double, double>(TypeConverter, 45, 45.0);
         }
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<int, double>(BasicTypeConverter, 45);
+            TypeConverter_ConversionToObjectAndBackTest<int, double>(TypeConverter, 45);
         }
 
         // Conversion from double:
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_DoubleToDoubleObjectToDouble_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_DoubleToDoubleObjectToDouble_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<double>(BasicTypeConverter, 6.4);
+            TypeConverter_ConversionToObjectAndBackTest<double>(TypeConverter, 6.4);
         }
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_IntegerDoubleToIntObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_IntegerDoubleToIntObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.0, 6);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.0, 6);
         }
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToInt_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.1, 6);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.9, 7);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 6.5, 6);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.1, 6);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.9, 7);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 6.5, 6);
         }
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_OwerflowDoubleToIntObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_OwerflowDoubleToIntObjectToInt_IsCorrect()
         {
             try
             {
                 Exception exception = Assert.Throws<InvalidOperationException>(() =>
-                    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(BasicTypeConverter, 1.0e22, 6)
+                    TypeConverter_ConversionToObjectAndBackTest<double, int, int>(TypeConverter, 1.0e22, 6)
                     );
                 Console.WriteLine($"Exception type: {exception.GetType().Name}, message: {exception.Message}");
                 if (exception.InnerException != null)
@@ -191,16 +107,36 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        public void TypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToDouble_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_NonintegerDoubleToIntObjectToDouble_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.1, 6.0);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.9, 7.0);
-            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(BasicTypeConverter, 6.5, 6.0);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(TypeConverter, 6.1, 6.0);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(TypeConverter, 6.9, 7.0);
+            TypeConverter_ConversionToObjectAndBackTest<double, int, double>(TypeConverter, 6.5, 6.0);
         }
+
+
+
+
 
 
         #endregion BasicTypeConverterTests
 
+
+
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
+        {
+            TypeConverter_Speed_ConversionToObjectAndBackTest<int, double>(TypeConverter, NumExecutions, MinPerSecond, 
+                45);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
+        {
+            TypeConverter_Speed_ConversionToObjectAndBackTest<int>(TypeConverter, NumExecutions, MinPerSecond, 
+                45);
+        }
 
 
 
