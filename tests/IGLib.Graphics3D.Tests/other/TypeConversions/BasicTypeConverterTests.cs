@@ -193,8 +193,8 @@ namespace IGLib.Core.Tests
         [Fact]
         protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
         {
-            TypeConverter_Speed_ConversionToObjectAndBackTest<int, double>(TypeConverter, NumExecutions, MinPerSecond, 
-                45);
+            TypeConverter_Speed_ConversionToObjectAndBackTest<int, double, double>(TypeConverter, NumExecutions, MinPerSecond, 
+                45, 45.0, 45.0);
         }
 
         [Fact]

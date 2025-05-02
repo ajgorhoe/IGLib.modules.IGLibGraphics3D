@@ -53,7 +53,7 @@ namespace IGLib.Core.Tests
         /// <param name="expectedRestoredValue">Expected restored value after conversion of original to object and restoring back to original.</param>
         /// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
         protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(ITypeConverter typeConverter,
-            OriginalType originalValue, TargetType expectedassignedObjectValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
+            OriginalType originalValue, TargetType expectedAssignedObjectValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
         {
             // Arrange
             Type declaredOriginalType = typeof(OriginalType);
@@ -149,6 +149,9 @@ namespace IGLib.Core.Tests
         #region GenericConversionSpeedTests
 
 
+
+
+
         /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
         /// but with target type and the type of restored variable both equal to type of the original variable, and also
         /// the expected restored value being equal to the original value.</summary>
@@ -158,32 +161,32 @@ namespace IGLib.Core.Tests
         {
             TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, OriginalType, OriginalType>(
                 typeConverter, numExecutions, minExecutionsPerSecond,
-                original, original, restoreObjectBackToValue);
+                original, original, original, restoreObjectBackToValue);
         }
 
-        /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        /// but with the type of restored variable equal to type of the original variable.</summary>
-        protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType>(
-            ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
-            OriginalType original, OriginalType expectedRestoredValue, bool restoreObjectBackToValue = true)
-        {
-            TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(
-                typeConverter, numExecutions, minExecutionsPerSecond,
-                original, expectedRestoredValue, restoreObjectBackToValue);
-        }
+        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
+        ///// but with the type of restored variable equal to type of the original variable.</summary>
+        //protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType>(
+        //    ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
+        //    OriginalType original, OriginalType expectedRestoredValue, bool restoreObjectBackToValue = true)
+        //{
+        //    TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(
+        //        typeConverter, numExecutions, minExecutionsPerSecond,
+        //        original, expectedRestoredValue, restoreObjectBackToValue);
+        //}
 
 
-        /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        /// but with the type of restored variable equal to type of the original variable, and also with expected
-        /// restored value equal to the original value.</summary>
-        protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType>(
-            ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
-            OriginalType original, bool restoreObjectBackToValue = true)
-        {
-            TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(
-                typeConverter, numExecutions, minExecutionsPerSecond,
-                original, original, restoreObjectBackToValue);
-        }
+        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
+        ///// but with the type of restored variable equal to type of the original variable, and also with expected
+        ///// restored value equal to the original value.</summary>
+        //protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType>(
+        //    ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
+        //    OriginalType original, bool restoreObjectBackToValue = true)
+        //{
+        //    TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(
+        //        typeConverter, numExecutions, minExecutionsPerSecond,
+        //        original, original, restoreObjectBackToValue);
+        //}
 
 
         /// <summary>Performs test of conversion via <see cref="TypeConversionHelper"/> from a value of type
@@ -194,16 +197,20 @@ namespace IGLib.Core.Tests
         /// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
         protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(
             ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
-            OriginalType originalValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
+            OriginalType originalValue, TargetType expectedAssignedObjectValue, RestoredType expectedRestoredValue, 
+            bool restoreObjectBackToValue = true)
         {
+            Console.WriteLine("Conversion SPEED test:");
             // First, just perform the ordinary test, such that test vreaks if the case does not work correctly:
             // Arrange
-            Type targetType = typeof(TargetType);
-            RestoredType restored;
-            Console.WriteLine("Conversion SPEED test:");
+            Type declaredOriginalType = typeof(OriginalType);
+            Type requestedTargetType = typeof(TargetType);
+            Type requestedRestoredType = typeof(RestoredType);
+            RestoredType restoredValue;
             Console.WriteLine($"Converting value of type {originalValue.GetType().Name}, value = {originalValue}. to object, and storing the object.");
             // Act
-            object assignedObject = typeConverter.ConvertToType(originalValue, targetType);
+            object assignedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
+            Console.WriteLine($"Assigned object: type = {assignedObject.GetType().Name}, value: {assignedObject}");
             if (assignedObject == null)
             {
                 Console.WriteLine("Warning: Converted object is null.");
@@ -213,22 +220,73 @@ namespace IGLib.Core.Tests
                 Console.WriteLine($"Converted object is of type {assignedObject.GetType().Name}, value: {assignedObject}");
             }
             // Assert
-            assignedObject.Should().NotBeNull(because: $"Precond: Value of type {originalValue.GetType().Name} value can be convertet to object of type {targetType.Name}.");
-            assignedObject.GetType().Should().Be(targetType, because: $"Precond: Type of the assigned object should mach the target typ {targetType.Name}.");
-            if (restoreObjectBackToValue)
+            if (originalValue == null)
             {
-                // restored = (RestoredType)assignedObject;
-                restored = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
-                if (restored == null)
+                if (assignedObject != null)
                 {
-                    Console.WriteLine("WARNING: Restored value is null.");
+                    Console.WriteLine($"Warning: the original value is null but the restored value is not null.");
+                }
+                assignedObject.Should().BeNull(because: "null original should produce null when converted to object.");
+            }
+            else
+            {
+                // originalValue != null
+                if (assignedObject == null)
+                {
+                    Console.WriteLine("WARNING: the original value is not null but the assigned object is null.");
+                }
+                assignedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} should be convertet to object of type {requestedTargetType.Name}.");
+                Type actualTargetType = assignedObject.GetType();
+                if (requestedTargetType.IsClass)
+                {
+                    requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true,
+                        because: "The requested target type should be assignable from the actual type of the assigned object.");
                 }
                 else
                 {
-                    Console.WriteLine($"Value of type {restored.GetType().Name} restored from the object: {restored}");
+                    assignedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the assigned object should mach the target type {requestedTargetType.Name}.");
                 }
-                restored.Should().Be(expectedRestoredValue, because: $"Precond: Restoring object that hods {targetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
             }
+            if (restoreObjectBackToValue)
+            {
+                // Q: Should we do it like this in some cases?: restored = (RestoredType)assignedObject;
+                restoredValue = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
+                if (restoredValue == null)
+                {
+                    Console.WriteLine("Restored value is null.");
+                }
+                Console.WriteLine($"Restored value: type = {restoredValue.GetType().Name}, value: {restoredValue}");
+                if (assignedObject == null)
+                {
+                    if (restoredValue != null)
+                    {
+                        Console.WriteLine($"Warning: assigned object is null but the restored value is not null.");
+                    }
+                    restoredValue.Should().BeNull(because: "null assigned object should result in null restored value.");
+                }
+                else
+                {
+                    // assignedObject is NOT null
+                    if (restoredValue == null)
+                    {
+                        Console.WriteLine("WARNING: Restored value is null but assignd object from which value was resttored is not.");
+                    }
+                    restoredValue.Should().NotBeNull(because: "The assigned object is not null, therefore the restored object should also not be null.");
+                    Type actualRestoredType = restoredValue.GetType();
+                    Console.WriteLine($"Value of type {actualRestoredType.Name} restored from the object: {restoredValue}");
+                    if (requestedRestoredType.IsClass)
+                    {
+                        requestedRestoredType.IsAssignableFrom(actualRestoredType).Should().Be(true,
+                            because: "The requested target type should be assignable from the actual type of the assigned object.");
+                    }
+                    else
+                    {
+                        assignedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the assigned object should mach the target type {requestedTargetType.Name}.");
+                    }
+                    restoredValue.Should().Be(expectedRestoredValue, because: $"Restoring object that hods {requestedTargetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
+                }
+            }
+
             // Then, do a similar thing in a loop, but without assertions:
             // Speifyinf the frequency of wtiring a dot:
             int frequency = 1;
@@ -245,10 +303,10 @@ namespace IGLib.Core.Tests
             {
 
                 // Act
-                assignedObject = typeConverter.ConvertToType(originalValue, targetType);
+                assignedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
                 if (restoreObjectBackToValue)
                 {
-                    restored = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
+                    restoredValue = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
                 }
                 if (i > 0 && i % frequency == 0)
                 {
@@ -263,7 +321,6 @@ namespace IGLib.Core.Tests
             Console.WriteLine($"Number of executions per second: {executionsPerSecond}");
             Console.WriteLine($"         In millions per second: {executionsPerSecond / 1.0e6}");
             executionsPerSecond.Should().BeGreaterThanOrEqualTo(minExecutionsPerSecond);
-
         }
 
         #endregion GenericConversionSpeedTests
