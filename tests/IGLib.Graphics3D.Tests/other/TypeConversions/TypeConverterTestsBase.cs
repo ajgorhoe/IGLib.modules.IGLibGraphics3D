@@ -38,7 +38,7 @@ namespace IGLib.Core.Tests
 
         /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
         /// but with target type and the type of restored variable both equal to type of the original variable, and also
-        /// the expected restored value being equal to the original value.</summary>
+        /// the expected assigned object value and the expected restored value being equal to the original value.</summary>
         protected void TypeConverter_ConversionToObjectAndBackTest<CommonType>(ITypeConverter typeConverter,
             CommonType original, bool restoreObjectBackToValue = true)
         {
@@ -46,12 +46,20 @@ namespace IGLib.Core.Tests
                 original, original, original, restoreObjectBackToValue);
         }
 
-        /// <summary>Performs test of conversion via <see cref="TypeConversionHelper"/> from a value of type
-        /// <typeparamref name="OriginalType"/> to an object variable of target type <typeparamref name="TargetType"/>
-        /// and back to value of type <typeparamref name="RestoredType"/>.</summary>
-        /// <param name="originalValue">Original value that is converted to object.</param>
-        /// <param name="expectedRestoredValue">Expected restored value after conversion of original to object and restoring back to original.</param>
+        /// <summary>Performs test of conversion via <see cref="ITypeConverter"/> from a value of type
+        /// <typeparamref name="OriginalType"/> to a value of the target type <typeparamref name="TargetType"/>
+        /// to be assigned to a variable of type object, and then converts this value to type <typeparamref name="RestoredType"/>
+        /// and copies (restores) it to a variable of that type.</summary>
+        /// <param name="typeConverter">Converter used for type conversion.</param>
+        /// <param name="originalValue">Original value that is converted converted to an object of type <see cref="TargetType"/>.</param>
+        /// <param name="expectedAssignedObjectValue">The expected value after conversion of the <paramref name="originalValue"/> to
+        /// a value of type <typeparamref name="TargetType"/> and assignment to a variable of type <see cref="object"/></param>
+        /// <param name="expectedRestoredValue">Expected restored value after conversion of the original value and storing it in 
+        /// a variable of type object and restoring it from the object variable to a variable of type <typeparamref name="RestoredType"/>.</param>
         /// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
+        /// <typeparam name="OriginalType">Type of the origial value to be stored as object.</typeparam>
+        /// <typeparam name="TargetType">Type to which the <paramref name="originalValue"/> will be converted when being stored in an object variable.</typeparam>
+        /// <typeparam name="RestoredType">Type of variable to which the value will be restored from the variable of type object.</typeparam>
         protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(ITypeConverter typeConverter,
             OriginalType originalValue, TargetType expectedAssignedObjectValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
         {
@@ -152,9 +160,9 @@ namespace IGLib.Core.Tests
 
 
 
-        /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
+        /// <summary>Like <see cref="TypeConverter_Speed_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(ITypeConverter, int, double, OriginalType, TargetType, RestoredType, bool)"/>,
         /// but with target type and the type of restored variable both equal to type of the original variable, and also
-        /// the expected restored value being equal to the original value.</summary>
+        /// the expected assiged object value and the restored value being equal to the original value.</summary>
         protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType>(
             ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
             OriginalType original, bool restoreObjectBackToValue = true)
@@ -164,36 +172,18 @@ namespace IGLib.Core.Tests
                 original, original, original, restoreObjectBackToValue);
         }
 
-        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        ///// but with the type of restored variable equal to type of the original variable.</summary>
-        //protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType>(
-        //    ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
-        //    OriginalType original, OriginalType expectedRestoredValue, bool restoreObjectBackToValue = true)
-        //{
-        //    TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(
-        //        typeConverter, numExecutions, minExecutionsPerSecond,
-        //        original, expectedRestoredValue, restoreObjectBackToValue);
-        //}
 
 
-        ///// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
-        ///// but with the type of restored variable equal to type of the original variable, and also with expected
-        ///// restored value equal to the original value.</summary>
-        //protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType>(
-        //    ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
-        //    OriginalType original, bool restoreObjectBackToValue = true)
-        //{
-        //    TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, OriginalType>(
-        //        typeConverter, numExecutions, minExecutionsPerSecond,
-        //        original, original, restoreObjectBackToValue);
-        //}
-
-
-        /// <summary>Performs test of conversion via <see cref="TypeConversionHelper"/> from a value of type
+        /// <summary>Performs a speed test of conversion via <see cref="ITypeConverter"/> from a value of type
         /// <typeparamref name="OriginalType"/> to an object variable of target type <typeparamref name="TargetType"/>
-        /// and back to value of type <typeparamref name="RestoredType"/>.</summary>
-        /// <param name="originalValue">Original value that is converted to object.</param>
-        /// <param name="expectedRestoredValue">Expected restored value after conversion of original to object and restoring back to original.</param>
+        /// and back to value of type <typeparamref name="RestoredType"/>.
+        /// <para>Expect for parameters related to measurement of the speed of conversions, parameters have the same meaning
+        /// as in the <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(ITypeConverter, 
+        /// OriginalType, TargetType, RestoredType, bool)"/> method. Type parameters also have the same meaning as in
+        /// that method.</para></summary>
+        /// <param name="numExecutions">Number of executinos for speed measurements.</param>
+        /// <param name="minExecutionsPerSecond">The expected minimal speed, in number of executions of type conversions 
+        /// per second.</param>
         /// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
         protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(
             ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
