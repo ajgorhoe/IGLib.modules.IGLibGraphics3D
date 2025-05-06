@@ -298,7 +298,8 @@ namespace IGLib.Core.Tests
                 {
                     restoredValue = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
                 }
-                if (i > 0 && i % frequency == 0)
+                if (frequency < 0 && /* Exclude printing dots! */
+                    i > 0 && i % frequency == 0)
                 {
                     Console.WriteLine($". ({i})");
                 }
