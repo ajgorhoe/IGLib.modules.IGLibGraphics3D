@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections;
 using IGLib.Core;
 using IGLib.Core.CollectionExtensions;
+using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
 
 namespace IGLib.Core.Tests
 {
@@ -29,12 +30,28 @@ namespace IGLib.Core.Tests
         #region ToReadableString_ForCollections_Tests
 
         [Fact]
-        protected void CollectionExtensoins_ToReadableString_Array_WorksCorrectly()
+        protected void CollectionExtensoins_ToReadableString_ArrayOfInt_WorksCorrectly()
         {
             Console.WriteLine("Converting an integer arry to a readable sring...");
-            int[] collection = { 1, 2, 3, 4, 5 };
-            string stringRepresentation = intArray.ToReadableString();
-            Console.WriteLine($"Produced string:<<\n{stringRepresentation}\n>>");
+            int[] collection = IntArray;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string:\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrEmpty();
+            stringRepresentation.Should().Contain("{");
+            stringRepresentation.Should().Contain("}");
+            foreach (int i in collection)
+            {
+                stringRepresentation.Should().Contain(i.ToString());
+            }
+        }
+
+        [Fact]
+        protected void CollectionExtensoins_ToReadableString_ListOfInt_WorksCorrectly()
+        {
+            Console.WriteLine("Converting an integer arry to a readable sring...");
+            List<int> collection = IntList;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string:\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrEmpty();
             stringRepresentation.Should().Contain("{");
             stringRepresentation.Should().Contain("}");
@@ -46,50 +63,68 @@ namespace IGLib.Core.Tests
 
 
 
+        //[Fact]
+        //protected void CollectionExtensoins_ToReadableString_Array_WorksCorrectly()
+        //{
+        //    Console.WriteLine("Converting an integer arry to a readable sring...");
+        //    object collection = intArray;
+        //    string stringRepresentation = collection.ToReadableString();
+        //    Console.WriteLine($"Produced string:\n<<\n{stringRepresentation}\n>>");
+        //    stringRepresentation.Should().NotBeNullOrEmpty();
+        //    stringRepresentation.Should().Contain("{");
+        //    stringRepresentation.Should().Contain("}");
+        //    foreach (int i in collection)
+        //    {
+        //        stringRepresentation.Should().Contain(i.ToString());
+        //    }
+        //}
+
+
+
         #endregion ToReadableString_ForCollections_Tests
 
 
 
 
-        #region SampleCollectionValues
+        //#region SampleCollectionValues
 
-        // Some hard-coded definitions of array values:
+        //// Some hard-coded definitions of array values:
 
-        // 1. Single-dimensional array
-        int[] intArray = { 1, 2, 3 };
+        //// 1. Single-dimensional array
+        //int[] intArray = { 1, 2, 3 };
 
-        // 2. Two-dimensional array
-        int[,] intArray_2_3 =
-        {
-            { 11, 12, 13 },
-            { 21, 22, 23 }
-        };
+        //// 2. Two-dimensional array
+        //int[,] intArray_2_3 =
+        //{
+        //    { 11, 12, 13 },
+        //    { 21, 22, 23 }
+        //};
 
-        // 3. Three-dimensional array
-        int[,,] intArray2_3_2 =
-        {
-            {
-                { 111, 112 },
-                { 121, 122 },
-                { 131, 132 }
-            },
-            {
-                { 211, 212 },
-                { 221, 222 },
-                { 231, 232 }
-            }
-        };
+        //// 3. Three-dimensional array
+        //int[,,] intArray2_3_2 =
+        //{
+        //    {
+        //        { 111, 112 },
+        //        { 121, 122 },
+        //        { 131, 132 }
+        //    },
+        //    {
+        //        { 211, 212 },
+        //        { 221, 222 },
+        //        { 231, 232 }
+        //    }
+        //};
 
-        // 4. Jagged array
-        int[][] intJaggedArray_2_3 =
-        {
-            new int[] { 11, 12, 13 },
-            new int[] { 21, 22, 23 }
-        };
+        //// 4. Jagged array
+        //int[][] intJaggedArray_2_3 =
+        //{
+        //    new int[] { 11, 12, 13 },
+        //    new int[] { 21, 22, 23 }
+        //};
 
-        #endregion SampleCollectionValues
+        //#endregion SampleCollectionValues
 
-
+        
 
     }
 

@@ -8,7 +8,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using IGLib.Tests.Base.SampleClasses;
+using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
 
 namespace IGLib.Core.Tests
 {
@@ -27,43 +28,43 @@ namespace IGLib.Core.Tests
         protected override ITypeConverter TypeConverter { get; } = new CollectionTypeConverter();
 
 
-        #region SampleArrayValues
+        //#region SampleArrayValues
 
-        // Some hard-coded definitions of array values:
+        //// Some hard-coded definitions of array values:
 
-        // 1. Single-dimensional array
-        int[] intArray = { 1, 2, 3 };
+        //// 1. Single-dimensional array
+        //int[] intArray = { 1, 2, 3 };
 
-        // 2. Two-dimensional array
-        int[,] intArray_2_3 =
-        {
-            { 11, 12, 13 },
-            { 21, 22, 23 }
-        };
+        //// 2. Two-dimensional array
+        //int[,] intArray_2_3 =
+        //{
+        //    { 11, 12, 13 },
+        //    { 21, 22, 23 }
+        //};
 
-        // 3. Three-dimensional array
-        int[,,] intArray2_3_2 =
-        {
-            {
-                { 111, 112 },
-                { 121, 122 },
-                { 131, 132 }
-            },
-            {
-                { 211, 212 },
-                { 221, 222 },
-                { 231, 232 }
-            }
-        };
+        //// 3. Three-dimensional array
+        //int[,,] intArray2_3_2 =
+        //{
+        //    {
+        //        { 111, 112 },
+        //        { 121, 122 },
+        //        { 131, 132 }
+        //    },
+        //    {
+        //        { 211, 212 },
+        //        { 221, 222 },
+        //        { 231, 232 }
+        //    }
+        //};
 
-        // 4. Jagged array
-        int[][] intJaggedArray_2_3 =
-        {
-            new int[] { 11, 12, 13 },
-            new int[] { 21, 22, 23 }
-        };
+        //// 4. Jagged array
+        //int[][] intJaggedArray_2_3 =
+        //{
+        //    new int[] { 11, 12, 13 },
+        //    new int[] { 21, 22, 23 }
+        //};
 
-        #endregion SampleArrayValues
+        //#endregion SampleArrayValues
 
 
         [Fact]

@@ -10,7 +10,7 @@ using System.Diagnostics;
 using IGLib.Tests.Base;
 using System.Linq;
 using IGLib.Core;
-
+using IGLib.Tests.Base.SampleClasses;
 
 namespace IGLib.Core.Tests
 {
@@ -182,7 +182,7 @@ namespace IGLib.Core.Tests
         [Fact]
         protected virtual void SpecificTypeConverter_RoundTripConversion_DerivedClassToBaseClassObjectToBaseClass_IsCorrect()
         {
-            DerivedClass originalObject = new TypeConverterTestsBase<BasicTypeConverterTests>.DerivedClass();
+            DerivedClass originalObject = new DerivedClass();
             DerivedClass expectedRestoredValue = originalObject;
             DerivedClass expectedAssignedObject = originalObject;
             TypeConverter_ConversionToObjectAndBackTest<DerivedClass, BaseClass, BaseClass>(TypeConverter, 

@@ -184,11 +184,6 @@ namespace IGLib.Core.Tests
 
 
 
-
-
-
-
-
         #endregion TypeConversionHelper
 
 

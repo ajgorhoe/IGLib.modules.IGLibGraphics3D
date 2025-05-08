@@ -21,17 +21,16 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
-            return $"[ {string.Join(", ", array)} ]";
+            return $"{{{string.Join(", ", array)}}}";
         }
 
 
-        // Extension method for generic IList<T>
         /// <summary>Converts an <see cref="IList{T}"/> object to a readable string.</summary>
         /// <typeparam name="T">Type of list elements.</typeparam>
         /// <param name="list"><see cref="IList{T}"/> object to be converted.</param>
         public static string ToReadableString<T>(this IList<T> list)
         {
-            return $"[ {string.Join(", ", list)} ]";
+            return $"{{{string.Join(", ", list)}}}";
         }
 
 
@@ -41,7 +40,7 @@ namespace IGLib.Core.CollectionExtensions
         /// <param name="enumerable"><see cref="IEnumerable{T}"/> object to be converted.</param>
         public static string ToReadableString<T>(this IEnumerable<T> enumerable)
         {
-            return $"[ {string.Join(", ", enumerable)} ]";
+            return $"{{{string.Join(", ", enumerable)}}}";
         }
 
 
