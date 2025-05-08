@@ -9,6 +9,7 @@ using System.Linq;
 using IGLib.Core;
 using Microsoft.Extensions.Hosting;
 using System.Xml.Linq;
+using System.Collections;
 
 
 namespace IGLib.Core.Tests
@@ -30,7 +31,7 @@ namespace IGLib.Core.Tests
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
         public TypeConverterTestsBase(ITestOutputHelper output) : base(output)
-        {  }
+        { }
 
 
         #region GenericConversionTests
@@ -62,7 +63,7 @@ namespace IGLib.Core.Tests
         /// <typeparam name="RestoredType">Type of variable to which the value will be restored from the variable of type object.</typeparam>
         protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(
             ITypeConverter typeConverter,
-            OriginalType originalValue, TargetType expectedAssignedObjectValue, 
+            OriginalType originalValue, TargetType expectedAssignedObjectValue,
             RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
         {
             // Arrange
@@ -90,7 +91,8 @@ namespace IGLib.Core.Tests
                     Console.WriteLine($"Warning: the original value is null but the restored value is not null.");
                 }
                 assignedObject.Should().BeNull(because: "null original should produce null when converted to object.");
-            } else
+            }
+            else
             {
                 // originalValue != null
                 if (assignedObject == null)
@@ -101,7 +103,7 @@ namespace IGLib.Core.Tests
                 Type actualTargetType = assignedObject.GetType();
                 if (requestedTargetType.IsClass)
                 {
-                    requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true, 
+                    requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true,
                         because: "The requested target type should be assignable from the actual type of the assigned object.");
                 }
                 else
@@ -189,7 +191,7 @@ namespace IGLib.Core.Tests
         /// <param name="restoreObjectBackToValue">If true (which is default) then object is also restored back to a value of type <typeparamref name="RestoredType"/>.</param>
         protected void TypeConverter_Speed_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(
             ITypeConverter typeConverter, int numExecutions, double minExecutionsPerSecond,
-            OriginalType originalValue, TargetType expectedAssignedObjectValue, RestoredType expectedRestoredValue, 
+            OriginalType originalValue, TargetType expectedAssignedObjectValue, RestoredType expectedRestoredValue,
             bool restoreObjectBackToValue = true)
         {
             Console.WriteLine("Conversion SPEED test:");
@@ -283,7 +285,7 @@ namespace IGLib.Core.Tests
             // Speifyinf the frequency of wtiring a dot:
             int frequency = 1;
             double numDots = (double)numExecutions / frequency;
-            while ((int) numDots >=50)
+            while ((int)numDots >= 50)
             {
                 frequency *= 10;
                 numDots = (double)numExecutions / frequency;
@@ -309,7 +311,7 @@ namespace IGLib.Core.Tests
             sw.Stop();
             double totalTime = sw.Elapsed.TotalSeconds;
             double executionsPerSecond = (double)numExecutions / totalTime;
-            Console.WriteLine($"Number of executions: {numExecutions} ({(double) numExecutions / 1_000.0} k).");
+            Console.WriteLine($"Number of executions: {numExecutions} ({(double)numExecutions / 1_000.0} k).");
             Console.WriteLine($"Elapsed time: {totalTime} s");
             Console.WriteLine($"Number of executions per second: {executionsPerSecond}");
             Console.WriteLine($"         In millions per second: {executionsPerSecond / 1.0e6}");
@@ -701,9 +703,161 @@ namespace IGLib.Core.Tests
         }
 
 
+        // Collection classes:
 
 
 
+        public class CustomEnumerable<T> : IEnumerable<T>
+        {
+            private readonly List<T> _items;
+
+            // Constructor that initializes the collection with a single item
+            public CustomEnumerable(T item)
+            {
+                _items = new List<T> { item };
+            }
+
+            // Constructor that initializes the collection with multiple items via params
+            public CustomEnumerable(params T[] items)
+            {
+                _items = new List<T>(items);
+            }
+
+            // Constructor that initializes the collection from an IEnumerable<T>
+            public CustomEnumerable(IEnumerable<T> items)
+            {
+                _items = new List<T>(items);
+            }
+
+            // Add method to add a single item
+            public void Add(T item)
+            {
+                _items.Add(item);
+            }
+
+            // Add method to add multiple items via params
+            public void Add(params T[] items)
+            {
+                _items.AddRange(items);
+            }
+
+            // Add method to add items from an IEnumerable<T>
+            public void Add(IEnumerable<T> items)
+            {
+                _items.AddRange(items);
+            }
+
+            // Implementation of IEnumerable<T>
+            public IEnumerator<T> GetEnumerator()
+            {
+                return _items.GetEnumerator();
+            }
+
+            // Explicit implementation of IEnumerable
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+
+
+
+        public class CustomList<T> : IList<T>
+        {
+            private readonly List<T> _items;
+
+            // Constructor that initializes the collection with a single item
+            public CustomList(T item)
+            {
+                _items = new List<T> { item };
+            }
+
+            // Constructor that initializes the collection with multiple items via params
+            public CustomList(params T[] items)
+            {
+                _items = new List<T>(items);
+            }
+
+            // Constructor that initializes the collection from an IEnumerable<T>
+            public CustomList(IEnumerable<T> items)
+            {
+                _items = new List<T>(items);
+            }
+
+            // IList<T> Implementation
+            public T this[int index]
+            {
+                get => _items[index];
+                set => _items[index] = value;
+            }
+
+            public int Count => _items.Count;
+
+            public bool IsReadOnly => false;
+
+            public void Add(T item)
+            {
+                _items.Add(item);
+            }
+
+            // Add method to add multiple items via params
+            public void Add(params T[] items)
+            {
+                _items.AddRange(items);
+            }
+
+            // Add method to add items from an IEnumerable<T>
+            public void Add(IEnumerable<T> items)
+            {
+                _items.AddRange(items);
+            }
+
+            public void Clear()
+            {
+                _items.Clear();
+            }
+
+            public bool Contains(T item)
+            {
+                return _items.Contains(item);
+            }
+
+            public void CopyTo(T[] array, int arrayIndex)
+            {
+                _items.CopyTo(array, arrayIndex);
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                return _items.GetEnumerator();
+            }
+
+            public int IndexOf(T item)
+            {
+                return _items.IndexOf(item);
+            }
+
+            public void Insert(int index, T item)
+            {
+                _items.Insert(index, item);
+            }
+
+            public bool Remove(T item)
+            {
+                return _items.Remove(item);
+            }
+
+            public void RemoveAt(int index)
+            {
+                _items.RemoveAt(index);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
 
         #endregion ClassesForTests
 

@@ -90,7 +90,10 @@ namespace IGLib.Core
 
         private object ConvertRectangularArray(object value, Type targetArrayType)
         {
-            if (!targetArrayType.IsArray || !targetArrayType.IsSZArray && !targetArrayType.IsArray)
+            // Remark: condition below was previously "!targetArrayType.IsArray || !targetArrayType.IsSZArray && !targetArrayType.IsArray",
+            // but IsSZArray check is redundant becaulse logic already filters arrays based on targetArrayType.GetArrayRank()
+            // and element access. "!targetArrayType.IsArray" should be sufficient.
+            if (!targetArrayType.IsArray)
                 throw new InvalidOperationException("Target type is not a rectangular array.");
 
             Type targetElementType = targetArrayType.GetElementType();
