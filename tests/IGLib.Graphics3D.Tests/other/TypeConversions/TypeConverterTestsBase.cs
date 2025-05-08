@@ -6,10 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using IGLib.Tests.Base;
 using System.Linq;
-using IGLib.Core;
-using Microsoft.Extensions.Hosting;
-using System.Xml.Linq;
 using System.Collections;
+using IGLib.Core;
 
 
 namespace IGLib.Core.Tests
@@ -709,50 +707,31 @@ namespace IGLib.Core.Tests
 
         public class CustomEnumerable<T> : IEnumerable<T>
         {
-            private readonly List<T> _items;
-
-            // Constructor that initializes the collection with a single item
-            public CustomEnumerable(T item)
-            {
-                _items = new List<T> { item };
-            }
-
             // Constructor that initializes the collection with multiple items via params
             public CustomEnumerable(params T[] items)
             {
                 _items = new List<T>(items);
             }
-
             // Constructor that initializes the collection from an IEnumerable<T>
             public CustomEnumerable(IEnumerable<T> items)
             {
                 _items = new List<T>(items);
             }
-
-            // Add method to add a single item
-            public void Add(T item)
-            {
-                _items.Add(item);
-            }
-
+            private readonly List<T> _items;
             // Add method to add multiple items via params
             public void Add(params T[] items)
             {
                 _items.AddRange(items);
             }
-
             // Add method to add items from an IEnumerable<T>
             public void Add(IEnumerable<T> items)
             {
                 _items.AddRange(items);
             }
-
-            // Implementation of IEnumerable<T>
             public IEnumerator<T> GetEnumerator()
             {
                 return _items.GetEnumerator();
             }
-
             // Explicit implementation of IEnumerable
             IEnumerator IEnumerable.GetEnumerator()
             {
@@ -761,98 +740,73 @@ namespace IGLib.Core.Tests
         }
 
 
-
-
         public class CustomList<T> : IList<T>
         {
-            private readonly List<T> _items;
-
-            // Constructor that initializes the collection with a single item
-            public CustomList(T item)
-            {
-                _items = new List<T> { item };
-            }
-
             // Constructor that initializes the collection with multiple items via params
             public CustomList(params T[] items)
             {
                 _items = new List<T>(items);
             }
-
             // Constructor that initializes the collection from an IEnumerable<T>
             public CustomList(IEnumerable<T> items)
             {
                 _items = new List<T>(items);
             }
-
+            private readonly List<T> _items;
             // IList<T> Implementation
             public T this[int index]
             {
                 get => _items[index];
                 set => _items[index] = value;
             }
-
             public int Count => _items.Count;
-
             public bool IsReadOnly => false;
-
             public void Add(T item)
             {
                 _items.Add(item);
             }
-
             // Add method to add multiple items via params
             public void Add(params T[] items)
             {
                 _items.AddRange(items);
             }
-
             // Add method to add items from an IEnumerable<T>
             public void Add(IEnumerable<T> items)
             {
                 _items.AddRange(items);
             }
-
             public void Clear()
             {
                 _items.Clear();
             }
-
             public bool Contains(T item)
             {
                 return _items.Contains(item);
             }
-
             public void CopyTo(T[] array, int arrayIndex)
             {
                 _items.CopyTo(array, arrayIndex);
             }
-
             public IEnumerator<T> GetEnumerator()
             {
                 return _items.GetEnumerator();
             }
-
             public int IndexOf(T item)
             {
                 return _items.IndexOf(item);
             }
-
             public void Insert(int index, T item)
             {
                 _items.Insert(index, item);
             }
-
             public bool Remove(T item)
             {
                 return _items.Remove(item);
             }
-
             public void RemoveAt(int index)
             {
                 _items.RemoveAt(index);
             }
-
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
