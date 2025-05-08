@@ -1,4 +1,7 @@
-﻿using Xunit;
+﻿// Uncomment the definition below in order to include tests that fail for BasicTypeConverter!
+# define IncludeFailedTests
+
+using Xunit;
 using FluentAssertions;
 using Xunit.Abstractions;
 using System;
@@ -27,13 +30,13 @@ namespace IGLib.Core.Tests
         {  }
 
 
-        #region BasicTypeConverterTests
-
         /// <summary>The type converter that is under test.</summary>
         protected virtual ITypeConverter TypeConverter { get; } = new BasicTypeConverter();
 
         /// <summary>Number of executions in speed tests.</summary>
         protected virtual int NumExecutions { get; } = 10_000;
+
+        #region BasicTypeConverterTests
 
         /// <summary>Minimum required number of executions per second in speed tests.</summary>
         protected virtual double MinPerSecond { get; } = 100_000;
@@ -184,6 +187,62 @@ namespace IGLib.Core.Tests
             DerivedClass expectedAssignedObject = originalObject;
             TypeConverter_ConversionToObjectAndBackTest<DerivedClass, BaseClass, BaseClass>(TypeConverter, 
                 originalObject, expectedAssignedObject, expectedRestoredValue);
+        }
+
+
+#if IncludeFailedTests
+        [Fact]
+#endif        
+        protected virtual void SpecificTypeConverter_RoundTripConversion_ImplicitlytoderivedToDerivedObjectToBase_IsCorrect()
+        {
+            ImplicitlyConvertibleToDerived originalObject = new();
+            DerivedClass expectedAssignedObject = originalObject;  // implicit conversion
+            DerivedClass expectedRestoredValue = expectedAssignedObject;
+            TypeConverter_ConversionToObjectAndBackTest<
+                ImplicitlyConvertibleToDerived, DerivedClass, DerivedClass>(
+                TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
+        }
+
+#if IncludeFailedTests
+        [Fact]
+#endif        
+        protected virtual void SpecificTypeConverter_RoundTripConversion_ExplicitlytoderivedToDerivedObjectToBase_IsCorrect()
+        {
+            ExplicitlyConvertibleToDerived originalObject = new();
+            DerivedClass expectedAssignedObject = (DerivedClass) originalObject;   // explicit conversion (cast)
+            DerivedClass expectedRestoredValue = expectedAssignedObject;
+            TypeConverter_ConversionToObjectAndBackTest<
+                ExplicitlyConvertibleToDerived, DerivedClass, DerivedClass>(
+                TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
+        }
+
+
+#if IncludeFailedTests
+        [Fact]
+#endif        
+        protected virtual void SpecificTypeConverter_OneDirectionConversion_ImplicitlyfromderivedToDerivedObjectToBase_IsCorrect()
+        {
+            DerivedClass originalObject = new();
+            ImplicitlyConvertibleFromDerived expectedAssignedObject = originalObject;  // implicit conversion
+            object expectedRestoredValue = null;  // onedirectional!
+            TypeConverter_ConversionToObjectAndBackTest<
+                DerivedClass, ImplicitlyConvertibleFromDerived, object>(
+                TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue,
+                restoreObjectBackToValue: false);
+        }
+
+#if IncludeFailedTests
+        [Fact]
+#endif        
+        protected virtual void SpecificTypeConverter_OneDirectionConversion_ExplicitlyfromderivedToDerivedObjectToBase_IsCorrect()
+        {
+            DerivedClass originalObject = new();
+            ExplicitlyConvertibleFromDerived expectedAssignedObject = (ExplicitlyConvertibleFromDerived)originalObject;  // explicit conversion (cast)
+            object expectedRestoredValue = null;  // onedirectional!
+            TypeConverter_ConversionToObjectAndBackTest<
+                DerivedClass, ExplicitlyConvertibleFromDerived, object>(
+                TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue,
+                restoreObjectBackToValue: false);
         }
 
 

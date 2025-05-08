@@ -16,7 +16,7 @@ namespace IGLib.Core.Tests
 
     /// <summary>Base class for type converter testing classes such as <see cref="BasicTypeConverterTests"/>.
     /// <para>Provides generic implementation of typical test methods for testing round-trip or one 
-    /// direction conversions, and helper stubb like example classes on which conversions can be
+    /// direction conversions, and helper stuff like example classes on which conversions can be
     /// tested, with prescribed relations (inherits from, implements implicit / explicit conversion,
     /// etc.).</para></summary>
     /// <typeparam name="TestClass"></typeparam>
@@ -60,8 +60,10 @@ namespace IGLib.Core.Tests
         /// <typeparam name="OriginalType">Type of the origial value to be stored as object.</typeparam>
         /// <typeparam name="TargetType">Type to which the <paramref name="originalValue"/> will be converted when being stored in an object variable.</typeparam>
         /// <typeparam name="RestoredType">Type of variable to which the value will be restored from the variable of type object.</typeparam>
-        protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(ITypeConverter typeConverter,
-            OriginalType originalValue, TargetType expectedAssignedObjectValue, RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
+        protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(
+            ITypeConverter typeConverter,
+            OriginalType originalValue, TargetType expectedAssignedObjectValue, 
+            RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
         {
             // Arrange
             Type declaredOriginalType = typeof(OriginalType);
@@ -324,8 +326,8 @@ namespace IGLib.Core.Tests
         {
             public BaseClass()
             {
-                ID = 98;
-                Name = "BaseClass object";
+                ID = 11;
+                Name = $"{GetType().Name} object";
             }
             public override string ToString()
             {
@@ -380,7 +382,7 @@ namespace IGLib.Core.Tests
         {
             public DerivedClass()
             {
-                ID = 466;
+                ID = 12;
                 Name = $"{GetType().Name} object";
                 Description = $"This is an instance of {GetType().Name}.";
             }
@@ -453,67 +455,11 @@ namespace IGLib.Core.Tests
             public static bool operator !=(DerivedClass lhs, DerivedClass rhs) => !(lhs == rhs);
         }
 
-
-        protected class ExplicitlyConvertibleToDerived
-        {
-            public ExplicitlyConvertibleToDerived()
-            {
-                MyId1 = 538;
-                MyName1 = $"{GetType().Name} object";
-            }
-            public override string ToString()
-            {
-                return $"{GetType().Name}: ID = {MyId1}, Name = \"{MyName1}\".";
-            }
-            public int MyId1 { get; set; }
-            public string MyName1 { get; set; }
-
-            // Implementations for equality comparisson:
-            public override bool Equals(object obj) => this.Equals(obj as ExplicitlyConvertibleToDerived);
-            public bool Equals(ExplicitlyConvertibleToDerived compared)
-            {
-                if (compared is null)
-                {
-                    return false;
-                }
-                // Optimization for a common success case.
-                if (Object.ReferenceEquals(this, compared))
-                {
-                    return true;
-                }
-                // If run-time types are not exactly the same, return false.
-                if (this.GetType() != compared.GetType())
-                {
-                    return false;
-                }
-                // Return true if the fields match.
-                // Note that the base class is not invoked because it is
-                // System.Object, which defines Equals as reference equality.
-                return (MyId1 == compared.MyId1) && (MyName1 == compared.MyName1);
-            }
-            public override int GetHashCode() => (MyId1, MyName1).GetHashCode();
-            public static bool operator ==(ExplicitlyConvertibleToDerived lhs, ExplicitlyConvertibleToDerived rhs)
-            {
-                if (lhs is null)
-                {
-                    if (rhs is null)
-                    {
-                        return true;
-                    }
-                    // Only the left side is null.
-                    return false;
-                }
-                // Equals handles case of null on right side.
-                return lhs.Equals(rhs);
-            }
-            public static bool operator !=(ExplicitlyConvertibleToDerived lhs, ExplicitlyConvertibleToDerived rhs) => !(lhs == rhs);
-        }
-
         protected class ImplicitlyConvertibleToDerived
         {
             public ImplicitlyConvertibleToDerived()
             {
-                MyId2 = 825;
+                MyId2 = 111;
                 MyName2 = $"{GetType().Name} object";
                 MyDescription2 = $"This is an instance of {GetType().Name}.";
             }
@@ -567,32 +513,23 @@ namespace IGLib.Core.Tests
         }
 
 
-
-        protected class ExplicitlyConvertibleFromDerived
+        protected class ExplicitlyConvertibleToDerived
         {
-            public ExplicitlyConvertibleFromDerived()
+            public ExplicitlyConvertibleToDerived()
             {
-                MyId3 = 235;
-                MyName3 = $"{GetType().Name} object";
+                MyId1 = 112;
+                MyName1 = $"{GetType().Name} object";
             }
             public override string ToString()
             {
-                return $"{GetType().Name}: ID = {MyId3}, Name = \"{MyName3}\".";
+                return $"{GetType().Name}: ID = {MyId1}, Name = \"{MyName1}\".";
             }
-            public int MyId3 { get; set; }
-            public string MyName3 { get; set; }
-            public static explicit operator ExplicitlyConvertibleFromDerived(DerivedClass source)
-            {
-                return new ExplicitlyConvertibleFromDerived
-                {
-                    MyId3 = source.ID,
-                    MyName3 = source.Name,
-                };
-            }
+            public int MyId1 { get; set; }
+            public string MyName1 { get; set; }
 
             // Implementations for equality comparisson:
-            public override bool Equals(object obj) => this.Equals(obj as ExplicitlyConvertibleFromDerived);
-            public bool Equals(ExplicitlyConvertibleFromDerived compared)
+            public override bool Equals(object obj) => this.Equals(obj as ExplicitlyConvertibleToDerived);
+            public bool Equals(ExplicitlyConvertibleToDerived compared)
             {
                 if (compared is null)
                 {
@@ -611,10 +548,10 @@ namespace IGLib.Core.Tests
                 // Return true if the fields match.
                 // Note that the base class is not invoked because it is
                 // System.Object, which defines Equals as reference equality.
-                return (MyId3 == compared.MyId3) && (MyName3 == compared.MyName3);
+                return (MyId1 == compared.MyId1) && (MyName1 == compared.MyName1);
             }
-            public override int GetHashCode() => (MyId3, MyName3).GetHashCode();
-            public static bool operator ==(ExplicitlyConvertibleFromDerived lhs, ExplicitlyConvertibleFromDerived rhs)
+            public override int GetHashCode() => (MyId1, MyName1).GetHashCode();
+            public static bool operator ==(ExplicitlyConvertibleToDerived lhs, ExplicitlyConvertibleToDerived rhs)
             {
                 if (lhs is null)
                 {
@@ -628,16 +565,15 @@ namespace IGLib.Core.Tests
                 // Equals handles case of null on right side.
                 return lhs.Equals(rhs);
             }
-            public static bool operator !=(ExplicitlyConvertibleFromDerived lhs, ExplicitlyConvertibleFromDerived rhs) => !(lhs == rhs);
+            public static bool operator !=(ExplicitlyConvertibleToDerived lhs, ExplicitlyConvertibleToDerived rhs) => !(lhs == rhs);
         }
-
 
 
         protected class ImplicitlyConvertibleFromDerived
         {
             public ImplicitlyConvertibleFromDerived()
             {
-                MyId4 = 816;
+                MyId4 = 211;
                 MyName4 = $"{GetType().Name} object";
                 MyDescription4 = $"This is an instance of {GetType().Name}.";
             }
@@ -698,6 +634,72 @@ namespace IGLib.Core.Tests
             }
             public static bool operator !=(ImplicitlyConvertibleFromDerived lhs, ImplicitlyConvertibleFromDerived rhs) => !(lhs == rhs);
         }
+
+
+
+        protected class ExplicitlyConvertibleFromDerived
+        {
+            public ExplicitlyConvertibleFromDerived()
+            {
+                MyId3 = 212;
+                MyName3 = $"{GetType().Name} object";
+            }
+            public override string ToString()
+            {
+                return $"{GetType().Name}: ID = {MyId3}, Name = \"{MyName3}\".";
+            }
+            public int MyId3 { get; set; }
+            public string MyName3 { get; set; }
+            public static explicit operator ExplicitlyConvertibleFromDerived(DerivedClass source)
+            {
+                return new ExplicitlyConvertibleFromDerived
+                {
+                    MyId3 = source.ID,
+                    MyName3 = source.Name,
+                };
+            }
+
+            // Implementations for equality comparisson:
+            public override bool Equals(object obj) => this.Equals(obj as ExplicitlyConvertibleFromDerived);
+            public bool Equals(ExplicitlyConvertibleFromDerived compared)
+            {
+                if (compared is null)
+                {
+                    return false;
+                }
+                // Optimization for a common success case.
+                if (Object.ReferenceEquals(this, compared))
+                {
+                    return true;
+                }
+                // If run-time types are not exactly the same, return false.
+                if (this.GetType() != compared.GetType())
+                {
+                    return false;
+                }
+                // Return true if the fields match.
+                // Note that the base class is not invoked because it is
+                // System.Object, which defines Equals as reference equality.
+                return (MyId3 == compared.MyId3) && (MyName3 == compared.MyName3);
+            }
+            public override int GetHashCode() => (MyId3, MyName3).GetHashCode();
+            public static bool operator ==(ExplicitlyConvertibleFromDerived lhs, ExplicitlyConvertibleFromDerived rhs)
+            {
+                if (lhs is null)
+                {
+                    if (rhs is null)
+                    {
+                        return true;
+                    }
+                    // Only the left side is null.
+                    return false;
+                }
+                // Equals handles case of null on right side.
+                return lhs.Equals(rhs);
+            }
+            public static bool operator !=(ExplicitlyConvertibleFromDerived lhs, ExplicitlyConvertibleFromDerived rhs) => !(lhs == rhs);
+        }
+
 
 
 
