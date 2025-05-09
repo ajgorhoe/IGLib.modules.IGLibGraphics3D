@@ -36,10 +36,11 @@ namespace IGLib.Core.Tests
         /// <summary>Array element separator used the string representation of array-like objects.</summary>
         protected string ArraySeparator { get; } = ",";
 
-        // Tests in the region below perform basic verification of correctness of the extension methogs
+
+        #region ToReadableString_ForCollections_BasicTests
+        // Tests in this region perform basic verification of correctness of the extension methogs
         // ToreadableString(...) for array-like types of method parameter. This involves checking that brackets
         // and separators are present in generated strings, and that all array elementts are also present.
-        #region ToReadableString_ForCollections_BasicTests
 
         [Theory]
         [InlineData(false)]
@@ -163,7 +164,7 @@ namespace IGLib.Core.Tests
 
         [Theory]
         [InlineData(false)]
-        //[InlineData(true)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableString_RectangularArray2dOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 2D rectangular array of ntegers to a readable string...");
@@ -189,14 +190,14 @@ namespace IGLib.Core.Tests
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
-                stringRepresentation.Should().Be(expectedOutput);
+                stringRepresentation.Replace("\r\n","\n").Should().Be(expectedOutput.Replace("\r\n","\n"));
                 ;
             }
         }
 
         [Theory]
         [InlineData(false)]
-        //[InlineData(true)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableString_RectangularArray3dOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 3D rectangular array of integers to a readable string...");
@@ -232,7 +233,7 @@ namespace IGLib.Core.Tests
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
-                stringRepresentation.Should().Be(expectedOutput);
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
                 ;
             }
         }
@@ -240,7 +241,7 @@ namespace IGLib.Core.Tests
 
         [Theory]
         [InlineData(false)]
-        //[InlineData(true)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableString_JaggedArray2dOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
@@ -267,14 +268,14 @@ namespace IGLib.Core.Tests
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
-                stringRepresentation.Should().Be(expectedOutput);
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
                 ;
             }
         }
 
         [Theory]
         [InlineData(false)]
-        //[InlineData(true)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableString_JaggedArray3dOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
@@ -314,7 +315,7 @@ namespace IGLib.Core.Tests
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
-                stringRepresentation.Should().Be(expectedOutput);
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
                 ;
             }
         }
@@ -323,7 +324,7 @@ namespace IGLib.Core.Tests
 
         [Theory]
         [InlineData(false)]
-        //[InlineData(true)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableString_JaggedArray2dNonrectangularOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
@@ -350,14 +351,14 @@ namespace IGLib.Core.Tests
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
-                stringRepresentation.Should().Be(expectedOutput);
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
                 ;
             }
         }
 
         [Theory]
         [InlineData(false)]
-        //[InlineData(true)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableString_JaggedArray3dNonrectangularOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
@@ -396,7 +397,7 @@ namespace IGLib.Core.Tests
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
-                stringRepresentation.Should().Be(expectedOutput);
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
                 ;
             }
         }
@@ -407,9 +408,9 @@ namespace IGLib.Core.Tests
 
 
 
-        // Tests in the region below perform verification of correctness of the extension methogs
-        // ToreadableString(...) for object parameters whose actual types are array-like.
         #region ToReadableString_ForCollectionsDynamic_BasicTests
+        // Tests in this region perform verification of correctness of the extension methogs
+        // ToreadableString(...) for object parameters whose actual types are array-like.
 
         [Theory]
         [InlineData(false)]
