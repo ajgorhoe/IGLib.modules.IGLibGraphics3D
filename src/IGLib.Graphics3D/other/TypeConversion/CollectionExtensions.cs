@@ -93,26 +93,37 @@ namespace IGLib.Core.CollectionExtensions
         /// <summary>A helper method to handle jagged arrays dynamically.</summary>
         /// <param name="jaggedArray">The jagged array whose string representation should be returned.</param>
         /// <returns>String representation of the specified jagged array.</returns>
-        private static string HandleJaggedArray(Array jaggedArray)
+        private static string HandleJaggedArray(Array jaggedArray, int indentLevel = 0)
         {
             var sb = new StringBuilder();
-            sb.Append("{\n");
-            foreach (var element in jaggedArray)
+            string indent = new string(' ', indentLevel * 4); // Indentation string based on the current level
+
+            sb.Append(indent + "{\n");
+            for (int i = 0; i < jaggedArray.Length; i++)
             {
-                if (element is Array innerArray && innerArray.GetType().GetElementType().IsArray)
+                var element = jaggedArray.GetValue(i);
+
+                if (element is Array innerArray && innerArray.GetType().GetElementType()?.IsArray == true)
                 {
-                    sb.Append("    ");
-                    sb.Append(HandleJaggedArray((Array)element));
-                    sb.Append(",\n");
+                    // Recursively handle nested jagged arrays
+                    sb.Append(HandleJaggedArray((Array)element, indentLevel + 1));
                 }
                 else if (element is Array inner1DArray)
                 {
-                    sb.Append("    ");
+                    // Handle 1D arrays
+                    sb.Append(new string(' ', (indentLevel + 1) * 4));
                     sb.Append(inner1DArray.Cast<object>().ToArray().ToReadableString());
-                    sb.Append(",\n");
                 }
+
+                // Append a comma unless it's the last element
+                if (i < jaggedArray.Length - 1)
+                {
+                    sb.Append(",");
+                }
+
+                sb.Append("\n");
             }
-            sb.Append("}");
+            sb.Append(indent + "}");
             return sb.ToString();
         }
 
