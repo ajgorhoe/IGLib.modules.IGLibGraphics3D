@@ -12,6 +12,88 @@ namespace IGLib.Core.CollectionExtensions
 
         public const string NullString = "null";
 
+
+        /// <summary>Converts the specified object <paramref name="o"/> to a readable string.
+        /// <para>This method dynamically checks the actual type of <paramref name="o"/>. If the object
+        /// is an array, 2 or 3 dimensional rectangular array, 2 or 3 dimensional ljagged array, a
+        /// list (it implwments the <see cref="IList"/> interface) or enumerable (it implements the
+        /// <see cref="IEnumerable"/> interface, then the appropriate method is called to produce
+        /// the string representation suitable for array-like objectrs.</para></summary>
+        /// <param name="o">Object to be converted to a readable string.</param>
+        /// <returns>Ths string containing a representation of the <paramref name="o"/>,
+        /// which is also nicely structured and readable for objects of array-like types.</returns>
+        public static string ToReadableString(this object o)
+        {
+            // Null check
+            if (o == null)
+                return "null";
+
+            // Handle 1D arrays
+            if (o is Array array && array.Rank == 1)
+            {
+                return ((Array)o).Cast<object>().ToArray().ToReadableString();
+            }
+
+            // Handle 2D rectangular arrays
+            if (o is Array array2D && array2D.Rank == 2)
+            {
+                return ((dynamic)o).ToReadableString();
+            }
+
+            // Handle 3D rectangular arrays
+            if (o is Array array3D && array3D.Rank == 3)
+            {
+                return ((dynamic)o).ToReadableString();
+            }
+
+            // Handle jagged arrays (1D array of arrays)
+            if (o is Array jaggedArray && jaggedArray.GetType().GetElementType().IsArray)
+            {
+                return HandleJaggedArray(jaggedArray);
+            }
+
+            // Handle IList
+            if (o is IList list)
+            {
+                return list.Cast<object>().ToReadableString();
+            }
+
+            // Handle IEnumerable
+            if (o is IEnumerable enumerable)
+            {
+                return enumerable.Cast<object>().ToReadableString();
+            }
+
+            // Fallback for non-collection types
+            return o.ToString();
+        }
+
+        /// <summary>A helper method to handle jagged arrays dynamically.</summary>
+        /// <param name="jaggedArray">The jagged array whose string representation should be returned.</param>
+        /// <returns>String representation of the specified jagged array.</returns>
+        private static string HandleJaggedArray(Array jaggedArray)
+        {
+            var sb = new StringBuilder();
+            sb.Append("{\n");
+            foreach (var element in jaggedArray)
+            {
+                if (element is Array innerArray && innerArray.GetType().GetElementType().IsArray)
+                {
+                    sb.Append("    ");
+                    sb.Append(HandleJaggedArray((Array)element));
+                    sb.Append(",\n");
+                }
+                else
+                {
+                    sb.Append("    ");
+                    sb.Append(((dynamic)element).ToReadableString());
+                    sb.Append(",\n");
+                }
+            }
+            sb.Append("}");
+            return sb.ToString();
+        }
+
         /// <summary>Converts 1D  array to a readable string.</summary>
         /// <typeparam name="T">Type of array elements.</typeparam>
         /// <param name="array">Array to be converted.</param>
