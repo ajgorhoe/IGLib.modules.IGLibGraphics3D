@@ -163,7 +163,7 @@ namespace IGLib.Core.CollectionExtensions
         /// <summary>Converts a 2D rectangular array to a readable string.</summary>
         /// <typeparam name="T">Type of array elements.</typeparam>
         /// <param name="array">Array to be converted.</param>
-        /// <returns></returns>
+        /// <returns>Readable string representation of the 2D rectangular array.</returns>
         public static string ToReadableString<T>(this T[,] array)
         {
             if (array == null)
@@ -175,14 +175,14 @@ namespace IGLib.Core.CollectionExtensions
             sb.Append("{\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append("    { ");
+                sb.Append("    {");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     sb.Append(array[i, j]);
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
                         sb.Append(", ");
                 }
-                sb.Append(" }");
+                sb.Append("}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
                     sb.Append(",");
                 sb.Append("\n");
@@ -191,7 +191,10 @@ namespace IGLib.Core.CollectionExtensions
             return sb.ToString();
         }
 
-        // Extension method for 3D rectangular array
+        /// <summary>Converts a 3D rectangular array to a readable string.</summary>
+        /// <typeparam name="T">Type of array elements.</typeparam>
+        /// <param name="array">Array to be converted.</param>
+        /// <returns>String representation of the 3D rectangular array.</returns>
         public static string ToReadableString<T>(this T[,,] array)
         {
             if (array == null)
@@ -206,14 +209,14 @@ namespace IGLib.Core.CollectionExtensions
                 sb.Append("    {\n");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    sb.Append("        { ");
+                    sb.Append("        {");
                     for (int k = 0; k < array.GetLength(2); k++)
                     {
                         sb.Append(array[i, j, k]);
                         if (k < array.GetLength(2) - 1) // Avoid trailing comma
                             sb.Append(", ");
                     }
-                    sb.Append(" }");
+                    sb.Append("}");
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
                         sb.Append(",");
                     sb.Append("\n");
