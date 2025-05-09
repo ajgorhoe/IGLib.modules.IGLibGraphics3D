@@ -220,16 +220,16 @@ namespace IGLib.Core.Tests
 {
     {
         { 111, 112, 113, 114 },
-        { 121, 122, 123, 124 },
+        { 121, 122, 123, 124 }
     },
     {
         { 211, 212, 213, 214 },
-        { 221, 222, 223, 224 },
+        { 221, 222, 223, 224 }
     },
     {
         { 311, 312, 313, 314 },
-        { 321, 322, 323, 324 },
-    },
+        { 321, 322, 323, 324 }
+    }
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
@@ -264,7 +264,7 @@ namespace IGLib.Core.Tests
 """
 {
     {11, 12, 13},
-    {21, 22, 23},
+    {21, 22, 23}
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
@@ -302,16 +302,16 @@ namespace IGLib.Core.Tests
 {
     {
         {111, 112, 113, 114},
-        {121, 122, 123, 124},
+        {121, 122, 123, 124}
     },
     {
         {211, 212, 213, 214},
-        {221, 222, 223, 224},
+        {221, 222, 223, 224}
     },
     {
         {311, 312, 313, 314},
-        {321, 322, 323, 324},
-    },
+        {321, 322, 323, 324}
+    }
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
@@ -347,7 +347,7 @@ namespace IGLib.Core.Tests
 """
 {
     {11, 12, 13},
-    {21, 22},
+    {21, 22}
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
@@ -385,15 +385,15 @@ namespace IGLib.Core.Tests
 {
     {
         {111, 112, 113, 114},
-        {121, 122, 1234},
+        {121, 122, 1234}
     },
     {
-        {211, 212, 213, 214},
+        {211, 212, 213, 214}
     },
     {
         {311, 312},
-        {321, 322, 323, 324},
-    },
+        {321, 322, 323, 324}
+    }
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");

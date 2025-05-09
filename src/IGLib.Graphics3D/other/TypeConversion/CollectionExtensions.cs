@@ -187,6 +187,7 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
+
             var sb = new StringBuilder();
             sb.Append("{\n");
             for (int i = 0; i < array.GetLength(0); i++)
@@ -198,12 +199,18 @@ namespace IGLib.Core.CollectionExtensions
                     for (int k = 0; k < array.GetLength(2); k++)
                     {
                         sb.Append(array[i, j, k]);
-                        if (k < array.GetLength(2) - 1)
+                        if (k < array.GetLength(2) - 1) // Avoid trailing comma
                             sb.Append(", ");
                     }
-                    sb.Append(" },\n");
+                    sb.Append(" }");
+                    if (j < array.GetLength(1) - 1) // Avoid trailing comma
+                        sb.Append(",");
+                    sb.Append("\n");
                 }
-                sb.Append("    },\n");
+                sb.Append("    }");
+                if (i < array.GetLength(0) - 1) // Avoid trailing comma
+                    sb.Append(",");
+                sb.Append("\n");
             }
             sb.Append("}");
             return sb.ToString();
@@ -216,13 +223,16 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
+
             var sb = new StringBuilder();
             sb.Append("{\n");
-            foreach (var row in jaggedArray)
+            for (int i = 0; i < jaggedArray.Length; i++)
             {
                 sb.Append("    ");
-                sb.Append(row.ToReadableString()); // Reuse 1D array method
-                sb.Append(",\n");
+                sb.Append(jaggedArray[i].ToReadableString()); // Reuse 1D array method
+                if (i < jaggedArray.Length - 1) // Avoid trailing comma
+                    sb.Append(",");
+                sb.Append("\n");
             }
             sb.Append("}");
             return sb.ToString();
@@ -230,18 +240,27 @@ namespace IGLib.Core.CollectionExtensions
 
         public static string ToReadableString<T>(this T[][][] jaggedArray)
         {
+            if (jaggedArray == null)
+            {
+                return NullString;
+            }
             var sb = new StringBuilder();
             sb.Append("{\n");
-            foreach (var plane in jaggedArray)
+            for (int i = 0; i < jaggedArray.Length; i++)
             {
                 sb.Append("    {\n");
-                foreach (var row in plane)
+                for (int j = 0; j < jaggedArray[i].Length; j++)
                 {
                     sb.Append("        ");
-                    sb.Append(row.ToReadableString()); // Reuse 1D array method
-                    sb.Append(",\n");
+                    sb.Append(jaggedArray[i][j].ToReadableString()); // Reuse 1D array method
+                    if (j < jaggedArray[i].Length - 1) // Avoid trailing comma
+                        sb.Append(",");
+                    sb.Append("\n");
                 }
-                sb.Append("    },\n");
+                sb.Append("    }");
+                if (i < jaggedArray.Length - 1) // Avoid trailing comma
+                    sb.Append(",");
+                sb.Append("\n");
             }
             sb.Append("}");
             return sb.ToString();
