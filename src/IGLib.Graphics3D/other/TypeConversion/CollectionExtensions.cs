@@ -159,6 +159,7 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
+
             var sb = new StringBuilder();
             sb.Append("{\n");
             for (int i = 0; i < array.GetLength(0); i++)
@@ -167,10 +168,13 @@ namespace IGLib.Core.CollectionExtensions
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     sb.Append(array[i, j]);
-                    if (j < array.GetLength(1) - 1)
+                    if (j < array.GetLength(1) - 1) // Avoid trailing comma
                         sb.Append(", ");
                 }
-                sb.Append(" },\n");
+                sb.Append(" }");
+                if (i < array.GetLength(0) - 1) // Avoid trailing comma
+                    sb.Append(",");
+                sb.Append("\n");
             }
             sb.Append("}");
             return sb.ToString();

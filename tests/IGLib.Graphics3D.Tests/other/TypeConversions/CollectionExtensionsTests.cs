@@ -186,7 +186,7 @@ namespace IGLib.Core.Tests
 """
 {
     { 11, 12, 13 },
-    { 21, 22, 23 },
+    { 21, 22, 23 }
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
