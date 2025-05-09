@@ -31,19 +31,19 @@ namespace IGLib.Core.CollectionExtensions
             // Handle 1D arrays
             if (o is Array array && array.Rank == 1)
             {
-                return ((Array)o).Cast<object>().ToArray().ToReadableString();
+                return array.Cast<object>().ToArray().ToReadableString();
             }
 
             // Handle 2D rectangular arrays
             if (o is Array array2D && array2D.Rank == 2)
             {
-                return ((dynamic)o).ToReadableString();
+                return CastAndCallToReadableString(array2D);
             }
 
             // Handle 3D rectangular arrays
             if (o is Array array3D && array3D.Rank == 3)
             {
-                return ((dynamic)o).ToReadableString();
+                return CastAndCallToReadableString(array3D);
             }
 
             // Handle jagged arrays (1D array of arrays)
@@ -68,6 +68,28 @@ namespace IGLib.Core.CollectionExtensions
             return o.ToString();
         }
 
+        private static string CastAndCallToReadableString(Array array)
+        {
+            if (array is int[,] int2DArray)
+            {
+                return int2DArray.ToReadableString();
+            }
+            if (array is int[,,] int3DArray)
+            {
+                return int3DArray.ToReadableString();
+            }
+            if (array is string[,] string2DArray)
+            {
+                return string2DArray.ToReadableString();
+            }
+            if (array is string[,,] string3DArray)
+            {
+                return string3DArray.ToReadableString();
+            }
+            // Add more types as needed
+            return array.ToString(); // Fallback for unsupported types
+        }
+
         /// <summary>A helper method to handle jagged arrays dynamically.</summary>
         /// <param name="jaggedArray">The jagged array whose string representation should be returned.</param>
         /// <returns>String representation of the specified jagged array.</returns>
@@ -83,16 +105,17 @@ namespace IGLib.Core.CollectionExtensions
                     sb.Append(HandleJaggedArray((Array)element));
                     sb.Append(",\n");
                 }
-                else
+                else if (element is Array inner1DArray)
                 {
                     sb.Append("    ");
-                    sb.Append(((dynamic)element).ToReadableString());
+                    sb.Append(inner1DArray.Cast<object>().ToArray().ToReadableString());
                     sb.Append(",\n");
                 }
             }
             sb.Append("}");
             return sb.ToString();
         }
+
 
         /// <summary>Converts 1D  array to a readable string.</summary>
         /// <typeparam name="T">Type of array elements.</typeparam>
