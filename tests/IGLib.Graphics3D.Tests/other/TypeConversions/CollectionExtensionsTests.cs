@@ -263,8 +263,8 @@ namespace IGLib.Core.Tests
                 string expectedOutput =
 """
 {
-    { 11, 12, 13 },
-    { 21, 22, 23 },
+    {11, 12, 13},
+    {21, 22, 23},
 }
 """;
                 Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
@@ -421,7 +421,7 @@ namespace IGLib.Core.Tests
             int[] collection = IntArray;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -447,7 +447,7 @@ namespace IGLib.Core.Tests
             List<int> collection = IntList;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -473,7 +473,7 @@ namespace IGLib.Core.Tests
             IList<int> collection = IntIList;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -499,7 +499,7 @@ namespace IGLib.Core.Tests
             IEnumerable<int> collection = IntIEnumerable;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -525,7 +525,7 @@ namespace IGLib.Core.Tests
             int[,] collection = IntArray2x3;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -551,7 +551,7 @@ namespace IGLib.Core.Tests
             int[,,] collection = IntArray3x2x4;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -578,7 +578,7 @@ namespace IGLib.Core.Tests
             int[][] collection = IntJaggedArray2x3;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -605,7 +605,7 @@ namespace IGLib.Core.Tests
             int[][][] collection = IntJaggedArray3x2x4;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -637,7 +637,7 @@ namespace IGLib.Core.Tests
             int[][] collection = IntJaggedArrayNonrectangular2x3;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
@@ -664,7 +664,7 @@ namespace IGLib.Core.Tests
             int[][][] collection = IntJaggedArrayNonrectangular3x2x4;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
-            Console.WriteLine($"Expected string:\n<<\n{expectedOutput}\n>>");
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
             string stringRepresentation = obj.ToReadableString();
             Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
             stringRepresentation.Should().NotBeNullOrWhiteSpace();
