@@ -28,7 +28,13 @@ namespace IGLib.Core.CollectionExtensions
             if (o == null)
                 return "null";
 
-            // Handle 1D arrays
+            // Handle jagged arrays (1D array of arrays or deeper)
+            if (o is Array jaggedArray && jaggedArray.GetType().GetElementType()?.IsArray == true)
+            {
+                return HandleJaggedArray(jaggedArray);
+            }
+
+            // Handle 1D flat arrays
             if (o is Array array && array.Rank == 1)
             {
                 return array.Cast<object>().ToArray().ToReadableString();
@@ -44,12 +50,6 @@ namespace IGLib.Core.CollectionExtensions
             if (o is Array array3D && array3D.Rank == 3)
             {
                 return CastAndCallToReadableString(array3D);
-            }
-
-            // Handle jagged arrays (1D array of arrays)
-            if (o is Array jaggedArray && jaggedArray.GetType().GetElementType().IsArray)
-            {
-                return HandleJaggedArray(jaggedArray);
             }
 
             // Handle IList
