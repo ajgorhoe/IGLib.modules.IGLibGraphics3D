@@ -19,20 +19,20 @@ namespace IGLib.Tests.Base.SampleCollsctions
         /// <summary>Sample array of int (type <see cref="int[]"/>), for use in tests.</summary>
         public static int[] IntArray { get; } = { 1, 2, 3 };
 
+        /// <summary>Sample List of int (type <see cref="List{int}"/>), for use in tests.</summary>
+        public static List<int> IntList { get; } = [1, 2, 3, 4, 5];
+
         /// <summary>Sample IList of int (type <see cref="IList{int}"/>, actual type <see cref="CustomList{int}"/>), 
         /// for use in tests.</summary>
         public static IList<int> IntIList { get; } = new CustomList<int>() {1, 2, 3, 4 };
 
-        /// <summary>Sample List of int (type <see cref="List{int}"/>), for use in tests.</summary>
-        public static List<int> IntList { get; } = [1, 2, 3, 4, 5];
-
         /// <summary>Sample IList of int (type <see cref="IEnumerable{int}"/>, actual type 
         /// <see cref="CustomEnumerable{int}"/>), for use in tests.</summary>
-        public static IList<int> IntIEnumerable { get; } = new CustomList<int>() {1, 2, 3, 4, 5, 6 };
+        public static IEnumerable<int> IntIEnumerable { get; } = new CustomList<int>() {1, 2, 3, 4, 5, 6 };
 
         /// <summary>Sample 2D rectangular array of int (type <see cref="int[,]"/>), for use in tests.
         /// Dimensions of the array are 2*3.</summary>
-        public static int[,] IntArray_2_3 { get; } =
+        public static int[,] IntArray2x3 { get; } =
         {
             { 11, 12, 13 },
             { 21, 22, 23 }
@@ -40,7 +40,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
 
         /// <summary>Sample 3D rectangular array of int (type <see cref="int[,,]"/>), for use in tests.
         /// Dimensions of the array are 2*3*4.</summary>
-        public static int[,,] IntArray3_2_4 { get; } =
+        public static int[,,] IntArray3x2x4 { get; } =
         {
             {
                 { 111, 112, 113, 114 },
@@ -58,7 +58,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
 
         /// <summary>Sample 2D jagged array of int (type <see cref="int[][]"/>), for use in tests.
         /// Array's shape corresponds to a 2D rectangular 2*3 array.</summary>
-        public static int[][] IntJaggedArray_2_3 { get; } =
+        public static int[][] IntJaggedArray2x3 { get; } =
         {
             new int[] { 11, 12, 13 },
             new int[] { 21, 22, 23 }
@@ -67,7 +67,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
         /// <summary>Sample 2D jagged array of int (type <see cref="int[][]"/>), for use in tests.
         /// The array does not correspond to a rectangular array (some elements are missing).
         /// The smallest rectangular array that contains it is 2*3.</summary>
-        public static int[][] IntJaggedArrayNonrectangular_2_3 { get; } =
+        public static int[][] IntJaggedArrayNonrectangular2x3 { get; } =
         {
             new int[] { 11, 12, 13 },
             new int[] { 21, 22 }
@@ -75,7 +75,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
 
         /// <summary>Sample 2D jagged array of int (type <see cref="int[][][]"/>), for use in tests.
         /// Array's shape corresponds to a 2D rectangular 3*2*4 array.</summary>
-        public static int[][][] jaggedArray_3_2_4 { get; } =
+        public static int[][][] IntJaggedArray3x2x4 { get; } =
         {
             new int[][]
             {
@@ -97,7 +97,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
         /// <summary>Sample 3D jagged array of int (type <see cref="int[][][]"/>), for use in tests.
         /// The array does not correspond to a rectangular array (some elements are missing).
         /// The smallest rectangular array that contains it is 3*2*4.</summary>
-        public static int[][][] jaggedArrayNonrectangular_3_2_4 { get; } =
+        public static int[][][] IntJaggedArrayNonrectangular3x2x4 { get; } =
         {
             new int[][]
             {
