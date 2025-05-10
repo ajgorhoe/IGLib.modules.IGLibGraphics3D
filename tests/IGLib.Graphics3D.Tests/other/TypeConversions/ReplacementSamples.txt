@@ -1,0 +1,36 @@
+
+
+=========================
+=========================
+
+
+sb.Append($",");
+
+
+string.Join($", ", array)
+
+$"apple,banana,carrot"
+
+
+Console.WritwLine($", {$"{a} + ',' + {x}"} .")
+
+
+========================
+
+
+
+sb.Append($",");
+
+
+string.Join($", ", array)
+
+$"apple,banana,carrot"
+
+
+
+Console.WritwLine($", {$"{a} + ',' + {x}"} .")
+
+
+
+
+

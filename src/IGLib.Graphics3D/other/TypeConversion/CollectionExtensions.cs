@@ -149,7 +149,7 @@ namespace IGLib.Core.CollectionExtensions
                 // Append a comma unless it's the last element
                 if (i < jaggedArray.Length - 1)
                 {
-                    sb.Append($",");
+                    sb.Append($"{ArraySeparator}");
                 }
 
                 sb.Append($"\n");
@@ -170,7 +170,7 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
-            return $"{ArrayBracketOpen}{string.Join($", ", array)}{ArrayBracketClosed}";
+            return $"{ArrayBracketOpen}{string.Join($"{ArraySeparator} ", array)}{ArrayBracketClosed}";
         }
 
 
@@ -181,7 +181,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{ArrayBracketOpen}{string.Join($", ", list)}{ArrayBracketClosed}";
+            return $"{ArrayBracketOpen}{string.Join($"{ArraySeparator} ", list)}{ArrayBracketClosed}";
         }
 
 
@@ -193,7 +193,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{ArrayBracketOpen}{string.Join($", ", enumerable)}{ArrayBracketClosed}";
+            return $"{ArrayBracketOpen}{string.Join($"{ArraySeparator} ", enumerable)}{ArrayBracketClosed}";
         }
 
 
@@ -214,16 +214,16 @@ namespace IGLib.Core.CollectionExtensions
             sb.Append($"{ArrayBracketOpen}\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append($"    {ArrayBracketOpen}");
+                sb.Append($"{ArrayIndentation}{ArrayBracketOpen}");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     sb.Append(array[i, j]);
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
-                        sb.Append($", ");
+                        sb.Append($"{ArraySeparator} ");
                 }
                 sb.Append($"{ArrayBracketClosed}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
-                    sb.Append($",");
+                    sb.Append($"{ArraySeparator}");
                 sb.Append($"\n");
             }
             sb.Append($"{ArrayBracketClosed}");
@@ -247,24 +247,24 @@ namespace IGLib.Core.CollectionExtensions
             sb.Append($"{ArrayBracketOpen}\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append($"    {ArrayBracketOpen}\n");
+                sb.Append($"{ArrayIndentation}{ArrayBracketOpen}\n");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    sb.Append($"        {ArrayBracketOpen}");
+                    sb.Append($"{ArrayIndentation}{ArrayIndentation}{ArrayBracketOpen}");
                     for (int k = 0; k < array.GetLength(2); k++)
                     {
                         sb.Append(array[i, j, k]);
                         if (k < array.GetLength(2) - 1) // Avoid trailing comma
-                            sb.Append($", ");
+                            sb.Append($"{ArraySeparator} ");
                     }
                     sb.Append($"{ArrayBracketClosed}");
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
-                        sb.Append($",");
+                        sb.Append($"{ArraySeparator}");
                     sb.Append($"\n");
                 }
-                sb.Append($"    {ArrayBracketClosed}");
+                sb.Append($"{ArrayIndentation}{ArrayBracketClosed}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
-                    sb.Append($",");
+                    sb.Append($"{ArraySeparator}");
                 sb.Append($"\n");
             }
             sb.Append($"{ArrayBracketClosed}");
@@ -285,10 +285,10 @@ namespace IGLib.Core.CollectionExtensions
             sb.Append($"{ArrayBracketOpen}\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
-                sb.Append($"    ");
+                sb.Append($"{ArrayIndentation}");
                 sb.Append(jaggedArray[i].ToReadableString()); // Reuse 1D array method
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
-                    sb.Append($",");
+                    sb.Append($"{ArraySeparator}");
                 sb.Append($"\n");
             }
             sb.Append($"{ArrayBracketClosed}");
@@ -307,18 +307,18 @@ namespace IGLib.Core.CollectionExtensions
             sb.Append($"{ArrayBracketOpen}\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
-                sb.Append($"    {ArrayBracketOpen}\n");
+                sb.Append($"{ArrayIndentation}{ArrayBracketOpen}\n");
                 for (int j = 0; j < jaggedArray[i].Length; j++)
                 {
-                    sb.Append($"        ");
+                    sb.Append($"{ArrayIndentation}{ArrayIndentation}");
                     sb.Append(jaggedArray[i][j].ToReadableString()); // Reuse 1D array method
                     if (j < jaggedArray[i].Length - 1) // Avoid trailing comma
-                        sb.Append($",");
+                        sb.Append($"{ArraySeparator}");
                     sb.Append($"\n");
                 }
-                sb.Append($"    {ArrayBracketClosed}");
+                sb.Append($"{ArrayIndentation}{ArrayBracketClosed}");
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
-                    sb.Append($",");
+                    sb.Append($"{ArraySeparator}");
                 sb.Append($"\n");
             }
             sb.Append($"{ArrayBracketClosed}");
