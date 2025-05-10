@@ -129,7 +129,7 @@ namespace IGLib.Core.CollectionExtensions
             var sb = new StringBuilder();
             string indent = new string(' ', indentLevel * 4); // Indentation string based on the current level
 
-            sb.Append(indent + "{\n");
+            sb.Append(indent + $"{{\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 var element = jaggedArray.GetValue(i);
@@ -149,12 +149,12 @@ namespace IGLib.Core.CollectionExtensions
                 // Append a comma unless it's the last element
                 if (i < jaggedArray.Length - 1)
                 {
-                    sb.Append(",");
+                    sb.Append($",");
                 }
 
-                sb.Append("\n");
+                sb.Append($"\n");
             }
-            sb.Append(indent + "}");
+            sb.Append(indent + $"}}");
             return sb.ToString();
         }
 
@@ -170,7 +170,7 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
-            return $"{{{string.Join(", ", array)}}}";
+            return $"{{{string.Join($", ", array)}}}";
         }
 
 
@@ -181,7 +181,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{{{string.Join(", ", list)}}}";
+            return $"{{{string.Join($", ", list)}}}";
         }
 
 
@@ -193,7 +193,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{{{string.Join(", ", enumerable)}}}";
+            return $"{{{string.Join($", ", enumerable)}}}";
         }
 
 
@@ -211,22 +211,22 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             var sb = new StringBuilder();
-            sb.Append("{\n");
+            sb.Append($"{{\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append("    {");
+                sb.Append($"    {{");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     sb.Append(array[i, j]);
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
-                        sb.Append(", ");
+                        sb.Append($", ");
                 }
-                sb.Append("}");
+                sb.Append($"}}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
-                    sb.Append(",");
-                sb.Append("\n");
+                    sb.Append($",");
+                sb.Append($"\n");
             }
-            sb.Append("}");
+            sb.Append($"}}");
             return sb.ToString();
         }
 
@@ -244,30 +244,30 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             var sb = new StringBuilder();
-            sb.Append("{\n");
+            sb.Append($"{{\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append("    {\n");
+                sb.Append($"    {{\n");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    sb.Append("        {");
+                    sb.Append($"        {{");
                     for (int k = 0; k < array.GetLength(2); k++)
                     {
                         sb.Append(array[i, j, k]);
                         if (k < array.GetLength(2) - 1) // Avoid trailing comma
-                            sb.Append(", ");
+                            sb.Append($", ");
                     }
-                    sb.Append("}");
+                    sb.Append($"}}");
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
-                        sb.Append(",");
-                    sb.Append("\n");
+                        sb.Append($",");
+                    sb.Append($"\n");
                 }
-                sb.Append("    }");
+                sb.Append($"    }}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
-                    sb.Append(",");
-                sb.Append("\n");
+                    sb.Append($",");
+                sb.Append($"\n");
             }
-            sb.Append("}");
+            sb.Append($"}}");
             return sb.ToString();
         }
 
@@ -282,16 +282,16 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             var sb = new StringBuilder();
-            sb.Append("{\n");
+            sb.Append($"{{\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
-                sb.Append("    ");
+                sb.Append($"    ");
                 sb.Append(jaggedArray[i].ToReadableString()); // Reuse 1D array method
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
-                    sb.Append(",");
-                sb.Append("\n");
+                    sb.Append($",");
+                sb.Append($"\n");
             }
-            sb.Append("}");
+            sb.Append($"}}");
             return sb.ToString();
         }
 
@@ -304,24 +304,24 @@ namespace IGLib.Core.CollectionExtensions
                 return NullString;
             }
             var sb = new StringBuilder();
-            sb.Append("{\n");
+            sb.Append($"{{\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
-                sb.Append("    {\n");
+                sb.Append($"    {{\n");
                 for (int j = 0; j < jaggedArray[i].Length; j++)
                 {
-                    sb.Append("        ");
+                    sb.Append($"        ");
                     sb.Append(jaggedArray[i][j].ToReadableString()); // Reuse 1D array method
                     if (j < jaggedArray[i].Length - 1) // Avoid trailing comma
-                        sb.Append(",");
-                    sb.Append("\n");
+                        sb.Append($",");
+                    sb.Append($"\n");
                 }
-                sb.Append("    }");
+                sb.Append($"    }}");
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
-                    sb.Append(",");
-                sb.Append("\n");
+                    sb.Append($",");
+                sb.Append($"\n");
             }
-            sb.Append("}");
+            sb.Append($"}}");
             return sb.ToString();
         }
 
