@@ -7,6 +7,7 @@ using System.Diagnostics;
 using IGLib.Tests.Base;
 using System.Linq;
 using System.Collections;
+using IGLib.Core;
 using IGLib.Core.CollectionExtensions;
 using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
 

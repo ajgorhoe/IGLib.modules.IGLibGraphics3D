@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IGLib.Core.CollectionExtensions
+namespace IGLib.Core.CollectionExtensions_NEW
 {
     /// <summary>
     /// Provides extension methods for converting arrays, lists, and enumerable types to readable string representations.
     /// </summary>
-    public static class CollectionExtensions
+    public static class CollectionExtensions_NEW
     {
+
         /// <summary>Open bracket used in the string representation of array-like objects.</summary>
         public const string ArrayBracketOpen = "{";
 
@@ -145,6 +146,121 @@ namespace IGLib.Core.CollectionExtensions
             return sb.ToString();
         }
 
-        // Other methods (e.g., for lists, enumerables, 2D/3D arrays) are already parameterized in the previous version.
+
+        // Other methods (e.g., for lists, enumerables, 2D/3D arrays) are parameterized below:
+
+
+        /// <summary>
+        /// Converts a 1D array to a readable string using the specified formatting parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of array elements.</typeparam>
+        /// <param name="array">The 1D array to be converted.</param>
+        /// <param name="openBracket">The open bracket to use (default is "{").</param>
+        /// <param name="closedBracket">The closed bracket to use (default is "}").</param>
+        /// <param name="separator">The separator to use between elements (default is ",").</param>
+        /// <returns>A formatted string representation of the 1D array.</returns>
+        public static string ToReadableString<T>(this T[] array, string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed, string separator = ArraySeparator)
+        {
+            if (array == null)
+                return NullString;
+
+            return $"{openBracket}{string.Join(separator + " ", array)}{closedBracket}";
+        }
+
+        /// <summary>
+        /// Converts a 2D rectangular array to a readable string using the specified formatting parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of array elements.</typeparam>
+        /// <param name="array">The 2D array to be converted.</param>
+        /// <param name="indentation">The indentation to use for nested levels (default is "    ").</param>
+        /// <param name="openBracket">The open bracket to use (default is "{").</param>
+        /// <param name="closedBracket">The closed bracket to use (default is "}").</param>
+        /// <param name="separator">The separator to use between elements (default is ",").</param>
+        /// <returns>A formatted string representation of the 2D array.</returns>
+        public static string ToReadableString<T>(this T[,] array, string indentation = ArrayIndentation, string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed, string separator = ArraySeparator)
+        {
+            if (array == null)
+                return NullString;
+
+            var sb = new StringBuilder();
+            sb.Append($"{openBracket}\n");
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                sb.Append($"{indentation}{openBracket}");
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    sb.Append(array[i, j]);
+                    if (j < array.GetLength(1) - 1)
+                        sb.Append($"{separator} ");
+                }
+                sb.Append($"{closedBracket}");
+                if (i < array.GetLength(0) - 1)
+                    sb.Append($"{separator}");
+                sb.Append("\n");
+            }
+            sb.Append($"{closedBracket}");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Converts a 3D rectangular array to a readable string using the specified formatting parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of array elements.</typeparam>
+        /// <param name="array">The 3D array to be converted.</param>
+        /// <param name="indentation">The indentation to use for nested levels (default is "    ").</param>
+        /// <param name="openBracket">The open bracket to use (default is "{").</param>
+        /// <param name="closedBracket">The closed bracket to use (default is "}").</param>
+        /// <param name="separator">The separator to use between elements (default is ",").</param>
+        /// <returns>A formatted string representation of the 3D array.</returns>
+        public static string ToReadableString<T>(this T[,,] array, string indentation = ArrayIndentation, string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed, string separator = ArraySeparator)
+        {
+            if (array == null)
+                return NullString;
+
+            var sb = new StringBuilder();
+            sb.Append($"{openBracket}\n");
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                sb.Append($"{indentation}{openBracket}\n");
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    sb.Append($"{indentation}{indentation}{openBracket}");
+                    for (int k = 0; k < array.GetLength(2); k++)
+                    {
+                        sb.Append(array[i, j, k]);
+                        if (k < array.GetLength(2) - 1)
+                            sb.Append($"{separator} ");
+                    }
+                    sb.Append($"{closedBracket}");
+                    if (j < array.GetLength(1) - 1)
+                        sb.Append($"{separator}");
+                    sb.Append("\n");
+                }
+                sb.Append($"{indentation}{closedBracket}");
+                if (i < array.GetLength(0) - 1)
+                    sb.Append($"{separator}");
+                sb.Append("\n");
+            }
+            sb.Append($"{closedBracket}");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Converts an <see cref="IEnumerable{T}"/> object to a readable string using the specified formatting parameters.
+        /// </summary>
+        /// <typeparam name="T">Type of enumerable elements.</typeparam>
+        /// <param name="enumerable">The enumerable to be converted.</param>
+        /// <param name="openBracket">The open bracket to use (default is "{").</param>
+        /// <param name="closedBracket">The closed bracket to use (default is "}").</param>
+        /// <param name="separator">The separator to use between elements (default is ",").</param>
+        /// <returns>A formatted string representation of the enumerable.</returns>
+        public static string ToReadableString<T>(this IEnumerable<T> enumerable, string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed, string separator = ArraySeparator)
+        {
+            if (enumerable == null)
+                return NullString;
+
+            return $"{openBracket}{string.Join(separator + " ", enumerable)}{closedBracket}";
+        }
+
     }
 }

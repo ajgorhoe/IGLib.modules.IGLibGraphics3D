@@ -4,11 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IGLib.Core.CollectionExtensions_OLD
+namespace IGLib.Core.CollectionExtensions
 {
 
-    public static class CollectionExtensions_OLD
+    public static class CollectionExtensions
     {
+
+
+        /// <summary>Open bracket used in the string representation of array-like objects.</summary>
+        public const string ArrayBracketOpen = "{";
+
+        /// <summary>Closed bracket used in the string representation of array-like objects.</summary>
+        public const string ArrayBracketClosed = "}";
+
+        /// <summary>Array element separator used in the string representation of array-like objects.</summary>
+        public const string ArraySeparator = ",";
+
+        /// <summary>Default indentation used in the string representation of array-like objects.</summary>
+        public const string ArrayIndentation = "    ";
 
         public const string NullString = "null";
 
