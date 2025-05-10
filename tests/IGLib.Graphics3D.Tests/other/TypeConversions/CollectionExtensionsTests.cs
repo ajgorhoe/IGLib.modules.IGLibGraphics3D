@@ -7,7 +7,6 @@ using System.Diagnostics;
 using IGLib.Tests.Base;
 using System.Linq;
 using System.Collections;
-using IGLib.Core;
 using IGLib.Core.CollectionExtensions;
 using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
 
@@ -24,17 +23,20 @@ namespace IGLib.Core.Tests
         /// constructor) by the test framework. I is also stored to Console property, such that
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
-        public CollectionExtensionsTests(ITestOutputHelper output) : base(output)
+        public CollectionExtensionsTests(ITestOutputHelper output) : base(output) 
         { }
 
-        /// <summary>Open bracket used the string representation of array-like objects.</summary>
-        protected string ArrayBracketOpen { get; } = "{";
+        /// <summary>Open bracket used in the string representation of array-like objects.</summary>
+        protected string ArrayIndentation { get; } = CollectionExtensions.CollectionExtensions.ArrayIndentation;
 
-        /// <summary>Closed bracket used the string representation of array-like objects.</summary>
-        protected string ArrayBracketClosed { get; } = "}";
+        /// <summary>Open bracket used in the string representation of array-like objects.</summary>
+        protected string ArrayBracketOpen { get; } = CollectionExtensions.CollectionExtensions.ArrayBracketOpen;
 
-        /// <summary>Array element separator used the string representation of array-like objects.</summary>
-        protected string ArraySeparator { get; } = ",";
+        /// <summary>Closed bracket used in the string representation of array-like objects.</summary>
+        protected string ArrayBracketClosed { get; } = CollectionExtensions.CollectionExtensions.ArrayBracketClosed;
+
+        /// <summary>Array element separator used in the string representation of array-like objects.</summary>
+        protected string ArraySeparator { get; } = CollectionExtensions.CollectionExtensions.ArraySeparator;
 
 
         #region ToReadableString_ForCollections_BasicTests
@@ -175,6 +177,7 @@ namespace IGLib.Core.Tests
             stringRepresentation.Should().Contain(ArrayBracketOpen);
             stringRepresentation.Should().Contain(ArrayBracketClosed);
             stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
             foreach (int i in collection)
             {
                 stringRepresentation.Should().Contain(i.ToString());
@@ -208,6 +211,8 @@ namespace IGLib.Core.Tests
             stringRepresentation.Should().Contain(ArrayBracketOpen);
             stringRepresentation.Should().Contain(ArrayBracketClosed);
             stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
+            stringRepresentation.Should().Contain(ArrayIndentation + ArrayIndentation);
             foreach (int i in collection)
             {
                 stringRepresentation.Should().Contain(i.ToString());
@@ -252,6 +257,7 @@ namespace IGLib.Core.Tests
             stringRepresentation.Should().Contain(ArrayBracketOpen);
             stringRepresentation.Should().Contain(ArrayBracketClosed);
             stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
             foreach (int[] subCollection in collection)
             {
                 foreach (int element in subCollection)
