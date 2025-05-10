@@ -189,7 +189,9 @@ namespace IGLib.Core.CollectionExtensions
         /// <summary>Converts an <see cref="IEnumerable{T}"/> object to a readable string.</summary>
         /// <typeparam name="T">Type of array elements.</typeparam>
         /// <param name="enumerable"><see cref="IEnumerable{T}"/> object to be converted.</param>
-        public static string ToReadableString<T>(this IEnumerable<T> enumerable)
+        public static string ToReadableString<T>(this IEnumerable<T> enumerable, string indentation = ArrayIndentation,
+            string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
+            string separator = ArraySeparator)
         {
             return $"{{{string.Join(", ", enumerable)}}}";
         }
