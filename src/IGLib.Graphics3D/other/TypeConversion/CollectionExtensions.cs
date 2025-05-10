@@ -17,38 +17,21 @@ namespace IGLib.Core.CollectionExtensions
     public static class CollectionExtensions
     {
 
-        /*
-        ORIGINAL PARAMETERS:
-
         /// <summary>Open bracket used in the string representation of array-like objects.</summary>
-        public const string ArrayBracketOpen = "{";
+        public const string ArrayBracketOpen = "{";    // alternative: "[";
 
         /// <summary>Closed bracket used in the string representation of array-like objects.</summary>
-        public const string ArrayBracketClosed = "}";
+        public const string ArrayBracketClosed = "}";    // alternative: "]";
 
         /// <summary>Array element separator used in the string representation of array-like objects.</summary>
-        public const string ArraySeparator = ",";
+        public const string ArraySeparator = ",";    // alternative: " |";
 
         /// <summary>Default indentation used in the string representation of array-like objects.</summary>
-        public const string ArrayIndentation = "    ";
-
-        */
-
-
-        /// <summary>Open bracket used in the string representation of array-like objects.</summary>
-        public const string ArrayBracketOpen = "[[";
-
-        /// <summary>Closed bracket used in the string representation of array-like objects.</summary>
-        public const string ArrayBracketClosed = "]]";
-
-        /// <summary>Array element separator used in the string representation of array-like objects.</summary>
-        public const string ArraySeparator = " |";
-
-        /// <summary>Default indentation used in the string representation of array-like objects.</summary>
-        public const string ArrayIndentation = "····";
+        public const string ArrayIndentation = "    ";    // alternative: "··";
 
         /// <summary>String that is used to output null objects.</summary>
         public const string NullString = "null";
+
 
 
         /// <summary>Converts the specified object <paramref name="o"/> to a readable string.

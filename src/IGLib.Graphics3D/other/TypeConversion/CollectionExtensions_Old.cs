@@ -6,14 +6,18 @@ using System.Net.Http;
 using System.Text;
 
 
-// WARNING: 
-// This works while the newer version has produces compiler errors.
-// Keep this version until errors are resolved.
 
 
-namespace IGLib.Core.CollectionExtensions_OLD
+namespace IGLib.Core.CollectionExtensions.Old
 {
 
+    /// <summary>
+    /// This is an original version of the <see cref="IGLib.Core.CollectionExtensions.CollectionExtensions"/>
+    /// class. This class should not be used in development any more, and is kept only for compatibility reasons 
+    /// and as reference. 
+    /// <para>Because format of the generated string representations of array-like objects
+    /// is not parameterized, the code of this class is more readable.</para></summary>
+    [Obsolete("Use IGLib.Core.CollectionExtensions.CollectionExtensions instead of this class.")]
     public static class CollectionExtensions
     {
 
