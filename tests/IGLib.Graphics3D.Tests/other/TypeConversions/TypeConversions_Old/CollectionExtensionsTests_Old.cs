@@ -15,7 +15,7 @@ namespace IGLib.Core.Tests.Old
 {
 
     /// <summary>Tests utilities from the <see cref="CollectionExtensions"/> class.</summary>
-    public class CollectionExtensionsTests : TestBase<CollectionExtensionsTests>
+    public class CollectionExtensionsTests_Old : TestBase<CollectionExtensionsTests>
     {
 
         /// <summary>Calling base constructor initializes things like <see cref="TestBase{TestClass}.Output"/> 
@@ -24,7 +24,7 @@ namespace IGLib.Core.Tests.Old
         /// constructor) by the test framework. I is also stored to Console property, such that
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
-        public CollectionExtensionsTests(ITestOutputHelper output) : base(output) 
+        public CollectionExtensionsTests_Old(ITestOutputHelper output) : base(output) 
         { }
 
         /// <summary>Open bracket used in the string representation of array-like objects.</summary>

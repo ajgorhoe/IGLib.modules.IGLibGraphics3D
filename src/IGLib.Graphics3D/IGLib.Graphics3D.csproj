@@ -57,5 +57,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="other\Core\" />
+	  <Folder Include="other\TypeConversion\TypeConversion_Old\" />
 	</ItemGroup>
 </Project>

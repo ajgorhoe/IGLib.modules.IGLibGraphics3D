@@ -6,8 +6,6 @@ using System.Net.Http;
 using System.Text;
 
 
-
-
 namespace IGLib.Core.CollectionExtensions.Old
 {
 
@@ -18,7 +16,7 @@ namespace IGLib.Core.CollectionExtensions.Old
     /// <para>Because format of the generated string representations of array-like objects
     /// is not parameterized, the code of this class is more readable.</para></summary>
     [Obsolete("Use IGLib.Core.CollectionExtensions.CollectionExtensions instead of this class.")]
-    public static class CollectionExtensions
+    public static class CollectionExtensionsOld
     {
 
 
