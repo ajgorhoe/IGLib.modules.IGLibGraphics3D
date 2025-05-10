@@ -30,6 +30,7 @@ namespace IGLib.Core.CollectionExtensions_OLD
         /// <summary>Default indentation used in the string representation of array-like objects.</summary>
         public const string ArrayIndentation = "    ";
 
+        /// <summary>String that is used to output null objects.</summary>
         public const string NullString = "null";
 
 
