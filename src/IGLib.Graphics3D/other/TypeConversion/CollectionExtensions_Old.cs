@@ -2,9 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 
-namespace IGLib.Core.CollectionExtensions
+
+// WARNING: 
+// This works while the newer version has produces compiler errors.
+// Keep this version until errors are resolved.
+
+
+namespace IGLib.Core.CollectionExtensions_OLD
 {
 
     public static class CollectionExtensions
