@@ -170,7 +170,7 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
-            return $"{{{string.Join($", ", array)}}}";
+            return $"{ArrayBracketOpen}{string.Join($", ", array)}{ArrayBracketClosed}";
         }
 
 
@@ -181,7 +181,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{{{string.Join($", ", list)}}}";
+            return $"{ArrayBracketOpen}{string.Join($", ", list)}{ArrayBracketClosed}";
         }
 
 
@@ -193,7 +193,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{{{string.Join($", ", enumerable)}}}";
+            return $"{ArrayBracketOpen}{string.Join($", ", enumerable)}{ArrayBracketClosed}";
         }
 
 
