@@ -37,9 +37,9 @@ namespace IGLib.Core.CollectionExtensions
         /// <summary>Converts the specified object <paramref name="o"/> to a readable string.
         /// <para>This method dynamically checks the actual type of <paramref name="o"/>. If the object
         /// is an array, 2 or 3 dimensional rectangular array, 2 or 3 dimensional ljagged array, a
-        /// list (it implwments the <see cref="IList"/> interface) or enumerable (it implements the
+        /// list (it implements the <see cref="IList"/> interface) or enumerable (it implements the
         /// <see cref="IEnumerable"/> interface, then the appropriate method is called to produce
-        /// the string representation suitable for array-like objectrs.</para></summary>
+        /// the string representation suitable for array-like objects.</para></summary>
         /// <param name="o">Object to be converted to a readable string.</param>
         /// <returns>Ths string containing a representation of the <paramref name="o"/>,
         /// <paramref name="indentation">String used for single indentation; default is <see cref="ArrayIndentation"/></paramref>
