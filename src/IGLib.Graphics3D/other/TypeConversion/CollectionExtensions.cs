@@ -17,6 +17,8 @@ namespace IGLib.Core.CollectionExtensions
     public static class CollectionExtensions
     {
 
+        /*
+        ORIGINAL PARAMETERS:
 
         /// <summary>Open bracket used in the string representation of array-like objects.</summary>
         public const string ArrayBracketOpen = "{";
@@ -29,6 +31,21 @@ namespace IGLib.Core.CollectionExtensions
 
         /// <summary>Default indentation used in the string representation of array-like objects.</summary>
         public const string ArrayIndentation = "    ";
+
+        */
+
+
+        /// <summary>Open bracket used in the string representation of array-like objects.</summary>
+        public const string ArrayBracketOpen = "[[";
+
+        /// <summary>Closed bracket used in the string representation of array-like objects.</summary>
+        public const string ArrayBracketClosed = "]]";
+
+        /// <summary>Array element separator used in the string representation of array-like objects.</summary>
+        public const string ArraySeparator = " |";
+
+        /// <summary>Default indentation used in the string representation of array-like objects.</summary>
+        public const string ArrayIndentation = "····";
 
         /// <summary>String that is used to output null objects.</summary>
         public const string NullString = "null";
@@ -127,8 +144,8 @@ namespace IGLib.Core.CollectionExtensions
             string separator = ArraySeparator)
         {
             var sb = new StringBuilder();
-            string indent = new string(' ', indentLevel * 4); // Indentation string based on the current level
-
+            // This has been replaced: string indent = new string(' ', indentLevel * 4); // Indentation string based on the current level
+            string indent = string.Concat(Enumerable.Repeat(indentation, indentLevel));
             sb.Append(indent + $"{ArrayBracketOpen}\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
@@ -137,12 +154,14 @@ namespace IGLib.Core.CollectionExtensions
                 if (element is Array innerArray && innerArray.GetType().GetElementType()?.IsArray == true)
                 {
                     // Recursively handle nested jagged arrays
-                    sb.Append(HandleJaggedArray((Array)element, indentLevel + 1));
+                    sb.Append(HandleJaggedArray((Array)element, indentLevel + 1,
+                        indentation, openBracket, closedBracket, separator));
                 }
                 else if (element is Array inner1DArray)
                 {
                     // Handle 1D arrays
-                    sb.Append(new string(' ', (indentLevel + 1) * 4));
+                    // This is replaced below: sb.Append(new string(' ', (indentLevel + 1) * 4));
+                    sb.Append(string.Concat(Enumerable.Repeat(indentation, indentLevel + 1)));
                     sb.Append(inner1DArray.Cast<object>().ToArray().ToReadableString());
                 }
 
