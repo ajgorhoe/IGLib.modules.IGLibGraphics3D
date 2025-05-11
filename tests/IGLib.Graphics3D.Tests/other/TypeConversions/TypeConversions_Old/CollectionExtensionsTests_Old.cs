@@ -696,6 +696,7 @@ namespace IGLib.Core.Tests.Old
         #endregion ToReadableString_ForCollections_Dynamic
 
 
+
     }
 
 }

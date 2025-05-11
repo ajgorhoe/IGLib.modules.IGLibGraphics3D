@@ -15,6 +15,11 @@ namespace IGLib.Core.CollectionExtensions.Old
     /// and as reference. 
     /// <para>Because format of the generated string representations of array-like objects
     /// is not parameterized, the code of this class is more readable.</para></summary>
+    /// <remarks>This class, together withthe corresponding unit tests, may be removed in the
+    /// future.
+    /// <para>For now, the class is left in the code because it is unclear whether it may be used
+    /// for some particular purpose. the class i less flexible than  the <see cref="IGLib.Core.CollectionExtensions.CollectionExtensions"/></para>,
+    /// but it is </remarks>
     [Obsolete("Use IGLib.Core.CollectionExtensions.CollectionExtensions instead of this class.")]
     public static class CollectionExtensionsOld
     {
