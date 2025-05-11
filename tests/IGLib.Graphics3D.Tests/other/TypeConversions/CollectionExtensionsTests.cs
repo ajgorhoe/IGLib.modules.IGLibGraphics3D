@@ -870,16 +870,6 @@ namespace IGLib.Core.Tests
         }
 
 
-
-
-
-
-
-
-
-
-
-
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -935,18 +925,6 @@ namespace IGLib.Core.Tests
                 stringRepresentation.Should().Be(expectedOutput);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         #endregion CustomFormatting
