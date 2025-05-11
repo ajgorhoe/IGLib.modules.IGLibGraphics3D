@@ -419,6 +419,7 @@ namespace IGLib.Core.Tests
         // Tests in this region perform verification of correctness of the extension methogs
         // ToreadableString(...) for object parameters whose actual types are array-like.
 
+
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -802,13 +803,15 @@ namespace IGLib.Core.Tests
             }
         }
 
-        // Dynamic type detection:
 
+        #region CustomFormatting.Dynamic
+        // Dynamic type detection:
 
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        protected void CollectionExtensoins_ToReadableStringCustomFormatDynamic_JaggedArray3dNonrectangularOfInt_WorksCorrectly(bool checkPreciseOutput)
+        protected void CollectionExtensoins_ToReadableStringCustomFormatDynamic_JaggedArray3dNonrectangularOfInt_WorksCorrectly(
+            bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
             int[][][] collection = IntJaggedArrayNonrectangular3x2x4;
@@ -832,6 +835,34 @@ namespace IGLib.Core.Tests
                     foreach (int element in subSubCollection)
                         stringRepresentation.Should().Contain(element.ToString());
                 }
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringCustomFormatDynamic_ArrayOfInt_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting an integer array to a readable string...");
+            int[] collection = IntArray;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString(indentation: CustomIndentation,
+                openBracket: CustomOpenBracket, closedBracket: CustomClosedBracket, separator: CustomSeparator);
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString(indentation: CustomIndentation,
+                openBracket: CustomOpenBracket, closedBracket: CustomClosedBracket, separator: CustomSeparator);
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(CustomOpenBracket);
+            stringRepresentation.Should().Contain(CustomClosedBracket);
+            stringRepresentation.Should().Contain(CustomSeparator);
+            foreach (int i in collection)
+            {
+                stringRepresentation.Should().Contain(i.ToString());
             }
             if (checkPreciseOutput)
             {
@@ -926,6 +957,8 @@ namespace IGLib.Core.Tests
             }
         }
 
+
+        #endregion CustomFormatting.Dynamic
 
         #endregion CustomFormatting
 
