@@ -693,8 +693,62 @@ namespace IGLib.Core.Tests
         }
 
 
-
         #endregion ToReadableString_ForCollections_Dynamic
+
+
+
+        #region CustomFormatting
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringCustomFormat_RectangularArray3dOfInt_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D rectangular array of integers to a readable string...");
+            int[,,] collection = IntArray3x2x4;
+            string stringRepresentation = collection.ToReadableString(indentation: "··", openBracket: "[", 
+                closedBracket: "]", separator: ";");
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
+            stringRepresentation.Should().Contain(ArrayIndentation + ArrayIndentation);
+            foreach (int i in collection)
+            {
+                stringRepresentation.Should().Contain(i.ToString());
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {
+        {111, 112, 113, 114},
+        {121, 122, 123, 124}
+    },
+    {
+        {211, 212, 213, 214},
+        {221, 222, 223, 224}
+    },
+    {
+        {311, 312, 313, 314},
+        {321, 322, 323, 324}
+    }
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
+
+
+
+        #endregion CustomFormatting
 
 
 
