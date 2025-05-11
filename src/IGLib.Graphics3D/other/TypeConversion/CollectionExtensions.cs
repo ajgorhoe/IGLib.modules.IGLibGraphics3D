@@ -129,7 +129,7 @@ namespace IGLib.Core.CollectionExtensions
             var sb = new StringBuilder();
             // This has been replaced: string indent = new string(' ', indentLevel * 4); // Indentation string based on the current level
             string indent = string.Concat(Enumerable.Repeat(indentation, indentLevel));
-            sb.Append(indent + $"{ArrayBracketOpen}\n");
+            sb.Append(indent + $"{openBracket}\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 var element = jaggedArray.GetValue(i);
@@ -151,12 +151,12 @@ namespace IGLib.Core.CollectionExtensions
                 // Append a comma unless it's the last element
                 if (i < jaggedArray.Length - 1)
                 {
-                    sb.Append($"{ArraySeparator}");
+                    sb.Append($"{separator}");
                 }
 
                 sb.Append($"\n");
             }
-            sb.Append(indent + $"{ArrayBracketClosed}");
+            sb.Append(indent + $"{closedBracket}");
             return sb.ToString();
         }
 
@@ -172,7 +172,7 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
-            return $"{ArrayBracketOpen}{string.Join($"{ArraySeparator} ", array)}{ArrayBracketClosed}";
+            return $"{openBracket}{string.Join($"{separator} ", array)}{closedBracket}";
         }
 
 
@@ -183,7 +183,7 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{ArrayBracketOpen}{string.Join($"{ArraySeparator} ", list)}{ArrayBracketClosed}";
+            return $"{openBracket}{string.Join($"{separator} ", list)}{closedBracket}";
         }
 
 
@@ -191,11 +191,13 @@ namespace IGLib.Core.CollectionExtensions
         /// <summary>Converts an <see cref="IEnumerable{T}"/> object to a readable string.</summary>
         /// <typeparam name="T">Type of array elements.</typeparam>
         /// <param name="enumerable"><see cref="IEnumerable{T}"/> object to be converted.</param>
+        /// <param name="indentation">This parameter is not relevent for the current method, but is kept
+        /// in order to resolve ambiguity with metods that take a jagged array parameter.</param>
         public static string ToReadableString<T>(this IEnumerable<T> enumerable, string indentation = ArrayIndentation,
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{ArrayBracketOpen}{string.Join($"{ArraySeparator} ", enumerable)}{ArrayBracketClosed}";
+            return $"{openBracket}{string.Join($"{separator} ", enumerable)}{closedBracket}";
         }
 
 
@@ -213,22 +215,22 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             var sb = new StringBuilder();
-            sb.Append($"{ArrayBracketOpen}\n");
+            sb.Append($"{openBracket}\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append($"{ArrayIndentation}{ArrayBracketOpen}");
+                sb.Append($"{indentation}{openBracket}");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     sb.Append(array[i, j]);
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
-                        sb.Append($"{ArraySeparator} ");
+                        sb.Append($"{separator} ");
                 }
-                sb.Append($"{ArrayBracketClosed}");
+                sb.Append($"{closedBracket}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
-                    sb.Append($"{ArraySeparator}");
+                    sb.Append($"{separator}");
                 sb.Append($"\n");
             }
-            sb.Append($"{ArrayBracketClosed}");
+            sb.Append($"{closedBracket}");
             return sb.ToString();
         }
 
@@ -246,35 +248,35 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             var sb = new StringBuilder();
-            sb.Append($"{ArrayBracketOpen}\n");
+            sb.Append($"{openBracket}\n");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                sb.Append($"{ArrayIndentation}{ArrayBracketOpen}\n");
+                sb.Append($"{indentation}{openBracket}\n");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    sb.Append($"{ArrayIndentation}{ArrayIndentation}{ArrayBracketOpen}");
+                    sb.Append($"{indentation}{indentation}{openBracket}");
                     for (int k = 0; k < array.GetLength(2); k++)
                     {
                         sb.Append(array[i, j, k]);
                         if (k < array.GetLength(2) - 1) // Avoid trailing comma
-                            sb.Append($"{ArraySeparator} ");
+                            sb.Append($"{separator} ");
                     }
-                    sb.Append($"{ArrayBracketClosed}");
+                    sb.Append($"{closedBracket}");
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
-                        sb.Append($"{ArraySeparator}");
+                        sb.Append($"{separator}");
                     sb.Append($"\n");
                 }
-                sb.Append($"{ArrayIndentation}{ArrayBracketClosed}");
+                sb.Append($"{indentation}{closedBracket}");
                 if (i < array.GetLength(0) - 1) // Avoid trailing comma
-                    sb.Append($"{ArraySeparator}");
+                    sb.Append($"{separator}");
                 sb.Append($"\n");
             }
-            sb.Append($"{ArrayBracketClosed}");
+            sb.Append($"{closedBracket}");
             return sb.ToString();
         }
 
         // Extension method for jagged arrays
-        public static string ToReadableString<T>(this T[][] jaggedArray, string indentation = ArrayIndentation,
+        public static string ToReadableString<T>(this T[][] jaggedArray, string indentation = indentation,
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
@@ -284,16 +286,16 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             var sb = new StringBuilder();
-            sb.Append($"{ArrayBracketOpen}\n");
+            sb.Append($"{openBracket}\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
-                sb.Append($"{ArrayIndentation}");
+                sb.Append($"{indentation}");
                 sb.Append(jaggedArray[i].ToReadableString()); // Reuse 1D array method
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
-                    sb.Append($"{ArraySeparator}");
+                    sb.Append($"{separator}");
                 sb.Append($"\n");
             }
-            sb.Append($"{ArrayBracketClosed}");
+            sb.Append($"{closedBracket}");
             return sb.ToString();
         }
 
@@ -306,24 +308,24 @@ namespace IGLib.Core.CollectionExtensions
                 return NullString;
             }
             var sb = new StringBuilder();
-            sb.Append($"{ArrayBracketOpen}\n");
+            sb.Append($"{openBracket}\n");
             for (int i = 0; i < jaggedArray.Length; i++)
             {
-                sb.Append($"{ArrayIndentation}{ArrayBracketOpen}\n");
+                sb.Append($"{indentation}{openBracket}\n");
                 for (int j = 0; j < jaggedArray[i].Length; j++)
                 {
-                    sb.Append($"{ArrayIndentation}{ArrayIndentation}");
+                    sb.Append($"{indentation}{indentation}");
                     sb.Append(jaggedArray[i][j].ToReadableString()); // Reuse 1D array method
                     if (j < jaggedArray[i].Length - 1) // Avoid trailing comma
-                        sb.Append($"{ArraySeparator}");
+                        sb.Append($"{separator}");
                     sb.Append($"\n");
                 }
-                sb.Append($"{ArrayIndentation}{ArrayBracketClosed}");
+                sb.Append($"{indentation}{closedBracket}");
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
-                    sb.Append($"{ArraySeparator}");
+                    sb.Append($"{separator}");
                 sb.Append($"\n");
             }
-            sb.Append($"{ArrayBracketClosed}");
+            sb.Append($"{closedBracket}");
             return sb.ToString();
         }
 
