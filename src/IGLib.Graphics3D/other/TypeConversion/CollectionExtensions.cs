@@ -145,7 +145,7 @@ namespace IGLib.Core.CollectionExtensions
                     // Handle 1D arrays
                     // This is replaced below: sb.Append(new string(' ', (indentLevel + 1) * 4));
                     sb.Append(string.Concat(Enumerable.Repeat(indentation, indentLevel + 1)));
-                    sb.Append(inner1DArray.Cast<object>().ToArray().ToReadableString());
+                    sb.Append(inner1DArray.Cast<object>().ToArray().ToReadableString(indentation, openBracket, closedBracket, separator));
                 }
 
                 // Append a comma unless it's the last element
@@ -276,7 +276,7 @@ namespace IGLib.Core.CollectionExtensions
         }
 
         // Extension method for jagged arrays
-        public static string ToReadableString<T>(this T[][] jaggedArray, string indentation = indentation,
+        public static string ToReadableString<T>(this T[][] jaggedArray, string indentation = ArrayIndentation,
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
@@ -290,7 +290,7 @@ namespace IGLib.Core.CollectionExtensions
             for (int i = 0; i < jaggedArray.Length; i++)
             {
                 sb.Append($"{indentation}");
-                sb.Append(jaggedArray[i].ToReadableString()); // Reuse 1D array method
+                sb.Append(jaggedArray[i].ToReadableString(indentation, openBracket, closedBracket, separator)); // Reuse 1D array method
                 if (i < jaggedArray.Length - 1) // Avoid trailing comma
                     sb.Append($"{separator}");
                 sb.Append($"\n");
@@ -315,7 +315,7 @@ namespace IGLib.Core.CollectionExtensions
                 for (int j = 0; j < jaggedArray[i].Length; j++)
                 {
                     sb.Append($"{indentation}{indentation}");
-                    sb.Append(jaggedArray[i][j].ToReadableString()); // Reuse 1D array method
+                    sb.Append(jaggedArray[i][j].ToReadableString(indentation, openBracket, closedBracket, separator)); // Reuse 1D array method
                     if (j < jaggedArray[i].Length - 1) // Avoid trailing comma
                         sb.Append($"{separator}");
                     sb.Append($"\n");
