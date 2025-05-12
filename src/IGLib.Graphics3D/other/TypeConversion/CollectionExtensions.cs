@@ -14,6 +14,22 @@ using System.Text;
 namespace IGLib.Core.CollectionExtensions
 {
 
+    /// <summary>Various extension methods for collections. In particular, conversion for readable strings,
+    /// which produce readable outputs in application or assist in testing.
+    /// <para>ToReadableString (<see cref="ToReadableString(object, string, string, string, string)"/> and similar):</para>\
+    /// <para>Conversions of various array-like objects to readable strings. Various types of collections
+    /// have their own overloads, which are statically dispatched (e.g. <see cref="IList{T}"/>, <see cref="IEnumerable{T}"/>,
+    /// T[], rectangular arrays T[,], T[,,], jagged arrays T[][], T[][][]).</para>
+    /// <para>There is also the method that detects the type of array-like objects dynamically, <see cref="ToReadableString(object, string, string, string, string)"/>,
+    /// and produces, according to the actual type of the argument, a similar output for array-like type of objects than the
+    /// corresponding statically typed counterparts.</para>
+    /// <para>The ToreadableString(...) type of methods are meant to be used as static extension methods, but certain formatting
+    /// aspects are parameterized by static properties <see cref="ArrayBracketOpen"/>, <see cref="ArrayBracketClosed"/>,
+    /// <see cref="ArraySeparator"/> and <see cref="ArrayIndentation"/>. Each of these methods has a set of optional 
+    /// parameters where these formatting parameters can be customized at will, and the mentioned properties represent
+    /// default values for these parameters. This increases reusibility, and if necessary, the equivalent instance classes
+    /// whose instances are injectable could easily be created from the current class.</para>
+    /// </summary>
     public static class CollectionExtensions
     {
 

@@ -4,10 +4,17 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using IGLib.Core;
 
-namespace IGLib.Core
+namespace IGLib.Core.Extended
 {
 
+    /// <summary><para>This class is OBSOLETE and is replaced by chasses that implement <see cref="ITypeConverter"/>.
+    /// The class will be kept for some time for reference. You can remove it at least in Nov '25, possibly before
+    /// (if you know it is not useful any more).</para>
+    /// <para>Handles type conversionss where the source type is inferred from the source object and the 
+    /// target type is specifyed by the <see cref="Type"/> object rather than generic type parameter.</para>
+    /// </summary>
     [Obsolete("Teplaced by TypeConverter classes  implementing ITypeConverter.")]
     public class TypeConversionHelper // : TypeConversionHelperBase
     {

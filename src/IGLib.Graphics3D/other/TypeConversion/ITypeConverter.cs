@@ -2,8 +2,14 @@
 
 namespace IGLib.Core
 {
-    /// <summary>
-    /// Defines methods for converting objects to a specified type.
+    /// <summary>Defines methods for converting objects to a specified type.
+    /// <para>Implemented by hierarchy of type converters, including <see cref="BasicTypeConverter"/>
+    /// and <see cref="CollectionTypeConverter"/>. One reason for inheritance hierarchy of converters
+    /// is to have layered hierarchy with increasing capability but also increasing dependencies (e.g.,
+    /// one policy is to keep code that requires advanced reflection (it needs System.Reflection namespace)
+    /// out of lower layers of libraries such that it does not interfere with trimming, which is needed
+    /// in many deployment scenarios such as Ahead of Time compilation, WebAssembly deployments like in
+    /// Blazor client profiles, self-contained deployments to embedded and other resource-limited scenarios).</para>
     /// </summary>
     public interface ITypeConverter
     {

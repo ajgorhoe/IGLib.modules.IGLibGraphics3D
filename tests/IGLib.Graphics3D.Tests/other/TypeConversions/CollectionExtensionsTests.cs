@@ -757,6 +757,43 @@ namespace IGLib.Core.Tests
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringCustomFormat_JaggedArray2dNonrectangularOfInt_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
+            int[][] collection = IntJaggedArrayNonrectangular2x3;
+            string stringRepresentation = collection.ToReadableString(indentation: CustomIndentation,
+                openBracket: CustomOpenBracket, closedBracket: CustomClosedBracket, separator: CustomSeparator);
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(CustomOpenBracket);
+            stringRepresentation.Should().Contain(CustomClosedBracket);
+            stringRepresentation.Should().Contain(CustomSeparator);
+            stringRepresentation.Should().Contain(CustomIndentation);
+            foreach (int[] subCollection in collection)
+            {
+                foreach (int element in subCollection)
+                    stringRepresentation.Should().Contain(element.ToString());
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+[
+··[11; 12; 13];
+··[21; 22]
+]
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
         protected void CollectionExtensoins_ToReadableStringCustomFormat_JaggedArray3dNonrectangularOfInt_WorksCorrectly(bool checkPreciseOutput)
         {
             Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");

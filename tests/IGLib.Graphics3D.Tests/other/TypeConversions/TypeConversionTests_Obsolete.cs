@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using IGLib.Tests.Base;
 using System.Linq;
-using IGLib.Core;
+using IGLib.Core.Extended;
 
 
 namespace IGLib.Core.Tests
