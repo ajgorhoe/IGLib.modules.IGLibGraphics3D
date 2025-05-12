@@ -45,6 +45,37 @@ namespace IGLib.Core.Tests
         // ToreadableString(...) for array-like types of method parameter. This involves checking that brackets
         // and separators are present in generated strings, and that all array elementts are also present.
 
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_DoubleNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            double collection = 2.43;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+2.43
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+
+
+
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -414,11 +445,57 @@ namespace IGLib.Core.Tests
 
 
 
-
         #region ToReadableString_ForCollectionsDynamic_BasicTests
         // Tests in this region perform verification of correctness of the extension methogs
         // ToreadableString(...) for object parameters whose actual types are array-like.
 
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_DoubleNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting an integer array to a readable string...");
+            double collection = 24.35e-12;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_String_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting an integer array to a readable string...");
+            string collection = "This is a test string";
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection);
+            stringRepresentation.Should().StartWith("\"");
+            stringRepresentation.Should().EndWith("\"");
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
 
         [Theory]
         [InlineData(false)]

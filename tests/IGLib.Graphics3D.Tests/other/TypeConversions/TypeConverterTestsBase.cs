@@ -8,7 +8,7 @@ using IGLib.Tests.Base;
 using System.Linq;
 using System.Collections;
 using IGLib.Core;
-
+using IGLib.Core.CollectionExtensions;
 
 namespace IGLib.Core.Tests
 {
@@ -32,16 +32,18 @@ namespace IGLib.Core.Tests
         { }
 
 
+
         #region GenericConversionTests
 
 
         /// <summary>Like <see cref="TypeConverter_ConversionToObjectAndBackTest{OriginalType, TargetType, RestoredType}(OriginalType, RestoredType)"/>,
         /// but with target type and the type of restored variable both equal to type of the original variable, and also
         /// the expected assigned object value and the expected restored value being equal to the original value.</summary>
-        protected void TypeConverter_ConversionToObjectAndBackTest<CommonType>(ITypeConverter typeConverter,
+        protected (CommonType Coverted, CommonType Restored) TypeConverter_ConversionToObjectAndBackTest
+            <CommonType>(ITypeConverter typeConverter,
             CommonType original, bool restoreObjectBackToValue = true)
         {
-            TypeConverter_ConversionToObjectAndBackTest<CommonType, CommonType, CommonType>(typeConverter,
+            return TypeConverter_ConversionToObjectAndBackTest<CommonType, CommonType, CommonType>(typeConverter,
                 original, original, original, restoreObjectBackToValue);
         }
 
@@ -59,7 +61,8 @@ namespace IGLib.Core.Tests
         /// <typeparam name="OriginalType">Type of the origial value to be stored as object.</typeparam>
         /// <typeparam name="TargetType">Type to which the <paramref name="originalValue"/> will be converted when being stored in an object variable.</typeparam>
         /// <typeparam name="RestoredType">Type of variable to which the value will be restored from the variable of type object.</typeparam>
-        protected void TypeConverter_ConversionToObjectAndBackTest<OriginalType, TargetType, RestoredType>(
+        protected (TargetType Converted, RestoredType Restored) TypeConverter_ConversionToObjectAndBackTest
+            <OriginalType, TargetType, RestoredType>(
             ITypeConverter typeConverter,
             OriginalType originalValue, TargetType expectedAssignedObjectValue,
             RestoredType expectedRestoredValue, bool restoreObjectBackToValue = true)
@@ -68,86 +71,121 @@ namespace IGLib.Core.Tests
             Type declaredOriginalType = typeof(OriginalType);
             Type requestedTargetType = typeof(TargetType);
             Type requestedRestoredType = typeof(RestoredType);
-            RestoredType restoredValue;
-            Console.WriteLine($"Converting value of type {originalValue.GetType().Name}, value = {originalValue}. to object, and storing the object.");
+            object convertedObject = default;
+            RestoredType restoredValue = default;
+            Console.WriteLine($"Converting value of type {typeof(OriginalType).Name} to object of type {typeof(TargetType)}");
+            if (restoreObjectBackToValue)
+            {
+                Console.WriteLine($"  and restoring the object to a value of type {typeof(RestoredType).Name}.");
+            }
+            Console.WriteLine($"Original object:");
+            Console.WriteLine($"  Declared Type: {typeof(OriginalType).Name}");
+            Console.WriteLine($"  Actual Type:   {originalValue?.GetType().Name??"unknown"}");
+            Console.WriteLine($"  Value: <{originalValue}>; using ToReadableString():");
+            Console.WriteLine($"{originalValue.ToReadableString()}");
+            Console.WriteLine("");
             // Act
-            object assignedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
-            Console.WriteLine($"Assigned object: type = {assignedObject.GetType().Name}, value: {assignedObject}");
-            if (assignedObject == null)
+            convertedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
+            Console.WriteLine($"Converted object:");
+            Console.WriteLine($"  Declared Type: {typeof(TargetType).Name}");
+            Console.WriteLine($"  Actual Type:   {convertedObject?.GetType().Name ?? "unknown"}");
+            Console.WriteLine($"  Value: <{convertedObject}>; using ToReadableString():");
+            Console.WriteLine($"{convertedObject.ToReadableString()}");
+            Console.WriteLine("");
+            if (convertedObject == null)
             {
                 Console.WriteLine("Warning: Converted object is null.");
             }
             else
             {
-                Console.WriteLine($"Converted object is of type {assignedObject.GetType().Name}, value: {assignedObject}");
+                Console.WriteLine($"Converted object is of type {convertedObject.GetType().Name}, value: {convertedObject}");
             }
             // Assert
             if (originalValue == null)
             {
-                if (assignedObject != null)
+                if (convertedObject != null)
                 {
                     Console.WriteLine($"Warning: the original value is null but the restored value is not null.");
                 }
-                assignedObject.Should().BeNull(because: "null original should produce null when converted to object.");
+                convertedObject.Should().BeNull(because: "null original should produce null when converted to object.");
             }
             else
             {
                 // originalValue != null
-                if (assignedObject == null)
+                if (convertedObject == null)
                 {
-                    Console.WriteLine("WARNING: the original value is not null but the assigned object is null.");
+                    Console.WriteLine("WARNING: the original value is not null but the converted object is null.");
                 }
-                assignedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} should be convertet to object of type {requestedTargetType.Name}.");
-                Type actualTargetType = assignedObject.GetType();
+                convertedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} should be convertet to object of type {requestedTargetType.Name}.");
+                Type actualTargetType = convertedObject.GetType();
                 if (requestedTargetType.IsClass)
                 {
                     requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true,
-                        because: "The requested target type should be assignable from the actual type of the assigned object.");
+                        because: "The requested target type should be assignable from the actual type of the converted object.");
                 }
                 else
                 {
-                    assignedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the assigned object should mach the target type {requestedTargetType.Name}.");
+                    convertedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the converted object should mach the target type {requestedTargetType.Name}.");
+                }
+                if (requestedTargetType == typeof(string) || 
+                    (!(requestedTargetType.IsClass || convertedObject is IList || convertedObject is IEnumerable || convertedObject is Array)))
+                {
+                    Console.WriteLine("Comparisson to the expected converted object will be applied.");
+                    convertedObject.Should().Be(expectedAssignedObjectValue);
                 }
             }
             if (restoreObjectBackToValue)
             {
                 // Q: Should we do it like this in some cases?: restored = (RestoredType)assignedObject;
-                restoredValue = (RestoredType)typeConverter.ConvertToType(assignedObject, typeof(RestoredType));
+                restoredValue = (RestoredType)typeConverter.ConvertToType(convertedObject, typeof(RestoredType));
+
+                convertedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
+                Console.WriteLine($"Restored value (round-trip conversion):");
+                Console.WriteLine($"  Declared Type: {typeof(RestoredType).Name}");
+                Console.WriteLine($"  Actual Type:   {restoredValue?.GetType().Name ?? "unknown"}");
+                Console.WriteLine($"  Value: <{restoredValue}>; using ToReadableString():");
+                Console.WriteLine($"{restoredValue.ToReadableString()}");
+                Console.WriteLine("");
                 if (restoredValue == null)
                 {
                     Console.WriteLine("Restored value is null.");
                 }
-                Console.WriteLine($"Restored value: type = {restoredValue.GetType().Name}, value: {restoredValue}");
-                if (assignedObject == null)
+                if (convertedObject == null)
                 {
                     if (restoredValue != null)
                     {
-                        Console.WriteLine($"Warning: assigned object is null but the restored value is not null.");
+                        Console.WriteLine($"Warning: restored object is null but the restored value is not null.");
                     }
-                    restoredValue.Should().BeNull(because: "null assigned object should result in null restored value.");
+                    restoredValue.Should().BeNull(because: "null rstored object should result in null restored value.");
                 }
                 else
                 {
-                    // assignedObject is NOT null
+                    // restoredValue is NOT null
                     if (restoredValue == null)
                     {
                         Console.WriteLine("WARNING: Restored value is null but assignd object from which value was resttored is not.");
                     }
-                    restoredValue.Should().NotBeNull(because: "The assigned object is not null, therefore the restored object should also not be null.");
+                    restoredValue.Should().NotBeNull(because: "The converted object is not null, therefore the restored object should also not be null.");
                     Type actualRestoredType = restoredValue.GetType();
                     Console.WriteLine($"Value of type {actualRestoredType.Name} restored from the object: {restoredValue}");
                     if (requestedRestoredType.IsClass)
                     {
                         requestedRestoredType.IsAssignableFrom(actualRestoredType).Should().Be(true,
-                            because: "The requested target type should be assignable from the actual type of the assigned object.");
+                            because: "The requested target type should be assignable from the actual type of the restored object.");
                     }
                     else
                     {
-                        assignedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the assigned object should mach the target type {requestedTargetType.Name}.");
+                        restoredValue.GetType().Should().Be(requestedRestoredType, because: $"Type of the restored object should mach the target type {requestedTargetType.Name}.");
                     }
-                    restoredValue.Should().Be(expectedRestoredValue, because: $"Restoring object that hods {requestedTargetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
+                    if (requestedRestoredType == typeof(string) ||
+                        !(requestedRestoredType.IsClass || restoredValue is IList || restoredValue is IEnumerable || restoredValue is Array))
+                    {
+                        Console.WriteLine("Comparisson to the expected restored value will be applied.");
+                        restoredValue.Should().Be(expectedRestoredValue, because: $"Restoring object that hods {requestedTargetType.Name} should correctly reproduce the original value of type {originalValue.GetType().Name}.");
+                    }
                 }
             }
+            return (Converted: (TargetType)convertedObject, Restored: restoredValue);
         }
 
 

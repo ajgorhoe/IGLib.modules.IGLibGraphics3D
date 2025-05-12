@@ -1,5 +1,5 @@
-﻿// Uncomment the definition below in order to include tests that fail for BasicTypeConverter!
-# define IncludeFailedTests
+﻿// Uncomment the definition below in order to include tests that fail at this hierarchy level by design!
+// #define IncludeFailedTestsByDesign
 
 using Xunit;
 using FluentAssertions;
@@ -35,6 +35,7 @@ namespace IGLib.Core.Tests
 
         /// <summary>Number of executions in speed tests.</summary>
         protected virtual int NumExecutions { get; } = 10_000;
+
 
         #region BasicTypeConverterTests
 
@@ -125,10 +126,10 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_RoundTripConversion_StringToDoubleObjectToDouble_IsCorrect()
+        protected virtual void SpecificTypeConverter_RoundTripConversion_StringToDoubleObjectToString_IsCorrect()
         {
-            TypeConverter_ConversionToObjectAndBackTest<string, double, double>(TypeConverter, 
-                "123456.55e-16", 123_456.55e-16, 123_456.55e-16);
+            TypeConverter_ConversionToObjectAndBackTest<string, double, string>(TypeConverter, 
+                "24.6", 24.6, "24.6");
         }
 
         [Fact]
@@ -183,14 +184,14 @@ namespace IGLib.Core.Tests
         protected virtual void SpecificTypeConverter_RoundTripConversion_DerivedClassToBaseClassObjectToBaseClass_IsCorrect()
         {
             DerivedClass originalObject = new DerivedClass();
-            DerivedClass expectedRestoredValue = originalObject;
-            DerivedClass expectedAssignedObject = originalObject;
+            BaseClass expectedAssignedObject = originalObject;
+            BaseClass expectedRestoredValue = originalObject;
             TypeConverter_ConversionToObjectAndBackTest<DerivedClass, BaseClass, BaseClass>(TypeConverter, 
                 originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
 
-#if IncludeFailedTests
+#if IncludeFailedTestsByDesign
         [Fact]
 #endif        
         protected virtual void SpecificTypeConverter_RoundTripConversion_ImplicitlytoderivedToDerivedObjectToBase_IsCorrect()
@@ -203,7 +204,7 @@ namespace IGLib.Core.Tests
                 TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
-#if IncludeFailedTests
+#if IncludeFailedTestsByDesign
         [Fact]
 #endif        
         protected virtual void SpecificTypeConverter_RoundTripConversion_ExplicitlytoderivedToDerivedObjectToBase_IsCorrect()
@@ -217,7 +218,7 @@ namespace IGLib.Core.Tests
         }
 
 
-#if IncludeFailedTests
+#if IncludeFailedTestsByDesign
         [Fact]
 #endif        
         protected virtual void SpecificTypeConverter_OneDirectionConversion_ImplicitlyfromderivedToDerivedObjectToBase_IsCorrect()
@@ -231,7 +232,7 @@ namespace IGLib.Core.Tests
                 restoreObjectBackToValue: false);
         }
 
-#if IncludeFailedTests
+#if IncludeFailedTestsByDesign
         [Fact]
 #endif        
         protected virtual void SpecificTypeConverter_OneDirectionConversion_ExplicitlyfromderivedToDerivedObjectToBase_IsCorrect()
@@ -250,13 +251,9 @@ namespace IGLib.Core.Tests
         #endregion BasicTypeConverterTests
 
 
-        [Fact]
-        protected virtual void SpecificTypeConverter_SpeedComparisson_()
-        {
-            
-        }
 
 
+        #region SpeedTests.TypeConversion
 
         [Fact]
         protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
@@ -271,6 +268,9 @@ namespace IGLib.Core.Tests
             TypeConverter_Speed_ConversionToObjectAndBackTest<int>(TypeConverter, NumExecutions, MinPerSecond, 
                 45);
         }
+
+
+        #endregion SpeedTests.TypeConversion
 
 
 

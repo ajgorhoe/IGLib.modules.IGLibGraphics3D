@@ -71,6 +71,12 @@ namespace IGLib.Core.CollectionExtensions
             if (o == null)
                 return "null";
 
+            // Handle strings:
+            if (o is string str)
+            {
+                return ToReadableString(str);
+            }
+
             // Handle jagged arrays (1D array of arrays or deeper)
             if (o is Array jaggedArray && jaggedArray.GetType().GetElementType()?.IsArray == true)
             {
@@ -174,6 +180,18 @@ namespace IGLib.Core.CollectionExtensions
             }
             sb.Append(indent + $"{closedBracket}");
             return sb.ToString();
+        }
+
+
+        /// <summary>Converts a string to a readable string.</summary>
+        /// <param name="array">Array to be converted.</param>
+        public static string ToReadableString(this string str)
+        {
+            if (str == null)
+            {
+                return NullString;
+            }
+            return $"\"{str}\"";
         }
 
 
