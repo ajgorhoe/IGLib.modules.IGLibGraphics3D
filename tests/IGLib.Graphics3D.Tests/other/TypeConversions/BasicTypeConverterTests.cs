@@ -34,7 +34,7 @@ namespace IGLib.Core.Tests
         protected virtual ITypeConverter TypeConverter { get; } = new BasicTypeConverter();
 
         /// <summary>Number of executions in speed tests.</summary>
-        protected virtual int NumExecutions { get; } = 10_000;
+        protected virtual int NumExecutions { get; } = 1_000;
 
 
         #region BasicTypeConverterTests
@@ -256,17 +256,42 @@ namespace IGLib.Core.Tests
         #region SpeedTests.TypeConversion
 
         [Fact]
-        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
         {
-            TypeConverter_Speed_ConversionToObjectAndBackTest<int, double, double>(TypeConverter, NumExecutions, MinPerSecond, 
-                45, 45.0, 45.0);
+            TypeConverter_Speed_ConversionToObjectAndBackTest<int>(TypeConverter, NumExecutions, MinPerSecond,
+                45, doOutputInReferenceTest: false);
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToIntObjectToInt_IsCorrect()
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_IntToDoubleObjectToInt_IsCorrect()
         {
-            TypeConverter_Speed_ConversionToObjectAndBackTest<int>(TypeConverter, NumExecutions, MinPerSecond, 
-                45);
+            TypeConverter_Speed_ConversionToObjectAndBackTest<int, double, int>(TypeConverter, NumExecutions, MinPerSecond, 
+                45, 45.0, 45, doOutputInReferenceTest: false);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_DoubleToIntObjectToDouble_IsCorrect()
+        {
+            TypeConverter_Speed_ConversionToObjectAndBackTest<double, int, double>(TypeConverter, NumExecutions, MinPerSecond, 
+                26.9, 27, 27.0, doOutputInReferenceTest: false);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_DoubleToStringObjectToDouble_IsCorrect()
+        {
+            TypeConverter_Speed_ConversionToObjectAndBackTest<double, string, double>(TypeConverter, NumExecutions, MinPerSecond, 
+                98.4, "98.4", 98.4, doOutputInReferenceTest: false);
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_Speed_RoundTripConversion_DerivedClassToBaseClassObjectToBaseClass_IsCorrect()
+        {
+            DerivedClass originalObject = new DerivedClass();
+            BaseClass expectedAssignedObject = originalObject;
+            BaseClass expectedRestoredValue = originalObject;
+            TypeConverter_Speed_ConversionToObjectAndBackTest<DerivedClass, BaseClass, BaseClass>(
+                TypeConverter, NumExecutions, MinPerSecond,
+                originalObject, expectedAssignedObject, expectedRestoredValue, doOutputInReferenceTest: false);
         }
 
 

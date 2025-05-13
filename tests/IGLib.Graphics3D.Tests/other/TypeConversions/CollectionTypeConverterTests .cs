@@ -92,6 +92,69 @@ namespace IGLib.Core.Tests
         }
 
 
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntEnumerableToIntListObjectToIntArray()
+        {
+            IEnumerable<int> original = new CustomEnumerable<int>{ 1, 2, 3, 4 };
+            List<int> expectedConvertedObject = original.ToList();
+            int[] expectedRestoredValue = original.ToArray();
+
+            var result = TypeConverter_ConversionToObjectAndBackTest<
+                IEnumerable<int>, List<int>, int[]>(
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
+            List<int> converted = result.Converted;
+            int[] restored = result.Restored;
+            // Assert (additional to asserts in the generic test mwthod called above):
+            Console.WriteLine("\nOutside the generic test function...");
+            Console.WriteLine("Checking dimensions...");
+            Console.WriteLine($"  Dimension of original:  {original?.ToList().Count}");
+            Console.WriteLine($"  Dimension of converted: {converted?.Count}");
+            Console.WriteLine($"  Dimension of restored:  {restored?.Length}");
+            converted.Count.Should().Be(expectedConvertedObject.Count);
+            Console.WriteLine("Checking the converted object's elements...");
+            for (int i = 0; i < expectedConvertedObject.Count; i++)
+            {
+                converted[i].Should().Be(expectedConvertedObject[i]);
+            }
+            Console.WriteLine("Checking the restored object's elements...");
+            restored.Length.Should().Be(expectedRestoredValue.Length);
+            for (int i = 0; i < expectedRestoredValue.Length; i++)
+            {
+                restored[i].Should().Be(expectedRestoredValue[i]);
+            }
+        }
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntEnumerableToIntArrayObjectToIntList()
+        {
+            IEnumerable<int> original = new CustomEnumerable<int>{ 1, 2, 3, 4 };
+            int[] expectedConvertedObject =  original.ToArray();
+            List<int> expectedRestoredValue = original.ToList();
+
+            var result = TypeConverter_ConversionToObjectAndBackTest<
+                IEnumerable<int>, int[], List<int>>(
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
+            int[] converted = result.Converted;
+            List<int> restored = result.Restored;
+            // Assert (additional to asserts in the generic test mwthod called above):
+            Console.WriteLine("\nOutside the generic test function...");
+            Console.WriteLine("Checking dimensions...");
+            Console.WriteLine($"  Dimension of original:  {original?.ToList().Count}");
+            Console.WriteLine($"  Dimension of converted: {converted?.Length}");
+            Console.WriteLine($"  Dimension of restored:  {restored?.Count}");
+            converted.Length.Should().Be(expectedConvertedObject.Length);
+            Console.WriteLine("Checking the converted object's elements...");
+            for (int i = 0; i < expectedConvertedObject.Length; i++)
+            {
+                converted[i].Should().Be(expectedConvertedObject[i]);
+            }
+            Console.WriteLine("Checking the restored object's elements...");
+            restored.Count.Should().Be(expectedRestoredValue.Count);
+            for (int i = 0; i < expectedRestoredValue.Count; i++)
+            {
+                restored[i].Should().Be(expectedRestoredValue[i]);
+            }
+        }
 
 
         [Fact]
@@ -128,7 +191,6 @@ namespace IGLib.Core.Tests
         }
 
 
-
         [Fact]
         protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArrayToIntListObjectToIntArray()
         {
@@ -160,8 +222,6 @@ namespace IGLib.Core.Tests
                 restored[i].Should().Be(expectedRestoredValue[i]);
             }
         }
-
-
 
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} or T[] can be used.</remarks>
