@@ -30,9 +30,6 @@ namespace IGLib.Core.Tests
 
 
 
-
-
-
         #region CollectionConversions.SameElementTypes
 
 
@@ -264,44 +261,46 @@ namespace IGLib.Core.Tests
 
 
 
-        //[Fact]
-        //protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray2DToIntArrayToIntList()
-        //{
-        //    int[,] original = IntArray2x3;
-        //    int[] expectedConvertedObject = original;
-        //    int[,] expectedRestoredValue = original;
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray2DToIntArrayToIntList()
+        {
+            int[,] original = IntArray2x3;
+            int[] expectedConvertedObject = null;
+            List<int> expectedRestoredValue = null;
+            expectedRestoredValue = new List<int>();
+            foreach(int element in original)
+            {
+                expectedRestoredValue.Add(element);
+            }
+            expectedConvertedObject = expectedRestoredValue.ToArray();
 
-        //    var result = TypeConverter_ConversionToObjectAndBackTest<
-        //        int[,], int[,], int[,]>(
-        //        TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-        //    int[,] converted = result.Converted;
-        //    int[,] restored = result.Restored;
-        //    // Assert (additional to asserts in the generic test mwthod called above):
-        //    Console.WriteLine("\nOutside the generic test function...");
-        //    Console.WriteLine("Checking dimensions...");
-        //    Console.WriteLine($"  Dimensions of original:  {original.GetLength(0)} x {original.GetLength(1)}");
-        //    Console.WriteLine($"  Dimensions of converted: {converted.GetLength(0)} x {converted.GetLength(1)}");
-        //    Console.WriteLine($"  Dimensions of restored:  {restored.GetLength(0)} x {restored.GetLength(1)}");
-        //    converted.GetLength(0).Should().Be(expectedConvertedObject.GetLength(0));
-        //    converted.GetLength(1).Should().Be(expectedConvertedObject.GetLength(1));
-        //    Console.WriteLine("Checking the converted object's elements...");
-        //    for (int i = 0; i < expectedConvertedObject.GetLength(0); i++)
-        //    {
-        //        for (int j = 0; j < expectedConvertedObject.GetLength(1); j++)
-        //            converted[i, j].Should().Be(expectedConvertedObject[i, j]);
-        //    }
-        //    Console.WriteLine("Checking the restored object's elements...");
-        //    restored.GetLength(0).Should().Be(expectedRestoredValue.GetLength(0));
-        //    restored.GetLength(1).Should().Be(expectedRestoredValue.GetLength(1));
-        //    for (int i = 0; i < expectedRestoredValue.GetLength(0); i++)
-        //    {
-        //        for (int j = 0; j < expectedRestoredValue.GetLength(1); j++)
-        //            restored[i, j].Should().Be(expectedRestoredValue[i, j]);
-        //    }
-        //}
+            var result = TypeConverter_ConversionToObjectAndBackTest(
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
+            int[] converted = result.Converted;
+            List<int> restored = result.Restored;
+            // Assert (additional to asserts in the generic test mwthod called above):
+            Console.WriteLine("\nOutside the generic test function...");
+            Console.WriteLine("Checking dimensions...");
+            Console.WriteLine($"  Dimensions of original:  {original.GetLength(0)} x {original.GetLength(1)}");
+            Console.WriteLine($"  Dimensions of converted: {converted.Length}");
+            Console.WriteLine($"  Dimensions of restored:  {restored.Count}");
+            converted.Length.Should().Be(expectedConvertedObject.Length);
+            Console.WriteLine("Checking the converted object's elements...");
+            int index;
+            for (int i = 0; i < original.GetLength(0); i++)
+            {
+                converted[i].Should().Be(expectedConvertedObject[i]);
+            }
+            Console.WriteLine("Checking the restored object's elements...");
+            restored.Count.Should().Be(expectedRestoredValue.Count);
+            for (int i = 0; i < expectedRestoredValue.Count; i++)
+            {
+                restored[i].Should().Be(expectedRestoredValue[i]);
+            }
+        }
 
         //[Fact]
-        //protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntArrayToIntList()
+        //protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntListToIntArray()
         //{
         //    int[,,] original = IntArray3x2x4;
         //    int[,,] expectedConvertedObject = original;
