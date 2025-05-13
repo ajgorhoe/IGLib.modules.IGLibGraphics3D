@@ -3,13 +3,39 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+
+    // In the beginning of private object ConvertRectangularArray(object value, Type targetArrayType):
+    // Remark: condition below was previously "!targetArrayType.IsArray || !targetArrayType.IsSZArray && !targetArrayType.IsArray",
+    // but IsSZArray check is redundant becaulse logic already filters arrays based on targetArrayType.GetArrayRank()
+    // and element access. "!targetArrayType.IsArray" should be sufficient.
+    //if (!targetArrayType.IsArray)
+    //    throw new InvalidOperationException("Target type is not a rectangular array.");
+
+
+
 namespace IGLib.Core
 {
+
+
+    /// <remarks>This class was i place before a deeper analysis, and it does not correctly convert rectangular arrays
+    /// to List{T}>.</remarks>
+    /// 
     /// <summary>
     /// A type converter that supports conversion of basic and collection types,
     /// including arrays, lists, and rectangular (multidimensional) arrays.
+    /// <para>Takes a value of type <see cref="object"/>, identifies its type, converts it to the type specified target type,
+    /// and returns the converted value as <see cref="object"/>.</para>
+    /// This class extends capabilities of <see cref="BasicTypeConverter"/> with additional capabilities for array-like objects.
+    /// <para>Capabilities:</para>
+    /// <para>* All capabilities of <see cref="BasicTypeConverter"/> (e.g. conversion of types that implement IConvertible interface),
+    /// like int ↔ double, etc., double ↔ string, etc., derived class → base class.</para>
+    /// <para>* Various array-like conversios, with conversion of element type supported by <see cref="BasicTypeConverter"/>, if necessary:</para>
+    /// <para>* 1D ↔ 1D (TSource[], List<TSource> ↔ TTarget[], List<TTarget>)</para>
+    /// <para>* Multidimensional → 1D conversions (TSource[,,...] ↔ TTarget[] or List<TTarget>)</para>
+    /// <para>* Multidimensional ↔ Multidimensional (only if rank and dimensions match exactly)</para>
     /// </summary>
-    public class CollectionTypeConverter : BasicTypeConverter
+    [Obsolete("Will be removed, kept as reference for some time (e.g. to transer useful comments and for testing).")]
+    public class CollectionTypeConverter_OLD_ToRemoveLater : BasicTypeConverter
     {
         /// <summary>
         /// Converts a value to the specified target type, supporting collections.
@@ -31,11 +57,11 @@ namespace IGLib.Core
             Type actualTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
             Type sourceType = value.GetType();
 
-            if (IsRectangularArray(sourceType))
+            if (IsRectangularArray(sourceType) || IsRectangularArray(actualTargetType))
             {
                 try
                 {
-                    return ConvertFromRectangularArray((Array)value, actualTargetType);
+                    return ConvertRectangularArray(value, actualTargetType);
                 }
                 catch (Exception ex)
                 {
@@ -81,8 +107,7 @@ namespace IGLib.Core
                 return array;
             }
 
-            if (IsAssignableToGenericIList(targetCollectionType, targetElementType) ||
-                IsAssignableToGenericIEnumerable(targetCollectionType, targetElementType))
+            if (IsAssignableToGenericIList(targetCollectionType, targetElementType))
             {
                 var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(targetElementType));
                 foreach (var item in convertedItems)
@@ -94,73 +119,55 @@ namespace IGLib.Core
         }
 
         /// <summary>
-        /// Converts a rectangular array to another rectangular or one-dimensional collection.
+        /// Converts a rectangular array to another rectangular or 1D collection.
         /// </summary>
-        /// <param name="sourceArray">The source rectangular array.</param>
-        /// <param name="targetType">The target type.</param>
-        /// <returns>The converted object.</returns>
-        private object ConvertFromRectangularArray(Array sourceArray, Type targetType)
+        /// <param name="value">The source array value.</param>
+        /// <param name="targetArrayType">The target array type.</param>
+        /// <returns>The converted array.</returns>
+        private object ConvertRectangularArray(object value, Type targetArrayType)
         {
-            Type targetElementType = GetElementType(targetType) ?? typeof(object);
+            Array sourceArray = (Array)value;
 
-            if (targetType.IsArray)
+            // Flatten the source array
+            var flatSource = FlattenRectangularArray(sourceArray).ToArray();
+
+            if (!targetArrayType.IsArray)
+                throw new InvalidOperationException("Target type is not an array.");
+
+            Type elementType = targetArrayType.GetElementType();
+            int rank = targetArrayType.GetArrayRank();
+
+            if (rank == 1)
             {
-                int targetRank = targetType.GetArrayRank();
-
-                if (targetRank == 1)
+                Array targetArray = Array.CreateInstance(elementType, flatSource.Length);
+                for (int i = 0; i < flatSource.Length; i++)
                 {
-                    // Convert to 1D array
-                    var flatSource = FlattenRectangularArray(sourceArray).ToList();
-                    Array targetArray = Array.CreateInstance(targetElementType, flatSource.Count);
-                    for (int i = 0; i < flatSource.Count; i++)
-                    {
-                        targetArray.SetValue(ConvertToType(flatSource[i], targetElementType), i);
-                    }
-                    return targetArray;
+                    targetArray.SetValue(ConvertToType(flatSource[i], elementType), i);
                 }
-                else if (sourceArray.Rank == targetRank)
-                {
-                    // Convert to same-shape rectangular array
-                    int[] dims = Enumerable.Range(0, sourceArray.Rank)
-                                           .Select(sourceArray.GetLength)
-                                           .ToArray();
-                    int total = dims.Aggregate(1, (a, b) => a * b);
-                    var flatSource = FlattenRectangularArray(sourceArray).ToList();
-
-                    if (flatSource.Count != total)
-                        throw new InvalidOperationException("Element count mismatch during array reshaping.");
-
-                    Array targetArray = Array.CreateInstance(targetElementType, dims);
-                    var indexGen = new MultiDimensionalIndexGenerator(dims);
-
-                    int counter = 0;
-                    foreach (int[] index in indexGen)
-                    {
-                        var valueToSet = ConvertToType(flatSource[counter++], targetElementType);
-                        targetArray.SetValue(valueToSet, index);
-                    }
-
-                    return targetArray;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Target and source array ranks do not match for rectangular conversion.");
-                }
+                return targetArray;
             }
-            else if (IsAssignableToGenericIList(targetType, targetElementType) ||
-                     IsAssignableToGenericIEnumerable(targetType, targetElementType))
+            else
             {
-                // Flatten to List<T>
-                var flatSource = FlattenRectangularArray(sourceArray).ToList();
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(targetElementType));
-                foreach (var item in flatSource)
-                {
-                    list.Add(ConvertToType(item, targetElementType));
-                }
-                return list;
-            }
+                int[] dims = Enumerable.Range(0, sourceArray.Rank)
+                                       .Select(sourceArray.GetLength)
+                                       .ToArray();
+                int total = dims.Aggregate(1, (a, b) => a * b);
 
-            throw new InvalidOperationException($"Unsupported rectangular array target type: {targetType.FullName}");
+                if (flatSource.Length != total)
+                    throw new InvalidOperationException("Element count mismatch during array reshaping.");
+
+                Array targetArray = Array.CreateInstance(elementType, dims);
+                var indexGen = new IncludeFailedTestsByDesignOld(dims);
+
+                int counter = 0;
+                foreach (int[] index in indexGen)
+                {
+                    var valueToSet = ConvertToType(flatSource[counter++], elementType);
+                    targetArray.SetValue(valueToSet, index);
+                }
+
+                return targetArray;
+            }
         }
 
         /// <summary>
@@ -173,7 +180,7 @@ namespace IGLib.Core
             int[] dims = Enumerable.Range(0, array.Rank)
                                    .Select(array.GetLength)
                                    .ToArray();
-            var indexGen = new MultiDimensionalIndexGenerator(dims);
+            var indexGen = new IncludeFailedTestsByDesignOld(dims);
 
             foreach (int[] index in indexGen)
                 yield return array.GetValue(index);
@@ -202,18 +209,7 @@ namespace IGLib.Core
         /// <param name="elementType">The element type.</param>
         /// <returns>True if assignable to IList&lt;T&gt;.</returns>
         private static bool IsAssignableToGenericIList(Type type, Type elementType) =>
-            type.IsGenericType &&
             typeof(IList<>).MakeGenericType(elementType).IsAssignableFrom(type);
-
-        /// <summary>
-        /// Checks if a type is assignable to IEnumerable&lt;T&gt;.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <param name="elementType">The element type.</param>
-        /// <returns>True if assignable to IEnumerable&lt;T&gt;.</returns>
-        private static bool IsAssignableToGenericIEnumerable(Type type, Type elementType) =>
-            type.IsGenericType &&
-            typeof(IEnumerable<>).MakeGenericType(elementType).IsAssignableFrom(type);
 
         /// <summary>
         /// Gets the element type of a collection type.
@@ -234,7 +230,7 @@ namespace IGLib.Core
     /// <summary>
     /// Utility class for generating indices for multidimensional arrays.
     /// </summary>
-    public class MultiDimensionalIndexGenerator : IEnumerable<int[]>
+    public class IncludeFailedTestsByDesignOld : IEnumerable<int[]>
     {
         private readonly int[] _dimensions;
 
@@ -242,7 +238,7 @@ namespace IGLib.Core
         /// Initializes a new instance with specified dimensions.
         /// </summary>
         /// <param name="dimensions">Array of dimension lengths.</param>
-        public MultiDimensionalIndexGenerator(int[] dimensions)
+        public IncludeFailedTestsByDesignOld(int[] dimensions)
         {
             _dimensions = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
         }
@@ -294,4 +290,8 @@ namespace IGLib.Core
             return flatIndex;
         }
     }
+
+
+
+
 }
