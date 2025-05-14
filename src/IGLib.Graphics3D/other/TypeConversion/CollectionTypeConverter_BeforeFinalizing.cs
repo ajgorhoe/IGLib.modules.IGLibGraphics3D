@@ -11,7 +11,7 @@ namespace IGLib.Core
     /// A type converter that supports conversion of basic and collection types,
     /// including arrays, lists, rectangular (multidimensional) arrays, and jagged arrays.
     /// </summary>
-    public class CollectionTypeConverter : BasicTypeConverter
+    public class CollectionTypeConverter_BeforeFinalizing : BasicTypeConverter
     {
         public override object ConvertToType(object value, Type targetType)
         {
@@ -145,7 +145,7 @@ namespace IGLib.Core
                         throw new InvalidOperationException("Element count mismatch during array reshaping.");
 
                     Array targetArray = Array.CreateInstance(targetElementType, dims);
-                    var indexGen = new MultiDimensionalIndexGenerator(dims);
+                    var indexGen = new MultiDimensionalIndexGenerator_BeforeFinalizing(dims);
 
                     int counter = 0;
                     foreach (int[] index in indexGen)
@@ -187,7 +187,7 @@ namespace IGLib.Core
             int[] dims = Enumerable.Range(0, array.Rank)
                                    .Select(array.GetLength)
                                    .ToArray();
-            var indexGen = new MultiDimensionalIndexGenerator(dims);
+            var indexGen = new MultiDimensionalIndexGenerator_BeforeFinalizing(dims);
 
             foreach (int[] index in indexGen)
                 yield return array.GetValue(index);
@@ -280,7 +280,7 @@ namespace IGLib.Core
                 int[] dims = shape;
                 Array targetArray = Array.CreateInstance(targetElementType, dims);
 
-                var indexGen = new MultiDimensionalIndexGenerator(dims);
+                var indexGen = new MultiDimensionalIndexGenerator_BeforeFinalizing(dims);
                 int counter = 0;
                 foreach (int[] index in indexGen)
                 {
@@ -352,19 +352,10 @@ namespace IGLib.Core
     }
 
 
-
-
-
-
-
-
-
-
-
     /// <summary>
     /// Utility class for generating indices for multidimensional arrays.
     /// </summary>
-    public class MultiDimensionalIndexGenerator : IEnumerable<int[]>
+    public class MultiDimensionalIndexGenerator_BeforeFinalizing : IEnumerable<int[]>
     {
         private readonly int[] _dimensions;
 
@@ -372,7 +363,7 @@ namespace IGLib.Core
         /// Initializes a new instance with specified dimensions.
         /// </summary>
         /// <param name="dimensions">Array of dimension lengths.</param>
-        public MultiDimensionalIndexGenerator(int[] dimensions)
+        public MultiDimensionalIndexGenerator_BeforeFinalizing(int[] dimensions)
         {
             _dimensions = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
         }
