@@ -7,12 +7,21 @@ namespace IGLib.Core
 {
 
 
+
+
     /// <summary>
-    /// A type converter that supports conversion of basic and collection types,
-    /// including arrays, lists, rectangular (multidimensional) arrays, and jagged arrays.
+    /// Provides conversion logic for a wide range of collection types, including:
+    /// jagged arrays, rectangular arrays, generic lists, and enumerable sequences.
+    /// Supports element-wise conversion and flattening where appropriate.
     /// </summary>
     public class CollectionTypeConverter : BasicTypeConverter
     {
+        /// <summary>
+        /// Main entry point that dispatches conversion of arrays, lists, and jagged/rectangular collections.
+        /// </summary>
+        /// <param name="value">The input object to be converted.</param>
+        /// <param name="targetType">The desired target type.</param>
+        /// <returns>The converted object compatible with the target type.</returns>
         public override object ConvertToType(object value, Type targetType)
         {
             if (targetType == null)
@@ -20,287 +29,124 @@ namespace IGLib.Core
 
             if (value == null)
             {
-                if (IsNullableType(targetType)) return null;
-                throw new InvalidOperationException($"Cannot assign null to non-nullable type {targetType.FullName}.");
+                if (targetType.IsValueType && Nullable.GetUnderlyingType(targetType) == null)
+                    throw new InvalidOperationException($"Cannot assign null to non-nullable type {targetType.FullName}.");
+                return null;
             }
 
-            Type actualTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-            Type sourceType = value.GetType();
+            var sourceType = value.GetType();
+            var actualTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
 
             if (actualTargetType.IsInstanceOfType(value))
                 return value;
 
+            // Rectangular array to rectangular array or flatten
+            if (sourceType.IsArray && sourceType.GetElementType() != null && sourceType.GetArrayRank() > 1)
+            {
+                return ConvertRectangularArray(value, actualTargetType);
+            }
+
+            // Jagged array handling (T[]...[])
             if (IsJaggedArray(sourceType))
             {
-                try
-                {
+                if (actualTargetType.IsArray && actualTargetType.GetArrayRank() > 1)
+                    return ConvertJaggedToRectangular((Array)value, actualTargetType);
+
+                if (actualTargetType.IsArray || ImplementsGenericInterface(actualTargetType, typeof(IEnumerable<>)))
                     return ConvertFromJaggedArray((Array)value, actualTargetType);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Failed to convert jagged array from {sourceType} to {targetType}.", ex);
-                }
             }
 
-            if (IsRectangularArray(sourceType))
+            // Rectangular array to jagged array
+            if (sourceType.IsArray && sourceType.GetArrayRank() > 1 &&
+                actualTargetType.IsArray && IsJaggedArray(actualTargetType))
             {
-                try
-                {
-                    return ConvertFromRectangularArray((Array)value, actualTargetType);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Failed to convert rectangular array from {sourceType} to {targetType}.", ex);
-                }
+                return ConvertRectangularToJagged((Array)value, actualTargetType);
             }
 
-            if (IsEnumerableButNotString(sourceType) && IsEnumerableButNotString(actualTargetType))
+            // Generic enumerable conversions
+            if (typeof(IEnumerable).IsAssignableFrom(sourceType) &&
+                (actualTargetType.IsArray || ImplementsGenericInterface(actualTargetType, typeof(IEnumerable<>))))
             {
-                try
-                {
-                    return ConvertEnumerable(value, actualTargetType);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Failed to convert collection from {sourceType} to {targetType}.", ex);
-                }
+                return ConvertEnumerable(value, actualTargetType);
             }
 
+            // Fallback to base logic
             return base.ConvertToType(value, targetType);
         }
 
-
-        // Auxiliary methods for array-like conversions:
-
         /// <summary>
-        /// Converts an enumerable collection to the specified target collection type.
+        /// Checks whether a given type implements a specific generic interface type.
         /// </summary>
-        /// <param name="value">The source value.</param>
-        /// <param name="targetCollectionType">The target collection type.</param>
-        /// <returns>The converted collection.</returns>
-        private object ConvertEnumerable(object value, Type targetCollectionType)
+        private static bool ImplementsGenericInterface(Type candidateType, Type genericInterface)
         {
-            Type targetElementType = GetElementType(targetCollectionType) ?? typeof(object);
-            var sourceEnumerable = ((IEnumerable)value).Cast<object>();
-
-            var convertedItems = sourceEnumerable
-                .Select(item => ConvertToType(item, targetElementType))
-                .ToList();
-
-            if (targetCollectionType.IsArray)
-            {
-                var array = Array.CreateInstance(targetElementType, convertedItems.Count);
-                for (int i = 0; i < convertedItems.Count; i++)
-                    array.SetValue(convertedItems[i], i);
-                return array;
-            }
-
-            if (IsAssignableToGenericIList(targetCollectionType, targetElementType) ||
-                IsAssignableToGenericIEnumerable(targetCollectionType, targetElementType))
-            {
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(targetElementType));
-                foreach (var item in convertedItems)
-                    list.Add(item);
-                return list;
-            }
-
-            throw new InvalidOperationException($"Unsupported collection target type: {targetCollectionType.FullName}");
-        }
-
-        /// <summary>
-        /// Converts a rectangular array to another rectangular or one-dimensional collection.
-        /// </summary>
-        /// <param name="sourceArray">The source rectangular array.</param>
-        /// <param name="targetType">The target type.</param>
-        /// <returns>The converted object.</returns>
-        private object ConvertFromRectangularArray(Array sourceArray, Type targetType)
-        {
-            Type targetElementType = GetElementType(targetType) ?? typeof(object);
-
-            if (targetType.IsArray)
-            {
-                int targetRank = targetType.GetArrayRank();
-
-                if (targetRank == 1)
-                {
-                    // Convert to 1D array
-                    var flatSource = FlattenRectangularArray(sourceArray).ToList();
-                    Array targetArray = Array.CreateInstance(targetElementType, flatSource.Count);
-                    for (int i = 0; i < flatSource.Count; i++)
-                    {
-                        targetArray.SetValue(ConvertToType(flatSource[i], targetElementType), i);
-                    }
-                    return targetArray;
-                }
-                else if (sourceArray.Rank == targetRank)
-                {
-                    // Convert to same-shape rectangular array
-                    int[] dims = Enumerable.Range(0, sourceArray.Rank)
-                                           .Select(sourceArray.GetLength)
-                                           .ToArray();
-                    int total = dims.Aggregate(1, (a, b) => a * b);
-                    var flatSource = FlattenRectangularArray(sourceArray).ToList();
-
-                    if (flatSource.Count != total)
-                        throw new InvalidOperationException("Element count mismatch during array reshaping.");
-
-                    Array targetArray = Array.CreateInstance(targetElementType, dims);
-                    var indexGen = new MultiDimensionalIndexGenerator(dims);
-
-                    int counter = 0;
-                    foreach (int[] index in indexGen)
-                    {
-                        var valueToSet = ConvertToType(flatSource[counter++], targetElementType);
-                        targetArray.SetValue(valueToSet, index);
-                    }
-
-                    return targetArray;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Target and source array ranks do not match for rectangular conversion.");
-                }
-            }
-            else if (IsAssignableToGenericIList(targetType, targetElementType) ||
-                     IsAssignableToGenericIEnumerable(targetType, targetElementType))
-            {
-                // Flatten to List<T>
-                var flatSource = FlattenRectangularArray(sourceArray).ToList();
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(targetElementType));
-                foreach (var item in flatSource)
-                {
-                    list.Add(ConvertToType(item, targetElementType));
-                }
-                return list;
-            }
-
-            throw new InvalidOperationException($"Unsupported rectangular array target type: {targetType.FullName}");
-        }
-
-        /// <summary>
-        /// Flattens a rectangular array into a sequence of objects.
-        /// </summary>
-        /// <param name="array">The rectangular array to flatten.</param>
-        /// <returns>An IEnumerable of the array elements.</returns>
-        private IEnumerable<object> FlattenRectangularArray(Array array)
-        {
-            int[] dims = Enumerable.Range(0, array.Rank)
-                                   .Select(array.GetLength)
-                                   .ToArray();
-            var indexGen = new MultiDimensionalIndexGenerator(dims);
-
-            foreach (int[] index in indexGen)
-                yield return array.GetValue(index);
-        }
-
-        /// <summary>
-        /// Checks if the type is a rectangular (multidimensional) array.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>True if rectangular array, false otherwise.</returns>
-        private static bool IsRectangularArray(Type type) =>
-            type.IsArray && type.GetArrayRank() > 1;
-
-        /// <summary>
-        /// Checks if a type is enumerable but not a string.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>True if type is enumerable but not string.</returns>
-        private static bool IsEnumerableButNotString(Type type) =>
-            typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string);
-
-        /// <summary>
-        /// Checks if a type is assignable to IList&lt;T&gt;.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <param name="elementType">The element type.</param>
-        /// <returns>True if assignable to IList&lt;T&gt;.</returns>
-        private static bool IsAssignableToGenericIList(Type type, Type elementType) =>
-            type.IsGenericType &&
-            typeof(IList<>).MakeGenericType(elementType).IsAssignableFrom(type);
-
-        /// <summary>
-        /// Checks if a type is assignable to IEnumerable&lt;T&gt;.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <param name="elementType">The element type.</param>
-        /// <returns>True if assignable to IEnumerable&lt;T&gt;.</returns>
-        private static bool IsAssignableToGenericIEnumerable(Type type, Type elementType) =>
-            type.IsGenericType &&
-            typeof(IEnumerable<>).MakeGenericType(elementType).IsAssignableFrom(type);
-
-        /// <summary>
-        /// Gets the element type of a collection type.
-        /// </summary>
-        /// <param name="type">The collection type.</param>
-        /// <returns>The element type if available, otherwise null.</returns>
-        private static Type GetElementType(Type type)
-        {
-            if (type.IsArray) return type.GetElementType();
-
-            var enumerableInterface = type.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-
-            return enumerableInterface?.GetGenericArguments()[0];
+            return candidateType.GetInterfaces()
+                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericInterface);
         }
 
 
-        // Auxiliary methods for jagged arrays:
 
+
+
+
+
+        // Jagged array flattening and Conversion:
+
+        /// <summary>
+        /// Converts a jagged array to a 1D array, List&lt;T&gt;, or other flat collection.
+        /// </summary>
+        /// <param name="sourceArray">The jagged array to flatten and convert.</param>
+        /// <param name="targetType">The type of collection to convert to.</param>
+        /// <returns>The flattened collection converted to the target type.</returns>
         private object ConvertFromJaggedArray(Array sourceArray, Type targetType)
         {
-            var flatSource = FlattenJaggedArray(sourceArray).ToList();
             Type targetElementType = GetElementType(targetType) ?? typeof(object);
+            var flatSource = FlattenJaggedArray(sourceArray).ToList();
 
+            // Early return if target type is 1D array
             if (targetType.IsArray && targetType.GetArrayRank() == 1)
             {
-                Array targetArray = Array.CreateInstance(targetElementType, flatSource.Count);
+                var resultArray = Array.CreateInstance(targetElementType, flatSource.Count);
                 for (int i = 0; i < flatSource.Count; i++)
                 {
-                    targetArray.SetValue(ConvertToType(flatSource[i], targetElementType), i);
+                    resultArray.SetValue(ConvertToType(flatSource[i], targetElementType), i);
                 }
-                return targetArray;
+                return resultArray;
             }
 
-            if (IsAssignableToGenericIList(targetType, targetElementType) ||
-                IsAssignableToGenericIEnumerable(targetType, targetElementType))
+            // Generic collection types (List<T>, IEnumerable<T>, IList<T>)
+            if (ImplementsGenericInterface(targetType, typeof(IEnumerable<>)))
             {
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(targetElementType));
+                var listType = typeof(List<>).MakeGenericType(targetElementType);
+                var list = (IList)Activator.CreateInstance(listType);
                 foreach (var item in flatSource)
-                    list.Add(ConvertToType(item, targetElementType));
-                return list;
-            }
-
-            if (targetType.IsArray && targetType.GetElementType()?.IsArray == false)
-            {
-                var shape = GetJaggedArrayShape(sourceArray);
-                if (shape == null)
-                    throw new InvalidOperationException("Jagged array cannot be reshaped to a rectangular array due to inconsistent dimensions.");
-
-                int[] dims = shape;
-                Array targetArray = Array.CreateInstance(targetElementType, dims);
-
-                var indexGen = new MultiDimensionalIndexGenerator(dims);
-                int counter = 0;
-                foreach (int[] index in indexGen)
                 {
-                    var val = ConvertToType(flatSource[counter++], targetElementType);
-                    targetArray.SetValue(val, index);
+                    list.Add(ConvertToType(item, targetElementType));
                 }
-                return targetArray;
+
+                if (targetType.IsAssignableFrom(listType))
+                    return list;
+
+                throw new InvalidOperationException(
+                    $"Cannot convert jagged array to target type {targetType.FullName}.");
             }
 
-            throw new InvalidOperationException($"Unsupported jagged array target type: {targetType.FullName}");
+            throw new InvalidOperationException(
+                $"Unsupported target type for jagged array conversion: {targetType.FullName}.");
         }
 
+        /// <summary>
+        /// Recursively flattens a jagged array into a linear sequence.
+        /// </summary>
+        /// <param name="array">The jagged array to flatten.</param>
+        /// <returns>A flattened sequence of all inner elements.</returns>
         private IEnumerable<object> FlattenJaggedArray(Array array)
         {
             foreach (var item in array)
             {
-                if (item is Array subArray)
+                if (item is Array nestedArray && IsJaggedArray(item.GetType()))
                 {
-                    foreach (var subItem in FlattenJaggedArray(subArray))
-                        yield return subItem;
+                    foreach (var sub in FlattenJaggedArray(nestedArray))
+                        yield return sub;
                 }
                 else
                 {
@@ -309,46 +155,353 @@ namespace IGLib.Core
             }
         }
 
-        private static bool IsJaggedArray(Type type) =>
-            type.IsArray && type.GetElementType()?.IsArray == true;
-
-        private static int[] GetJaggedArrayShape(Array array)
+        /// <summary>
+        /// Determines if the array is jagged (array of arrays).
+        /// </summary>
+        /// <param name="type">The array type to inspect.</param>
+        /// <returns>True if jagged; otherwise false.</returns>
+        private bool IsJaggedArray(Type type)
         {
-            List<int> shape = new List<int>();
-            while (array is Array current)
-            {
-                shape.Add(current.Length);
-                if (current.Length == 0) break;
-                object first = current.GetValue(0);
-                if (first is Array next && AllSameLength(current))
-                {
-                    array = next;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            return shape.ToArray();
+            return type.IsArray && type.GetElementType()?.IsArray == true;
         }
 
-        private static bool AllSameLength(Array array)
+        /// <summary>
+        /// Gets the element type of a collection or array.
+        /// </summary>
+        /// <param name="type">The type to examine.</param>
+        /// <returns>The element type, or null if not found.</returns>
+        private Type GetElementType(Type type)
         {
-            if (array.Length == 0) return true;
-            int? len = null;
-            foreach (var item in array)
-            {
-                if (item is Array subArray)
-                {
-                    if (len == null) len = subArray.Length;
-                    else if (subArray.Length != len) return false;
-                }
-                else return false;
-            }
-            return true;
+            if (type.IsArray)
+                return type.GetElementType();
+
+            if (type.IsGenericType &&
+                type.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+                return type.GetGenericArguments()[0];
+
+            var enumType = type.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
+            return enumType?.GetGenericArguments()[0];
         }
 
-    
+
+
+
+
+
+
+        // Jagged → rectangular conversion
+
+        /// <summary>
+        /// Converts a uniform jagged array to a rectangular array if shapes match.
+        /// </summary>
+        /// <param name="sourceArray">The jagged array with uniform shape.</param>
+        /// <param name="targetType">The rectangular array type to convert to.</param>
+        /// <returns>A rectangular array with converted elements.</returns>
+        private object ConvertJaggedToRectangular(Array sourceArray, Type targetType)
+        {
+            if (!IsUniformJaggedArray(sourceArray))
+                throw new InvalidOperationException("Jagged array does not have uniform shape.");
+
+            Type targetElementType = targetType.GetElementType();
+            int rank = targetType.GetArrayRank();
+            int[] shape = GetJaggedArrayShape(sourceArray).ToArray();
+
+            if (shape.Length != rank)
+                throw new InvalidOperationException("Jagged array rank does not match target rectangular array rank.");
+
+            Array result = Array.CreateInstance(targetElementType, shape);
+            var flatValues = FlattenJaggedArray(sourceArray).ToArray();
+
+            if (flatValues.Length != result.Length)
+                throw new InvalidOperationException("Mismatch in element count during jagged to rectangular conversion.");
+
+            int index = 0;
+            var indexGen = new MultiDimensionalIndexGenerator(shape);
+
+            foreach (var indices in indexGen)
+            {
+                var convertedValue = ConvertToType(flatValues[index++], targetElementType);
+                result.SetValue(convertedValue, indices);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Checks if all subarrays at each level of a jagged array have equal lengths.
+        /// </summary>
+        /// <param name="array">The jagged array to validate.</param>
+        /// <returns>True if the shape is uniform; otherwise false.</returns>
+        private bool IsUniformJaggedArray(Array array)
+        {
+            return CheckUniform(array, out _);
+
+            bool CheckUniform(Array arr, out int length)
+            {
+                length = arr.Length;
+
+                if (arr.Length == 0)
+                    return true;
+
+                object first = arr.GetValue(0);
+                if (first is not Array firstSub) return true;
+
+                int subLength;
+                if (!CheckUniform(firstSub, out subLength))
+                    return false;
+
+                for (int i = 1; i < arr.Length; i++)
+                {
+                    object current = arr.GetValue(i);
+                    if (current is not Array currArr || currArr.Length != subLength)
+                        return false;
+
+                    if (!CheckUniform(currArr, out int _))
+                        return false;
+                }
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Infers the shape (lengths at each level) of a uniform jagged array.
+        /// </summary>
+        /// <param name="array">The jagged array.</param>
+        /// <returns>A list of dimensions per level.</returns>
+        private List<int> GetJaggedArrayShape(Array array)
+        {
+            var shape = new List<int>();
+            object current = array;
+
+            while (current is Array arr)
+            {
+                shape.Add(arr.Length);
+                current = arr.Length > 0 ? arr.GetValue(0) : null;
+            }
+
+            return shape;
+        }
+
+        /// <summary>
+        /// Converts a rectangular array to a jagged array with matching shape and converted values.
+        /// </summary>
+        /// <param name="sourceArray">The rectangular array to convert.</param>
+        /// <param name="targetType">The target jagged array type.</param>
+        /// <returns>The jagged array filled with values.</returns>
+        private object ConvertRectangularToJagged(Array sourceArray, Type targetType)
+        {
+            Type targetElementType = GetElementType(targetType);
+            int rank = sourceArray.Rank;
+            int[] dims = Enumerable.Range(0, rank).Select(sourceArray.GetLength).ToArray();
+            var flatValues = FlattenRectangularArray(sourceArray).ToList();
+
+            Array jagged = CreateJaggedArray(targetElementType, dims, 0);
+            PopulateJaggedArray(jagged, flatValues, targetElementType, 0, new int[0]);
+
+            return jagged;
+        }
+
+        /// <summary>
+        /// Creates an empty jagged array of the given shape and element type.
+        /// </summary>
+        /// <param name="elementType">The leaf type of the array.</param>
+        /// <param name="dims">The shape (lengths) of the array at each level.</param>
+        /// <param name="level">The current depth level.</param>
+        /// <returns>A jagged array with the specified structure.</returns>
+        private Array CreateJaggedArray(Type elementType, int[] dims, int level)
+        {
+            Type arrayType = elementType;
+            for (int i = level; i < dims.Length - 1; i++)
+                arrayType = arrayType.MakeArrayType();
+
+            Array array = Array.CreateInstance(arrayType, dims[level]);
+
+            if (level < dims.Length - 1)
+            {
+                for (int i = 0; i < dims[level]; i++)
+                {
+                    var subArray = CreateJaggedArray(elementType, dims, level + 1);
+                    array.SetValue(subArray, i);
+                }
+            }
+
+            return array;
+        }
+
+        /// <summary>
+        /// Populates a jagged array with converted values from a flat list.
+        /// </summary>
+        /// <param name="target">The jagged array to fill.</param>
+        /// <param name="values">The flat list of values.</param>
+        /// <param name="elementType">The target element type.</param>
+        /// <param name="level">Current recursion level.</param>
+        /// <param name="indexPath">Index tracker for recursion path.</param>
+        private int PopulateJaggedArray(object target, List<object> values, Type elementType, int level, int[] indexPath)
+        {
+            int count = 0;
+            Array array = (Array)target;
+
+            if (array.GetType().GetElementType() == elementType)
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    array.SetValue(ConvertToType(values[count++], elementType), i);
+                }
+
+                return count;
+            }
+            else
+            {
+                for (int i = 0; i < array.Length; i++)
+                {
+                    object sub = array.GetValue(i);
+                    count += PopulateJaggedArray(sub, values.Skip(count).ToList(), elementType, level + 1, indexPath.Append(i).ToArray());
+                }
+
+                return count;
+            }
+        }
+
+
+
+
+
+
+        // Rectangular array & enumerable
+
+        /// <summary>
+        /// Converts any enumerable collection to a target collection type.
+        /// </summary>
+        /// <param name="value">The source enumerable object.</param>
+        /// <param name="targetType">The desired target collection type.</param>
+        /// <returns>A new collection with converted elements.</returns>
+        private object ConvertEnumerable(object value, Type targetType)
+        {
+            if (targetType.IsInstanceOfType(value))
+                return value;
+
+            Type targetElementType = GetElementType(targetType) ?? typeof(object);
+            var enumerable = ((IEnumerable)value).Cast<object>();
+
+            // 1D array
+            if (targetType.IsArray && targetType.GetArrayRank() == 1)
+            {
+                var list = enumerable.Select(x => ConvertToType(x, targetElementType)).ToList();
+                var array = Array.CreateInstance(targetElementType, list.Count);
+                for (int i = 0; i < list.Count; i++)
+                    array.SetValue(list[i], i);
+                return array;
+            }
+
+            // List<T>, IList<T>, IEnumerable<T>
+            if (ImplementsGenericInterface(targetType, typeof(IEnumerable<>)))
+            {
+                var listType = typeof(List<>).MakeGenericType(targetElementType);
+                var list = (IList)Activator.CreateInstance(listType);
+
+                foreach (var item in enumerable)
+                {
+                    list.Add(ConvertToType(item, targetElementType));
+                }
+
+                if (targetType.IsAssignableFrom(listType))
+                    return list;
+
+                throw new InvalidOperationException(
+                    $"Cannot assign created list to target type {targetType.FullName}.");
+            }
+
+            throw new InvalidOperationException(
+                $"Unsupported conversion from enumerable to {targetType.FullName}.");
+        }
+
+        /// <summary>
+        /// Converts rectangular arrays to other arrays or flat collections.
+        /// </summary>
+        /// <param name="value">The rectangular source array.</param>
+        /// <param name="targetArrayType">The target array or collection type.</param>
+        /// <returns>The converted collection or array.</returns>
+        private object ConvertRectangularArray(object value, Type targetArrayType)
+        {
+            Array sourceArray = (Array)value;
+            var flatSource = FlattenRectangularArray(sourceArray).ToArray();
+
+            Type targetElementType = GetElementType(targetArrayType) ?? typeof(object);
+
+            // Flatten to 1D array
+            if (targetArrayType.IsArray && targetArrayType.GetArrayRank() == 1)
+            {
+                var array = Array.CreateInstance(targetElementType, flatSource.Length);
+                for (int i = 0; i < flatSource.Length; i++)
+                    array.SetValue(ConvertToType(flatSource[i], targetElementType), i);
+                return array;
+            }
+
+            // Rectangular to rectangular of same shape
+            if (targetArrayType.IsArray && targetArrayType.GetArrayRank() == sourceArray.Rank)
+            {
+                int[] dims = Enumerable.Range(0, sourceArray.Rank)
+                                       .Select(d => sourceArray.GetLength(d))
+                                       .ToArray();
+
+                int total = dims.Aggregate(1, (a, b) => a * b);
+                if (flatSource.Length != total)
+                    throw new InvalidOperationException("Element count mismatch during array reshaping.");
+
+                var result = Array.CreateInstance(targetElementType, dims);
+                var indexGen = new MultiDimensionalIndexGenerator(dims);
+                int index = 0;
+
+                foreach (var indices in indexGen)
+                {
+                    var converted = ConvertToType(flatSource[index++], targetElementType);
+                    result.SetValue(converted, indices);
+                }
+
+                return result;
+            }
+
+            // Flatten to List<T>, IEnumerable<T>, IList<T>
+            if (ImplementsGenericInterface(targetArrayType, typeof(IEnumerable<>)))
+            {
+                var listType = typeof(List<>).MakeGenericType(targetElementType);
+                var list = (IList)Activator.CreateInstance(listType);
+
+                foreach (var item in flatSource)
+                {
+                    list.Add(ConvertToType(item, targetElementType));
+                }
+
+                if (targetArrayType.IsAssignableFrom(listType))
+                    return list;
+
+                throw new InvalidOperationException(
+                    $"Cannot assign list to target type {targetArrayType.FullName}.");
+            }
+
+            throw new InvalidOperationException(
+                $"Unsupported conversion from rectangular array to {targetArrayType.FullName}.");
+        }
+
+        /// <summary>
+        /// Flattens a rectangular array to an IEnumerable of its elements.
+        /// </summary>
+        /// <param name="sourceArray">Rectangular array to flatten.</param>
+        /// <returns>Flattened sequence of array elements.</returns>
+        private IEnumerable<object> FlattenRectangularArray(Array sourceArray)
+        {
+            foreach (var item in sourceArray)
+                yield return item;
+        }
+
+
+
+
+
+
     }
 
 
@@ -361,10 +514,18 @@ namespace IGLib.Core
 
 
 
-    /// <summary>
-    /// Utility class for generating indices for multidimensional arrays.
-    /// </summary>
-    public class MultiDimensionalIndexGenerator : IEnumerable<int[]>
+
+
+
+
+
+
+
+
+/// <summary>
+/// Utility class for generating indices for multidimensional arrays.
+/// </summary>
+public class MultiDimensionalIndexGenerator : IEnumerable<int[]>
     {
         private readonly int[] _dimensions;
 
