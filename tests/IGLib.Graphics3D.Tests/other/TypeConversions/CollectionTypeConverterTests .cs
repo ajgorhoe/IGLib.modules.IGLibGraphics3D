@@ -470,17 +470,22 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray2DToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArrayNonrectangular2DToIntArrayObjectToIntList()
         {
-            int[,] original = IntArray2x3;
+            int[][] original = IntJaggedArrayNonrectangular2x3;
             int[] expectedConvertedObject = null;
             List<int> expectedRestoredValue = null;
-            expectedRestoredValue = new List<int>();
-            foreach (int element in original)
+
+            List<int> elements = new List<int>();
+            foreach (int[] subArray1 in original)
             {
-                expectedRestoredValue.Add(element);
+                foreach (int element in subArray1)
+                {
+                    elements.Add(element);
+                }
             }
-            expectedConvertedObject = expectedRestoredValue.ToArray();
+            expectedConvertedObject = elements.ToArray();
+            expectedRestoredValue = elements.ToList();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
@@ -489,18 +494,19 @@ namespace IGLib.Core.Tests
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
             Console.WriteLine("Checking dimensions...");
-            Console.WriteLine($"  Dimensions of original:  {original.GetLength(0)} x {original.GetLength(1)}");
+            Console.WriteLine($"  Dimensions of original:  {original.Length} x {original[0].Length}, NonRectangular!");
             Console.WriteLine($"  Dimensions of converted: {converted.Length}");
             Console.WriteLine($"  Dimensions of restored:  {restored.Count}");
-            converted.Length.Should().Be(expectedConvertedObject.Length);
+            Console.WriteLine($"    expected dimensions:   {elements.Count}");
+            converted.Length.Should().Be(elements.Count);
             Console.WriteLine("Checking the converted object's elements...");
-            for (int i = 0; i < original.GetLength(0); i++)
+            for (int i = 0; i < elements.Count; i++)
             {
                 converted[i].Should().Be(expectedConvertedObject[i]);
             }
             Console.WriteLine("Checking the restored object's elements...");
-            restored.Count.Should().Be(expectedRestoredValue.Count);
-            for (int i = 0; i < expectedRestoredValue.Count; i++)
+            restored.Count.Should().Be(elements.Count);
+            for (int i = 0; i < elements.Count; i++)
             {
                 restored[i].Should().Be(expectedRestoredValue[i]);
             }
@@ -534,7 +540,7 @@ namespace IGLib.Core.Tests
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
             Console.WriteLine("Checking dimensions...");
-            Console.WriteLine($"  Dimensions of original:  {{original[0].Length}} x {{original[0][0].Length}}, NonRectangular!");
+            Console.WriteLine($"  Dimensions of original:  {original.Length} x {original[0].Length} x {original[0][0].Length}, NonRectangular!");
             Console.WriteLine($"  Dimensions of converted: {converted.Count}");
             Console.WriteLine($"  Dimensions of restored:  {restored.Length}");
             Console.WriteLine($"    expected dimensions:   {elements.Count}");
@@ -603,7 +609,7 @@ namespace IGLib.Core.Tests
         // Rectangular Array to rectangular Array of the same type:
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray2DToIntArray2DObjectToIntArray2D()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray2DToIntJaggedArray2DObjectToIntJaggedArray2D()
         {
             int[][] original = IntJaggedArray2x3;
             int[][] expectedConvertedObject = original;
@@ -644,7 +650,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray3DToIntArray3DObjectToIntArray3D()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray3DToIntJaggedArray3DObjectToIntJaggedArray3D()
         {
             int[][][] original = IntJaggedArray3x2x4;
             int[][][] expectedConvertedObject = original;
@@ -681,9 +687,9 @@ namespace IGLib.Core.Tests
                 }
             }
             Console.WriteLine("Checking the restored object's elements...");
-            restored.GetLength(0).Should().Be(expectedRestoredValue.GetLength(0));
-            restored.GetLength(1).Should().Be(expectedRestoredValue.GetLength(1));
-            restored.GetLength(2).Should().Be(expectedRestoredValue.GetLength(2));
+            restored.Length.Should().Be(expectedRestoredValue.Length);
+            restored[0].Length.Should().Be(expectedRestoredValue[0].Length);
+            restored[0][0].Length.Should().Be(expectedRestoredValue[0][0].Length);
             for (int i = 0; i < expectedRestoredValue.Length; i++)
             {
                 // dimension check first:
@@ -703,6 +709,77 @@ namespace IGLib.Core.Tests
         }
 
 
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray3DToIntArray3DObjectToJaggedArray3D()
+        {
+            int[][][] original = IntJaggedArray3x2x4;
+            int[,,] expectedConvertedObject = null;
+            int[][][] expectedRestoredValue = original;
+
+            int dim1 = original.Length;
+            int dim2 = original[0].Length;
+            int dim3 = original[0][0].Length;
+            expectedConvertedObject = new int[3, 2, 4];
+            for (int i = 0; i < original.Length; ++i)
+            {
+                int[][] subArray1 = original[i];
+                for (int j = 0; j < subArray1.Length; ++j)
+                {
+                    int[] subArray2 = subArray1[j];
+                    for (int k = 0; k < subArray2.Length; ++k)
+                    {
+                        expectedConvertedObject[i, j, k] = subArray2[k];
+                    }
+                }
+            }
+
+            var result = TypeConverter_ConversionToObjectAndBackTest(
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
+            int[,,] converted = result.Converted;
+            int[][][] restored = result.Restored;
+            // Assert (additional to asserts in the generic test mwthod called above):
+            Console.WriteLine("\nOutside the generic test function...");
+            Console.WriteLine("Checking dimensions...");
+            Console.WriteLine($"  Dimensions of original:  {original.Length} x {original[0].Length} x {original[0][0].Length}");
+            Console.WriteLine($"  Dimensions of converted: {converted.GetLength(0)} x {converted.GetLength(1)} x {converted.GetLength(2)}");
+            Console.WriteLine($"  Dimensions of restored:  {restored.Length} x {restored[0].Length} x {restored[0][0].Length}");
+            converted.Length.Should().Be(expectedConvertedObject.Length);
+            converted.GetLength(0).Should().Be(dim1);
+            converted.GetLength(1).Should().Be(dim2);
+            converted.GetLength(2).Should().Be(dim3);
+            Console.WriteLine("Checking the converted object's elements...");
+            for (int i = 0; i < dim1; ++i)
+            {
+                for (int j = 0; j < dim2; ++j)
+                {
+                    for (int k = 0; k < dim3; ++k)
+                    {
+                        converted[i, j, k].Should().Be(expectedConvertedObject[i, j, k]);
+                    }
+                }
+            }
+            Console.WriteLine("Checking the restored object's dimenions and elements...");
+            restored.Length.Should().Be(dim1);
+            restored[0].Length.Should().Be(dim2);
+            restored[0][0].Length.Should().Be(dim3);
+            for (int i = 0; i < dim1; ++i)
+            {
+                // Check dimension first:
+                restored[i].Length.Should().Be(dim2);
+                // Check the next level:
+                for (int j = 0; j < dim2; ++j)
+                {
+                    // Check dimension first:
+                    restored[i][j].Length.Should().Be(dim3);
+                    // Check the next level:
+                    for (int k = 0; k < dim3; ++k)
+                    {
+                        restored[i][j][k].Should().Be(expectedRestoredValue[i][j][k]);
+                    }
+                }
+            }
+        }
 
 
 
