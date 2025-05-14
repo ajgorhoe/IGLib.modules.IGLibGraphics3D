@@ -298,14 +298,26 @@ namespace IGLib.Core
         private object ConvertRectangularToJagged(Array sourceArray, Type targetType)
         {
             Type targetElementType = GetElementType(targetType);
+            targetElementType = GetJaggedArrayLeafElementType(targetType);
             int rank = sourceArray.Rank;
             int[] dims = Enumerable.Range(0, rank).Select(sourceArray.GetLength).ToArray();
             var flatValues = FlattenRectangularArray(sourceArray).ToList();
 
             Array jagged = CreateJaggedArray(targetElementType, dims, 0);
-            PopulateJaggedArray(jagged, flatValues, targetElementType, 0, new int[0]);
+            int index = 0;
+            PopulateJaggedArray(jagged, flatValues, targetElementType, ref index);
 
             return jagged;
+        }
+
+        /// <summary>
+        /// Recursively gets the leaf element type of a jagged array (e.g., int from int[][][]).
+        /// </summary>
+        private static Type GetJaggedArrayLeafElementType(Type type)
+        {
+            while (type.IsArray)
+                type = type.GetElementType();
+            return type;
         }
 
         /// <summary>
@@ -340,32 +352,26 @@ namespace IGLib.Core
         /// </summary>
         /// <param name="target">The jagged array to fill.</param>
         /// <param name="values">The flat list of values.</param>
-        /// <param name="elementType">The final element type (not intermediate array types).</param>
-        /// <param name="level">Current recursion level.</param>
-        /// <param name="indexPath">Index tracker for debugging (optional).</param>
-        /// <returns>The count of consumed elements.</returns>
-        private int PopulateJaggedArray(object target, List<object> values, Type elementType, int level, int[] indexPath)
+        /// <param name="elementType">The final (leaf) element type.</param>
+        /// <param name="index">A ref index tracking position in the flat list.</param>
+        /// <returns>Nothing (fills array in-place).</returns>
+        private void PopulateJaggedArray(object target, List<object> values, Type elementType, ref int index)
         {
-            int count = 0;
-            Array array = (Array)target;
-            Type currentElementType = array.GetType().GetElementType();
-
-            bool isLeafLevel = currentElementType == elementType;
+            var array = (Array)target;
+            var elementTypeInArray = array.GetType().GetElementType();
 
             for (int i = 0; i < array.Length; i++)
             {
-                if (isLeafLevel)
+                if (elementTypeInArray.IsArray)
                 {
-                    array.SetValue(ConvertToType(values[count++], elementType), i);
+                    var sub = array.GetValue(i);
+                    PopulateJaggedArray(sub, values, elementType, ref index);
                 }
                 else
                 {
-                    object sub = array.GetValue(i);
-                    count += PopulateJaggedArray(sub, values.Skip(count).ToList(), elementType, level + 1, indexPath.Append(i).ToArray());
+                    array.SetValue(ConvertToType(values[index++], elementType), i);
                 }
             }
-
-            return count;
         }
 
 
