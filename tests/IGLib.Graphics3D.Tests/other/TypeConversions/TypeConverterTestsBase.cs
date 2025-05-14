@@ -124,15 +124,8 @@ namespace IGLib.Core.Tests
                 }
                 convertedObject.Should().NotBeNull(because: $"Value of type {originalValue.GetType().Name} should be convertet to object of type {requestedTargetType.Name}.");
                 Type actualTargetType = convertedObject.GetType();
-                if (requestedTargetType.IsClass)
-                {
-                    requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true,
-                        because: "The requested target type should be assignable from the actual type of the converted object.");
-                }
-                else
-                {
-                    convertedObject.GetType().Should().Be(requestedTargetType, because: $"Type of the converted object should mach the target type {requestedTargetType.Name}.");
-                }
+                requestedTargetType.IsAssignableFrom(actualTargetType).Should().Be(true,
+                    because: "The requested target type should be assignable from the actual type of the converted object.");
                 if (requestedTargetType == typeof(string) || 
                     (!(requestedTargetType.IsClass || convertedObject is IList || convertedObject is IEnumerable || convertedObject is Array)))
                 {
@@ -145,7 +138,6 @@ namespace IGLib.Core.Tests
                 // Q: Should we do it like this in some cases?: restored = (RestoredType)assignedObject;
                 restoredValue = (RestoredType)typeConverter.ConvertToType(convertedObject, typeof(RestoredType));
 
-                convertedObject = typeConverter.ConvertToType(originalValue, requestedTargetType);
                 if (doDetailedOutput)
                 {
                     Console.WriteLine($"Restored value (round-trip conversion):");
@@ -176,19 +168,8 @@ namespace IGLib.Core.Tests
                     }
                     restoredValue.Should().NotBeNull(because: "The converted object is not null, therefore the restored object should also not be null.");
                     Type actualRestoredType = restoredValue.GetType();
-                    //if (doOutput)
-                    //{
-                    //    Console.WriteLine($"Value of type {actualRestoredType.Name} restored from the object: {restoredValue}");
-                    //}
-                    if (requestedRestoredType.IsClass)
-                    {
-                        requestedRestoredType.IsAssignableFrom(actualRestoredType).Should().Be(true,
+                    requestedRestoredType.IsAssignableFrom(actualRestoredType).Should().Be(true,
                             because: "The requested target type should be assignable from the actual type of the restored object.");
-                    }
-                    else
-                    {
-                        restoredValue.GetType().Should().Be(requestedRestoredType, because: $"Type of the restored object should mach the target type {requestedTargetType.Name}.");
-                    }
                     if (requestedRestoredType == typeof(string) ||
                         !(requestedRestoredType.IsClass || restoredValue is IList || restoredValue is IEnumerable || restoredValue is Array))
                     {

@@ -35,37 +35,41 @@ namespace IGLib.Core.Tests
 
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} can be used.</remarks>
-#if IncludeFailedTestsByDesign
         [Fact]
-#endif
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToArrayObjectToIEnumerable()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToIntIEnumerableObjectToIntArray()
         {
-            CustomList<int> list = new CustomList<int>(1, 2, 3);
-            CustomEnumerable<int> enumerable = new CustomEnumerable<int>(1, 2, 3);
-
             IList<int> originalObject = new CustomList<int>(1, 2, 3);
-            int[] expectedAssignedObject = originalObject.ToArray();
-            CustomEnumerable<int> expectedRestoredValue = new(originalObject);
+            IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
+            int[] expectedRestoredValue = originalObject.ToArray();
             TypeConverter_ConversionToObjectAndBackTest<
-                IList<int>, int[], CustomEnumerable<int> > (
+                IList<int>, IEnumerable<int>, int[] > (
+                TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
+        }
+
+        /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} can be used.</remarks>
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArrayToIntIEnumerableObjectToIntIList()
+        {
+            int[] originalObject = { 1, 2, 3 }; // new CustomList<int>(1, 2, 3);
+            IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
+            IList<int> expectedRestoredValue = new CustomList<int>(originalObject);
+            TypeConverter_ConversionToObjectAndBackTest<
+                int[] , IEnumerable<int>, > IList<int> >(
                 TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
 
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} or T[] can be used.</remarks>
-#if IncludeFailedTestsByDesign
         [Fact]
-#endif
         protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToIntArrayObjectToIntIList()
         {
             int[] values = { 1, 2, 3, 4, 5 };
-            CustomList<int> original = new CustomList<int>(values);
+            IList<int> original = new CustomList<int>(values);
             int[] expectedConvertedObject = original.ToArray();
             IList<int> expectedRestoredValue = new List<int>(values);
 
-            var result = TypeConverter_ConversionToObjectAndBackTest<
-                IList<int>, int[], IList<int> > (
+            var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             int[] converted = result.Converted;
             IList<int> restored = result.Restored;
@@ -91,14 +95,13 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntEnumerableToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIEnumerableToIntListObjectToIntArray()
         {
             IEnumerable<int> original = new CustomEnumerable<int>{ 1, 2, 3, 4 };
             List<int> expectedConvertedObject = original.ToList();
             int[] expectedRestoredValue = original.ToArray();
 
-            var result = TypeConverter_ConversionToObjectAndBackTest<
-                IEnumerable<int>, List<int>, int[]>(
+            var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             List<int> converted = result.Converted;
             int[] restored = result.Restored;
@@ -123,7 +126,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntEnumerableToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIEnumerableToIntArrayObjectToIntList()
         {
             IEnumerable<int> original = new CustomEnumerable<int>{ 1, 2, 3, 4 };
             int[] expectedConvertedObject =  original.ToArray();
@@ -196,8 +199,7 @@ namespace IGLib.Core.Tests
             List<int> expectedConvertedObject = original.ToList();
             int[] expectedRestoredValue = original;
 
-            var result = TypeConverter_ConversionToObjectAndBackTest<
-                int[], List<int>, int[]>(
+            var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             List<int> converted = result.Converted;
             int[] restored = result.Restored;
@@ -223,17 +225,14 @@ namespace IGLib.Core.Tests
 
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} or T[] can be used.</remarks>
-#if IncludeFailedTestsByDesign
         [Fact]
-#endif
         protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArrayToIntIListObjectToIntArray()
         {
             int[] original = { 1, 2, 3, 4, 5, 6, 7, 8 };
             IList<int> expectedConvertedObject = original.ToList();
             int[] expectedRestoredValue = original;
 
-            var result = TypeConverter_ConversionToObjectAndBackTest<
-                int[], IList<int>, int[]>(
+            var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             IList<int> converted = result.Converted;
             int[] restored = result.Restored;
@@ -298,10 +297,10 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntIListObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
-            List<int> expectedConvertedObject = null;
+            IList<int> expectedConvertedObject = null;
             int[] expectedRestoredValue = null;
             expectedConvertedObject = new List<int>();
             foreach (int element in original)
@@ -312,7 +311,7 @@ namespace IGLib.Core.Tests
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            List<int> converted = result.Converted;
+            IList<int> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -343,8 +342,7 @@ namespace IGLib.Core.Tests
             int[,] expectedConvertedObject = original;
             int[,] expectedRestoredValue = original;
 
-            var result = TypeConverter_ConversionToObjectAndBackTest<
-                int[,], int[,], int[,] >(
+            var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             int[,] converted = result.Converted;
             int[,] restored = result.Restored;
@@ -379,8 +377,7 @@ namespace IGLib.Core.Tests
             int[,,] expectedConvertedObject = original;
             int[,,] expectedRestoredValue = original;
 
-            var result = TypeConverter_ConversionToObjectAndBackTest<
-                int[,,], int[,,], int[,,] >(
+            var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             int[,,] converted = result.Converted;
             int[,,] restored = result.Restored;
@@ -431,6 +428,10 @@ namespace IGLib.Core.Tests
 
 
         #region CollectionConversions.DifferentElementTypes
+
+
+
+
 
 
 
