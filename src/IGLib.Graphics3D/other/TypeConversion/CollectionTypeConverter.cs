@@ -340,33 +340,32 @@ namespace IGLib.Core
         /// </summary>
         /// <param name="target">The jagged array to fill.</param>
         /// <param name="values">The flat list of values.</param>
-        /// <param name="elementType">The target element type.</param>
+        /// <param name="elementType">The final element type (not intermediate array types).</param>
         /// <param name="level">Current recursion level.</param>
-        /// <param name="indexPath">Index tracker for recursion path.</param>
+        /// <param name="indexPath">Index tracker for debugging (optional).</param>
+        /// <returns>The count of consumed elements.</returns>
         private int PopulateJaggedArray(object target, List<object> values, Type elementType, int level, int[] indexPath)
         {
             int count = 0;
             Array array = (Array)target;
+            Type currentElementType = array.GetType().GetElementType();
 
-            if (array.GetType().GetElementType() == elementType)
+            bool isLeafLevel = currentElementType == elementType;
+
+            for (int i = 0; i < array.Length; i++)
             {
-                for (int i = 0; i < array.Length; i++)
+                if (isLeafLevel)
                 {
                     array.SetValue(ConvertToType(values[count++], elementType), i);
                 }
-
-                return count;
-            }
-            else
-            {
-                for (int i = 0; i < array.Length; i++)
+                else
                 {
                     object sub = array.GetValue(i);
                     count += PopulateJaggedArray(sub, values.Skip(count).ToList(), elementType, level + 1, indexPath.Append(i).ToArray());
                 }
-
-                return count;
             }
+
+            return count;
         }
 
 
