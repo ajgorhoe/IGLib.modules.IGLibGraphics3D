@@ -75,12 +75,16 @@ namespace IGLib.Core
         }
 
         /// <summary>
-        /// Checks whether a given type implements a specific generic interface type.
+        /// Checks if a type is or implements a specific generic interface (e.g., IEnumerable&lt;&gt;).
         /// </summary>
+        /// <param name="candidateType">The type to check.</param>
+        /// <param name="genericInterface">The generic interface definition, e.g., typeof(IEnumerable&lt;&gt;).</param>
+        /// <returns>True if the type is or implements the given generic interface.</returns>
         private static bool ImplementsGenericInterface(Type candidateType, Type genericInterface)
         {
-            return candidateType.GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == genericInterface);
+            return (candidateType.IsGenericType && candidateType.GetGenericTypeDefinition() == genericInterface)
+                || candidateType.GetInterfaces().Any(i =>
+                       i.IsGenericType && i.GetGenericTypeDefinition() == genericInterface);
         }
 
 
@@ -475,7 +479,9 @@ namespace IGLib.Core
                     list.Add(ConvertToType(item, targetElementType));
                 }
 
-                if (targetArrayType.IsAssignableFrom(listType))
+                // $$ Original condition:
+                // if (targetArrayType.IsAssignableFrom(listType))
+                if (targetArrayType.IsAssignableFrom(list.GetType()))
                     return list;
 
                 throw new InvalidOperationException(
