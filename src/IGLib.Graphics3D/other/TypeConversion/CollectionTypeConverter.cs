@@ -147,10 +147,10 @@ namespace IGLib.Core
         {
             foreach (var item in array)
             {
-                if (item is Array nestedArray && IsJaggedArray(item.GetType()))
+                if (item is Array nestedArray)
                 {
-                    foreach (var sub in FlattenJaggedArray(nestedArray))
-                        yield return sub;
+                    foreach (var subItem in FlattenJaggedArray(nestedArray))
+                        yield return subItem;
                 }
                 else
                 {
