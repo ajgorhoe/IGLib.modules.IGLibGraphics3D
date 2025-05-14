@@ -54,13 +54,10 @@ namespace IGLib.Core.Tests
             IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
             IList<int> expectedRestoredValue = new CustomList<int>(originalObject);
             TypeConverter_ConversionToObjectAndBackTest<
-                int[] , IEnumerable<int>, > IList<int> >(
+                int[], IEnumerable<int>, IList<int>>(
                 TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
-
-
-        /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} or T[] can be used.</remarks>
         [Fact]
         protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToIntArrayObjectToIntIList()
         {
