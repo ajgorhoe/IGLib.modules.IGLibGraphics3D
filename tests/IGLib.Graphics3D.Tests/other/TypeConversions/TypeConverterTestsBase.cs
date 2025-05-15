@@ -81,8 +81,8 @@ namespace IGLib.Core.Tests
                     Console.WriteLine($"  and restoring the object to a value of type {typeof(RestoredType).Name}.");
                 }
                 Console.WriteLine($"Original object:");
-                Console.WriteLine($"  Declared Type: {typeof(OriginalType).Name}");
-                Console.WriteLine($"  Actual Type:   {originalValue?.GetType().Name ?? "unknown"}");
+                Console.WriteLine($"  Declared Type: {typeof(OriginalType).ToString()}");
+                Console.WriteLine($"  Actual Type:   {originalValue?.GetType().ToString() ?? "unknown"}");
                 Console.WriteLine($"  Value: <{originalValue}>; using ToReadableString():");
                 Console.WriteLine($"{originalValue.ToReadableString()}");
                 Console.WriteLine("");
@@ -92,8 +92,8 @@ namespace IGLib.Core.Tests
             if (doDetailedOutput)
             {
                 Console.WriteLine($"Converted object:");
-                Console.WriteLine($"  Declared Type: {typeof(TargetType).Name}");
-                Console.WriteLine($"  Actual Type:   {convertedObject?.GetType().Name ?? "unknown"}");
+                Console.WriteLine($"  Declared Type: {typeof(TargetType).ToString()}");
+                Console.WriteLine($"  Actual Type:   {convertedObject?.GetType().ToString() ?? "unknown"}");
                 Console.WriteLine($"  Value: <{convertedObject}>; using ToReadableString():");
                 Console.WriteLine($"{convertedObject.ToReadableString()}");
                 Console.WriteLine("");
@@ -141,8 +141,8 @@ namespace IGLib.Core.Tests
                 if (doDetailedOutput)
                 {
                     Console.WriteLine($"Restored value (round-trip conversion):");
-                    Console.WriteLine($"  Declared Type: {typeof(RestoredType).Name}");
-                    Console.WriteLine($"  Actual Type:   {restoredValue?.GetType().Name ?? "unknown"}");
+                    Console.WriteLine($"  Declared Type: {typeof(RestoredType).ToString()}");
+                    Console.WriteLine($"  Actual Type:   {restoredValue?.GetType().ToString() ?? "unknown"}");
                     Console.WriteLine($"  Value: <{restoredValue}>; using ToReadableString():");
                     Console.WriteLine($"{restoredValue.ToReadableString()}");
                     Console.WriteLine("");

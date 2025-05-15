@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using IGLib.Tests.Base.SampleClasses;
 using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
-using System.Runtime.ExceptionServices;
 using IGLib.Core;
+using IGLib.Core.CollectionExtensions;
 
 namespace IGLib.Core.Tests
 {

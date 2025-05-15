@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using IGLib.Tests.Base.SampleClasses;
 using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
-using System.Runtime.ExceptionServices;
 using IGLib.Core;
+using IGLib.Core.CollectionExtensions;
 
 namespace IGLib.Core.Tests
 {
@@ -36,39 +36,39 @@ namespace IGLib.Core.Tests
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} can be used.</remarks>
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToIntIEnumerableObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToStringIEnumerableObjectToIntArray()
         {
             IList<int> originalObject = new CustomList<int>(1, 2, 3);
-            IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
+            IEnumerable<string> expectedAssignedObject = new CustomEnumerable<string>(originalObject.Select(a=>a.ToString()));
             int[] expectedRestoredValue = originalObject.ToArray();
             TypeConverter_ConversionToObjectAndBackTest<
-                IList<int>, IEnumerable<int>, int[]>(
+                IList<int>, IEnumerable<string>, int[]>(
                 TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} can be used.</remarks>
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToIntIEnumerableObjectToIntIList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToDoubleIEnumerableObjectToIntIList()
         {
             int[] originalObject = { 1, 2, 3 }; // new CustomList<int>(1, 2, 3);
-            IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
+            IEnumerable<double> expectedAssignedObject = new CustomEnumerable<double>(originalObject.Select(a => (double)a).ToArray());
             IList<int> expectedRestoredValue = new CustomList<int>(originalObject);
             TypeConverter_ConversionToObjectAndBackTest<
-                int[], IEnumerable<int>, IList<int>>(
+                int[], IEnumerable<double>, IList<int>>(
                 TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToIntArrayObjectToIntIList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToStringArrayObjectToIntIList()
         {
             int[] values = { 1, 2, 3, 4, 5 };
             IList<int> original = new CustomList<int>(values);
-            int[] expectedConvertedObject = original.ToArray();
+            string[] expectedConvertedObject = original.Select(a => a.ToString()).ToArray();
             IList<int> expectedRestoredValue = new List<int>(values);
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[] converted = result.Converted;
+            string[] converted = result.Converted;
             IList<int> restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");

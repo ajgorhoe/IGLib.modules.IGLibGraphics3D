@@ -38,6 +38,16 @@ namespace IGLib.Tests.Base.SampleCollsctions
             { 21, 22, 23 }
         };
 
+        /// <summary>Sample 2D rectangular array of int (type <see cref="string[,]"/>), for use in tests.
+        /// Dimensions of the array are 2*3.
+        /// <para>Elements of the array correspond to elements of <see cref="IntArray2x3"/> converted to 
+        /// strings by <see cref="int.ToString()"/> method.</para></summary>
+        public static string[,] StringArray2x3 { get; } =
+        {
+            { "11", "12", "13" },
+            { "21", "22", "23" }
+        };
+
         /// <summary>Sample 3D rectangular array of int (type <see cref="int[,,]"/>), for use in tests.
         /// Dimensions of the array are 2*3*4.</summary>
         public static int[,,] IntArray3x2x4 { get; } =
@@ -53,6 +63,26 @@ namespace IGLib.Tests.Base.SampleCollsctions
             {
                 { 311, 312, 313, 314 },
                 { 321, 322, 323, 324 },
+            }
+        };
+
+        /// <summary>Sample 3D rectangular array of int (type <see cref="string[,,]"/>), for use in tests.
+        /// Dimensions of the array are 2*3*4.
+        /// <para>Elements of the array correspond to elements of <see cref="IntArray3x2x4"/> converted to 
+        /// strings by <see cref="int.ToString()"/> method.</para></summary>
+        public static string[,,] StringArray3x2x4 { get; } =
+        {
+            {
+                { "111", "112", "113", "114" },
+                { "121", "122", "123", "124" },
+            },
+            {
+                { "211", "212", "213", "214" },
+                { "221", "222", "223", "224" },
+            },
+            {
+                { "311", "312", "313", "314" },
+                { "321", "322", "323", "324" },
             }
         };
 

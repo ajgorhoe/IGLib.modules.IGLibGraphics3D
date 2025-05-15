@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 
 
 // WARNING: 
@@ -50,6 +51,30 @@ namespace IGLib.Core.CollectionExtensions
 
 
 
+
+        /// <summary>Extension method to serialize an object to a JSON string with optional indentation</summary>
+        /// <typeparam name="T">Type of the object. ost of the time, type parameters can be inferred and
+        /// does not need to be stated when calling this method. Even if the declared type of
+        /// <paramref name="obj"/> is <see cref="object"/>, the conversion to JSON should be take into
+        /// account its actual type and should be correct.</typeparam>
+        /// <param name="obj">The object to be serialized to a JSON string that is returned.</param>
+        /// <param name="indent">If true then the returned JSON string is indented. If not, the JSON
+        /// string is as short as possible, without the unnecessary whitespace. Default is false.</param>
+        /// <returns>The JSON-serialized string corresponding to <paramref name="obj"/>. The string will not
+        /// contain private objects.</returns>
+        public static string ToJsonString<T>(this T obj, bool indent = false)
+        {
+            // Configure JsonSerializerOptions to conditionally enable indentation
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = indent
+            };
+
+            // Use JsonSerializer to convert the object to JSON with the specified options
+            return JsonSerializer.Serialize(obj, options);
+        }
+
+
         /// <summary>Converts the specified object <paramref name="o"/> to a readable string.
         /// <para>This method dynamically checks the actual type of <paramref name="o"/>. If the object
         /// is an array, 2 or 3 dimensional rectangular array, 2 or 3 dimensional ljagged array, a
@@ -75,6 +100,11 @@ namespace IGLib.Core.CollectionExtensions
             if (o is string str)
             {
                 return ToReadableString(str);
+            }
+
+            if (o is char ch)
+            {
+                return ToReadableString(ch);
             }
 
             // Handle jagged arrays (1D array of arrays or deeper)
@@ -114,6 +144,7 @@ namespace IGLib.Core.CollectionExtensions
             }
 
             // Fallback for non-collection types
+            // return o.ToJsonString();
             return o.ToString();
         }
 
@@ -183,17 +214,38 @@ namespace IGLib.Core.CollectionExtensions
         }
 
 
-        /// <summary>Converts a string to a readable string.</summary>
-        /// <param name="array">Array to be converted.</param>
+        /// <summary>Converts a string to a readable string.
+        /// <para>The returned string is in double quotes, and all double quotes (but not other characters) within the string
+        /// are scaped with backslash.</para></summary>
+        /// <param name="array">String to be converted.</param>
         public static string ToReadableString(this string str)
         {
             if (str == null)
             {
                 return NullString;
             }
-            return $"\"{str}\"";
+            return $"\"{str.Replace("\"", "\\\"")}\"";
         }
 
+        /// <summary>Converts a character to a readable string.
+        /// <para>The returned string contains the character within single quotes. If the character itself is a single quote,
+        /// then it is escaped by a backslash (this is not true for any other characters).</para></summary>
+        /// <param name="ch">Character to be converted.</param>
+        public static string ToReadableString(this char ch)
+        {
+            return $"'{(ch == '\'' ? "\\'" : ch)}'";
+        }
+
+        /// <summary>Converts a string to a readable string.</summary>
+        /// <param name="array">Array to be converted.</param>
+        public static string ToReadableString(this char? ch)
+        {
+            if (ch == null)
+            {
+                return NullString;
+            }
+            return ToReadableString(ch.Value);
+        }
 
         /// <summary>Converts 1D  array to a readable string.</summary>
         /// <typeparam name="T">Type of array elements.</typeparam>
@@ -206,7 +258,8 @@ namespace IGLib.Core.CollectionExtensions
             {
                 return NullString;
             }
-            return $"{openBracket}{string.Join($"{separator} ", array)}{closedBracket}";
+            return $"{openBracket}{string.Join($"{separator} ", 
+                array.Select(a => a.ToReadableString(indentation, openBracket, closedBracket, separator)))}{closedBracket}";
         }
 
 
@@ -217,9 +270,9 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{openBracket}{string.Join($"{separator} ", list)}{closedBracket}";
+            return $"{openBracket}{string.Join($"{separator} ",
+                list.Select(a => a.ToReadableString(indentation, openBracket, closedBracket, separator)))}{closedBracket}";
         }
-
 
         // Extension method for generic IEnumerable<T>
         /// <summary>Converts an <see cref="IEnumerable{T}"/> object to a readable string.</summary>
@@ -231,7 +284,8 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
-            return $"{openBracket}{string.Join($"{separator} ", enumerable)}{closedBracket}";
+            return $"{openBracket}{string.Join($"{separator} ", 
+                enumerable.Select(a => a.ToReadableString(indentation, openBracket, closedBracket, separator)))}{closedBracket}";
         }
 
 
@@ -255,7 +309,7 @@ namespace IGLib.Core.CollectionExtensions
                 sb.Append($"{indentation}{openBracket}");
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    sb.Append(array[i, j]);
+                    sb.Append(array[i, j].ToReadableString(indentation, openBracket, closedBracket, separator));
                     if (j < array.GetLength(1) - 1) // Avoid trailing comma
                         sb.Append($"{separator} ");
                 }
@@ -291,7 +345,7 @@ namespace IGLib.Core.CollectionExtensions
                     sb.Append($"{indentation}{indentation}{openBracket}");
                     for (int k = 0; k < array.GetLength(2); k++)
                     {
-                        sb.Append(array[i, j, k]);
+                        sb.Append(array[i, j, k].ToReadableString(indentation, openBracket, closedBracket, separator));
                         if (k < array.GetLength(2) - 1) // Avoid trailing comma
                             sb.Append($"{separator} ");
                     }

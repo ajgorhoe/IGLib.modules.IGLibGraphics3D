@@ -39,13 +39,13 @@ namespace IGLib.Core.Tests
         /// <summary>Array element separator used in the string representation of array-like objects.</summary>
         protected string ArraySeparator { get; } = CollectionExtensions.CollectionExtensions.ArraySeparator;
 
+        /// <summary>Representation of null reference.</summary>
+        protected string NullString { get; } = CollectionExtensions.CollectionExtensions.NullString;
 
         #region ToReadableString_ForCollections_BasicTests
         // Tests in this region perform basic verification of correctness of the extension methogs
         // ToreadableString(...) for array-like types of method parameter. This involves checking that brackets
         // and separators are present in generated strings, and that all array elementts are also present.
-
-
 
         [Theory]
         [InlineData(false)]
@@ -73,6 +73,352 @@ namespace IGLib.Core.Tests
             }
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_IntNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            int collection = 256;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+256
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableDoubleNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            double? collection = 4.22;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+4.22
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableDoubleNumberNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            double? collection = null;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(NullString);
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+null
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableIntNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            int? collection = 6225;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+6225
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableIntNumberNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            int? collection = null;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(NullString);
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+null
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_String_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            string collection = "The number is: 256";
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            stringRepresentation.Should().StartWith("\"");
+            stringRepresentation.Should().EndWith("\"");
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+"The number is: 256"
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_StringWithDoubleQuotes_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            string collection = "The number is: 256; The string is: \"ABcd\"";
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().StartWith("\"");
+            stringRepresentation.Should().EndWith("\"");
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+"The number is: 256; The string is: \"ABcd\""
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_StringNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            string collection = null;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Be(NullString);
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+null
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_Char_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char collection = 'x';
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+'x'
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_CharSingleQuote_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char collection = '\'';
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+'\''
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableChar_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char? collection = 'x';
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+'x'
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableCharSingleQuote_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char? collection = '\'';
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+'\''
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_NullableCharNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char? collection = null;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(NullString);
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+null
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Should().Be(expectedOutput);
+                ;
+            }
+        }
 
 
 
@@ -455,8 +801,8 @@ namespace IGLib.Core.Tests
         [InlineData(true)]
         protected void CollectionExtensoins_ToReadableStringDynamic_DoubleNumber_WorksCorrectly(bool checkPreciseOutput)
         {
-            Console.WriteLine("Converting an integer array to a readable string...");
-            double collection = 24.35e-12;
+            Console.WriteLine("Converting a string value  to a readable string...");
+            double collection = 2.43;
             object obj = collection;
             string expectedOutput = collection.ToReadableString();
             Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
@@ -466,6 +812,113 @@ namespace IGLib.Core.Tests
             stringRepresentation.Should().NotContain(ArrayBracketOpen);
             stringRepresentation.Should().NotContain(ArrayBracketClosed);
             stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableDoubleNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            double? collection = 4.22;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableDoubleNumberNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            double? collection = null;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_IntNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            int collection = 256;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableIntNumber_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            int? collection = 6225;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableIntNumberNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            int? collection = null;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
             if (checkPreciseOutput)
             {
                 stringRepresentation.Should().Be(expectedOutput);
@@ -496,6 +949,172 @@ namespace IGLib.Core.Tests
                 stringRepresentation.Should().Be(expectedOutput);
             }
         }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_StringNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting an integer array to a readable string...");
+            string collection = null;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_StringWithDoubleQuotes_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            string collection = "The number is: 256; The string is: \"ABcd\"";
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().StartWith("\"");
+            stringRepresentation.Should().EndWith("\"");
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_Char_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char collection = 'x';
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            stringRepresentation.Should().StartWith("'");
+            stringRepresentation.Should().EndWith("'");
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_CharSingleQuote_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char collection = '\'';
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            stringRepresentation.Should().StartWith("'");
+            stringRepresentation.Should().EndWith("'");
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableChar_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char? collection = 'x';
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            stringRepresentation.Should().StartWith("'");
+            stringRepresentation.Should().EndWith("'");
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableCharSingleQuote_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char? collection = '\'';
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(collection.ToString());
+            stringRepresentation.Should().StartWith("'");
+            stringRepresentation.Should().EndWith("'");
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_NullableCharNull_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a string value to a readable string...");
+            char? collection = null;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().NotContain(ArrayBracketOpen);
+            stringRepresentation.Should().NotContain(ArrayBracketClosed);
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
 
         [Theory]
         [InlineData(false)]
