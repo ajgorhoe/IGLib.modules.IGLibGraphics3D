@@ -12,6 +12,7 @@ using IGLib.Tests.Base.SampleClasses;
 using static IGLib.Tests.Base.SampleCollsctions.SampleCollections;
 using IGLib.Core;
 using IGLib.Core.CollectionExtensions;
+using Xunit.Sdk;
 
 namespace IGLib.Core.Tests
 {
@@ -92,15 +93,15 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIEnumerableToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIEnumerableToStringListObjectToIntArray()
         {
             IEnumerable<int> original = new CustomEnumerable<int> { 1, 2, 3, 4 };
-            List<int> expectedConvertedObject = original.ToList();
+            List<string> expectedConvertedObject = original.Select(a=>a.ToString()).ToList();
             int[] expectedRestoredValue = original.ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            List<int> converted = result.Converted;
+            List<string> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -123,16 +124,16 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIEnumerableToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIEnumerableToStringArrayObjectToIntList()
         {
             IEnumerable<int> original = new CustomEnumerable<int> { 1, 2, 3, 4 };
-            int[] expectedConvertedObject = original.ToArray();
+            string[] expectedConvertedObject = original.Select(a => a.ToString()).ToArray();
             List<int> expectedRestoredValue = original.ToList();
 
             var result = TypeConverter_ConversionToObjectAndBackTest<
-                IEnumerable<int>, int[], List<int>>(
+                IEnumerable<int>, string[], List<int>>(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[] converted = result.Converted;
+            string[] converted = result.Converted;
             List<int> restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -156,17 +157,17 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToStringArrayObjectToIntList()
         {
             int[] values = { 1, 2, 3, 4, 5 };
             IList<int> original = new CustomList<int>(values);
-            int[] expectedConvertedObject = original.ToArray();
+            string[] expectedConvertedObject = original.Select(a => a.ToString()).ToArray();
             List<int> expectedRestoredValue = new List<int>(values);
 
             var result = TypeConverter_ConversionToObjectAndBackTest<
-                IList<int>, int[], List<int>>(
+                IList<int>, string[], List<int>>(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[] converted = result.Converted;
+            string[] converted = result.Converted;
             List<int> restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -190,15 +191,15 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToStringListObjectToIntArray()
         {
             int[] original = { 1, 2, 3, 4, 5, 6, 7, 8 };
-            List<int> expectedConvertedObject = original.ToList();
+            List<string> expectedConvertedObject = original.Select(a => a.ToString()).ToList();
             int[] expectedRestoredValue = original;
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            List<int> converted = result.Converted;
+            List<string> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -221,17 +222,16 @@ namespace IGLib.Core.Tests
         }
 
 
-        /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} or T[] can be used.</remarks>
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToIntIListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToStringIListObjectToIntArray()
         {
             int[] original = { 1, 2, 3, 4, 5, 6, 7, 8 };
-            IList<int> expectedConvertedObject = original.ToList();
+            IList<string> expectedConvertedObject = original.Select(a => a.ToString()).ToList();
             int[] expectedRestoredValue = original;
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            IList<int> converted = result.Converted;
+            IList<string> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -258,21 +258,21 @@ namespace IGLib.Core.Tests
         // // Cnversions of rectangular arrays (T[, ... ,]) to 1D arrays (Ttarget[]), Lists (List<Ttarget>, IList<Ttarget]), enumerables (IEnumerable[Ttarget]):
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray2DToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray2DToStringArrayObjectToIntList()
         {
             int[,] original = IntArray2x3;
-            int[] expectedConvertedObject = null;
+            string[] expectedConvertedObject = null;
             List<int> expectedRestoredValue = null;
             expectedRestoredValue = new List<int>();
             foreach (int element in original)
             {
                 expectedRestoredValue.Add(element);
             }
-            expectedConvertedObject = expectedRestoredValue.ToArray();
+            expectedConvertedObject = expectedRestoredValue.Select(a => a.ToString()).ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[] converted = result.Converted;
+            string[] converted = result.Converted;
             List<int> restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -295,21 +295,23 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntIListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToStringIListObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
-            IList<int> expectedConvertedObject = null;
+            IList<string> expectedConvertedObject = null;
             int[] expectedRestoredValue = null;
-            expectedConvertedObject = new CustomList<int>();
+            expectedConvertedObject = new CustomList<string>();
+            List<int> elements = new List<int>();
             foreach (int element in original)
             {
-                expectedConvertedObject.Add(element);
+                expectedConvertedObject.Add(element.ToString());
+                elements.Add(element);
             }
-            expectedRestoredValue = expectedConvertedObject.ToArray();
+            expectedRestoredValue = elements.ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            IList<int> converted = result.Converted;
+            IList<string> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -332,21 +334,23 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToStringListObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
-            List<int> expectedConvertedObject = null;
+            List<string> expectedConvertedObject = null;
             int[] expectedRestoredValue = null;
-            expectedConvertedObject = new List<int>();
+            expectedConvertedObject = new List<string>();
+            List<int> elements = new List<int>();
             foreach (int element in original)
             {
-                expectedConvertedObject.Add(element);
+                expectedConvertedObject.Add(element.ToString());
+                elements.Add(element);
             }
-            expectedRestoredValue = expectedConvertedObject.ToArray();
+            expectedRestoredValue = elements.ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            List<int> converted = result.Converted;
+            List<string> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -369,25 +373,25 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntIEnumerableObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToStringIEnumerableObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
-            IEnumerable<int> expectedConvertedObject = null;
+            IEnumerable<string> expectedConvertedObject = null;
             int[] expectedRestoredValue = null;
             IList<int> elements = new List<int>();
             foreach (int element in original)
             {
                 elements.Add(element);
             }
-            expectedConvertedObject = new CustomEnumerable<int>(elements);
+            expectedConvertedObject = new CustomEnumerable<string>(elements.Select(a => a.ToString()));
             expectedRestoredValue = elements.ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            IEnumerable<int> converted = result.Converted;
+            IEnumerable<string> converted = result.Converted;
             // Conversion of IEnumerable to List will make comparisons easier (the 2 ines below)
-            IList<int> convertedAsList = converted.ToList();
-            IList<int> expectedConvertedObjectAsList = expectedConvertedObject.ToList();
+            IList<string> convertedAsList = converted.ToList();
+            IList<string> expectedConvertedObjectAsList = expectedConvertedObject.ToList();
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -412,15 +416,24 @@ namespace IGLib.Core.Tests
         // Rectangular Array to rectangular Array:
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray2DToIntArray2DObjectToIntArray2D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray2DToStringArray2DObjectToIntArray2D()
         {
             int[,] original = IntArray2x3;
-            int[,] expectedConvertedObject = original;
+            int dim1 = original.GetLength(0);
+            int dim2 = original.GetLength(1);
+            string[,] expectedConvertedObject = new string[dim1, dim2];
             int[,] expectedRestoredValue = original;
+            for (int i = 0; i < dim1; ++i)
+            {
+                for (int j = 0; j < dim2; ++j)
+                {
+                    expectedConvertedObject[i, j] = original[i, j].ToString();
+                }
+            }
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[,] converted = result.Converted;
+            string[,] converted = result.Converted;
             int[,] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -447,15 +460,29 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntArray3DObjectToIntArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToStringArray3DObjectToIntArray3D()
         {
             int[,,] original = IntArray3x2x4;
-            int[,,] expectedConvertedObject = original;
+            int dim1 = original.GetLength(0);
+            int dim2 = original.GetLength(1);
+            int dim3 = original.GetLength(2);
+            string[,,] expectedConvertedObject = new string[dim1, dim2, dim3];
             int[,,] expectedRestoredValue = original;
+            for (int i = 0; i < dim1; ++i)
+            {
+                for (int j = 0; j < dim2; ++j)
+                {
+                    for (int k = 0; k < dim3; ++k)
+                    {
+                        expectedConvertedObject[i, j, k] = original[i, j, k].ToString();
+                    }
+                }
+            }
+            Console.WriteLine($"Expected converted object: \n<<\n{expectedConvertedObject.ToReadableString()}\n>>\n");
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[,,] converted = result.Converted;
+            string[,,] converted = result.Converted;
             int[,,] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -501,10 +528,10 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular2DToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular2DToStringArrayObjectToIntList()
         {
             int[][] original = IntJaggedArrayNonrectangular2x3;
-            int[] expectedConvertedObject = null;
+            string[] expectedConvertedObject = null;
             List<int> expectedRestoredValue = null;
 
             List<int> elements = new List<int>();
@@ -515,12 +542,12 @@ namespace IGLib.Core.Tests
                     elements.Add(element);
                 }
             }
-            expectedConvertedObject = elements.ToArray();
+            expectedConvertedObject = elements.Select(a => a.ToString()).ToArray();
             expectedRestoredValue = elements.ToList();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            int[] converted = result.Converted;
+            string[] converted = result.Converted;
             List<int> restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -544,12 +571,12 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular3DToIntIListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular3DToStringIListObjectToIntArray()
         {
             int[][][] original = IntJaggedArrayNonrectangular3x2x4;
-            IList<int> expectedConvertedObject = null;
+            IList<string> expectedConvertedObject = null;
             int[] expectedRestoredValue = null;
-            expectedConvertedObject = new List<int>();
+            expectedConvertedObject = new List<string>();
             List<int> elements = new List<int>();
             foreach (int[][] subArray1 in original)
             {
@@ -561,12 +588,12 @@ namespace IGLib.Core.Tests
                     }
                 }
             }
-            expectedConvertedObject = elements;
-            expectedRestoredValue = expectedConvertedObject.ToArray();
+            expectedConvertedObject = elements.Select(a => a.ToString()).ToList();
+            expectedRestoredValue = elements.ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            IList<int> converted = result.Converted;
+            IList<string> converted = result.Converted;
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -590,10 +617,10 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular3DToIntIEnumerableObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular3DToStringIEnumerableObjectToIntArray()
         {
             int[][][] original = IntJaggedArrayNonrectangular3x2x4;
-            IEnumerable<int> expectedConvertedObject = null;
+            IEnumerable<string> expectedConvertedObject = null;
             int[] expectedRestoredValue = null;
             List<int> elements = new List<int>();
             foreach (int[][] subArray1 in original)
@@ -606,15 +633,15 @@ namespace IGLib.Core.Tests
                     }
                 }
             }
-            expectedConvertedObject = new CustomEnumerable<int>(elements);
+            expectedConvertedObject = new CustomEnumerable<string>(elements.Select(a => a.ToString()));
             expectedRestoredValue = elements.ToArray();
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
-            IEnumerable<int> converted = result.Converted;
+            IEnumerable<string> converted = result.Converted;
             // Conversion of IEnumerable to List will make comparisons easier (the 2 ines below)
-            IList<int> convertedAsList = converted.ToList();
-            IList<int> expectedConvertedObjectAsList = expectedConvertedObject.ToList();
+            IList<string> convertedAsList = converted.ToList();
+            IList<string> expectedConvertedObjectAsList = expectedConvertedObject.ToList();
             int[] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -639,12 +666,14 @@ namespace IGLib.Core.Tests
 
         // Jagged array to jagged array:
 
+
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray2DToIntJaggedArray2DObjectToIntJaggedArray2D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray2DToIntJaggedArray2DObjectToIntJaggedArray2D__ComparativeToDelete_()
         {
             int[][] original = IntJaggedArray2x3;
-            int[][] expectedConvertedObject = original;
+            int[][] expectedConvertedObject = IntJaggedArray2x3;
             int[][] expectedRestoredValue = original;
+            Console.WriteLine($"Expected converted object: \n<<\n{expectedConvertedObject.ToReadableString()}\n>>\n");
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
@@ -680,16 +709,123 @@ namespace IGLib.Core.Tests
             }
         }
 
+
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToIntJaggedArray3DObjectToIntJaggedArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray2DToStringJaggedArray2DObjectToIntJaggedArray2D()
+        {
+            int[][] original = IntJaggedArray2x3;
+            string[][] expectedConvertedObject = StringJaggedArray2x3;
+            int[][] expectedRestoredValue = original;
+            Console.WriteLine($"Expected converted object: \n<<\n{expectedConvertedObject.ToReadableString()}\n>>\n");
+
+            var result = TypeConverter_ConversionToObjectAndBackTest(
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
+            string[][] converted = result.Converted;
+            int[][] restored = result.Restored;
+            // Assert (additional to asserts in the generic test mwthod called above):
+            Console.WriteLine("\nOutside the generic test function...");
+            Console.WriteLine("Checking dimensions...");
+            Console.WriteLine($"  Dimensions of original:  {original.Length} x {original[0].Length}");
+            Console.WriteLine($"  Dimensions of converted: {converted.Length} x {converted[0].Length}");
+            Console.WriteLine($"  Dimensions of restored:  {restored.Length} x {restored[0].Length}");
+            converted.Length.Should().Be(expectedConvertedObject.Length);
+            converted[0].Length.Should().Be(expectedConvertedObject[0].Length);
+            Console.WriteLine("Checking the converted object's elements...");
+            for (int i = 0; i < expectedConvertedObject.Length; i++)
+            {
+                // dimension check first:
+                converted[i].Length.Should().Be(expectedConvertedObject[i].Length);
+                // Check the next level:
+                for (int j = 0; j < expectedConvertedObject[i].Length; j++)
+                    converted[i][j].Should().Be(expectedConvertedObject[i][j]);
+            }
+            Console.WriteLine("Checking the restored object's elements...");
+            restored.GetLength(0).Should().Be(expectedRestoredValue.GetLength(0));
+            restored[0].Length.Should().Be(expectedRestoredValue[0].Length);
+            for (int i = 0; i < expectedRestoredValue.Length; i++)
+            {
+                // dimension check first:
+                restored[i].Length.Should().Be(expectedRestoredValue[i].Length);
+                // Check the next level:
+                for (int j = 0; j < expectedRestoredValue[i].Length; j++)
+                    restored[i][j].Should().Be(expectedRestoredValue[i][j]);
+            }
+        }
+
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToStringJaggedArray3DObjectToIntJaggedArray3D__ComparativeToDelete_()
         {
             int[][][] original = IntJaggedArray3x2x4;
             int[][][] expectedConvertedObject = original;
             int[][][] expectedRestoredValue = original;
+            Console.WriteLine($"Expected converted object: \n<<\n{expectedConvertedObject.ToReadableString()}\n>>\n");
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
             int[][][] converted = result.Converted;
+            int[][][] restored = result.Restored;
+            // Assert (additional to asserts in the generic test mwthod called above):
+            Console.WriteLine("\nOutside the generic test function...");
+            Console.WriteLine("Checking dimensions...");
+            Console.WriteLine($"  Dimensions of original:  {original.Length} x {original[0].Length} x {original[0][0].Length}");
+            Console.WriteLine($"  Dimensions of converted: {converted.Length} x {converted[0].Length} x {converted[0][0].Length}");
+            Console.WriteLine($"  Dimensions of restored:  {restored.Length} x {restored[0].Length} x {restored[0][0].Length}");
+            converted.Length.Should().Be(expectedConvertedObject.Length);
+            converted[0].Length.Should().Be(expectedConvertedObject[0].Length);
+            converted[0][0].Length.Should().Be(expectedConvertedObject[0][0].Length);
+            Console.WriteLine("Checking the converted object's elements...");
+            for (int i = 0; i < expectedConvertedObject.Length; i++)
+            {
+                // dimension check first:
+                converted[i].Length.Should().Be(expectedConvertedObject[i].Length);
+                // check the next level:
+                for (int j = 0; j < expectedConvertedObject[i].Length; j++)
+                {
+                    // dimension check first:
+                    converted[i][j].Length.Should().Be(expectedConvertedObject[i][j].Length);
+                    // check the next level:
+                    for (int k = 0; k < expectedConvertedObject[i][j].Length; k++)
+                    {
+                        converted[i][j][k].Should().Be(expectedConvertedObject[i][j][k]);
+                    }
+                }
+            }
+            Console.WriteLine("Checking the restored object's elements...");
+            restored.Length.Should().Be(expectedRestoredValue.Length);
+            restored[0].Length.Should().Be(expectedRestoredValue[0].Length);
+            restored[0][0].Length.Should().Be(expectedRestoredValue[0][0].Length);
+            for (int i = 0; i < expectedRestoredValue.Length; i++)
+            {
+                // dimension check first:
+                restored[i].Length.Should().Be(expectedRestoredValue[i].Length);
+                // check the next level:
+                for (int j = 0; j < expectedRestoredValue[i].Length; j++)
+                {
+                    // dimension check first:
+                    restored[i][j].Length.Should().Be(expectedRestoredValue[i][j].Length);
+                    // check the next level:
+                    for (int k = 0; k < expectedRestoredValue[i][j].Length; k++)
+                    {
+                        restored[i][j][k].Should().Be(expectedRestoredValue[i][j][k]);
+                    }
+                }
+            }
+        }
+
+
+
+        [Fact]
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToStringJaggedArray3DObjectToIntJaggedArray3D()
+        {
+            int[][][] original = IntJaggedArray3x2x4;
+            string[][][] expectedConvertedObject = StringJaggedArray3x2x4;
+            int[][][] expectedRestoredValue = original;
+            Console.WriteLine($"Expected converted object: \n<<\n{expectedConvertedObject.ToReadableString()}\n>>\n");
+
+            var result = TypeConverter_ConversionToObjectAndBackTest(
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue);
+            string[][][] converted = result.Converted;
             int[][][] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -749,33 +885,31 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToIntArray3DObjectToIntJaggedArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToStringArray3DObjectToIntJaggedArray3D()
         {
             bool restoreObjectBackToValue = true;
             int[][][] original = IntJaggedArray3x2x4;
-            int[,,] expectedConvertedObject = null;
+            string[,,] expectedConvertedObject = StringArray3x2x4;
             int[][][] expectedRestoredValue = original;
 
             int dim1 = original.Length;
             int dim2 = original[0].Length;
             int dim3 = original[0][0].Length;
-            expectedConvertedObject = new int[3, 2, 4];
-            for (int i = 0; i < original.Length; ++i)
+            expectedConvertedObject = new string[dim1, dim2, dim3];
+            for (int i = 0; i < dim1; ++i)
             {
-                int[][] subArray1 = original[i];
-                for (int j = 0; j < subArray1.Length; ++j)
+                for (int j = 0; j < dim2; ++j)
                 {
-                    int[] subArray2 = subArray1[j];
-                    for (int k = 0; k < subArray2.Length; ++k)
+                    for (int k = 0; k < dim3; ++k)
                     {
-                        expectedConvertedObject[i, j, k] = subArray2[k];
+                        expectedConvertedObject[i, j, k] = original[i][j][k].ToString();
                     }
                 }
             }
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue, restoreObjectBackToValue: restoreObjectBackToValue);
-            int[,,] converted = result.Converted;
+            string[,,] converted = result.Converted;
             int[][][] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -828,33 +962,34 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntJaggedArray3DObjectToIntArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToStringJaggedArray3DObjectToIntArray3D()
         {
             bool restoreObjectBackToValue = true;
             int[,,] original = IntArray3x2x4;
-            int[][][] expectedConvertedObject = null;
+            string[][][] expectedConvertedObject = StringJaggedArray3x2x4;
             int[,,] expectedRestoredValue = original;
 
             int dim1 = original.GetLength(0);
             int dim2 = original.GetLength(1);
             int dim3 = original.GetLength(2);
-            expectedConvertedObject = new int[dim1][][];
+
+            expectedConvertedObject = new string[dim1][][];
             for (int i = 0; i < dim1; ++i)
             {
-                expectedConvertedObject[i] = new int[dim1][];
+                expectedConvertedObject[i] = new string[dim1][];
                 for (int j = 0; j < dim2; ++j)
                 {
-                    expectedConvertedObject[i][j] = new int[dim3];
+                    expectedConvertedObject[i][j] = new string[dim3];
                     for (int k = 0; k < dim3; ++k)
                     {
-                        expectedConvertedObject[i][j][k] = original[i, j, k];
+                        expectedConvertedObject[i][j][k] = original[i, j, k].ToString();
                     }
                 }
             }
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
                 TypeConverter, original, expectedConvertedObject, expectedRestoredValue, restoreObjectBackToValue: restoreObjectBackToValue);
-            int[][][] converted = result.Converted;
+            string[][][] converted = result.Converted;
             int[,,] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
             Console.WriteLine("\nOutside the generic test function...");
@@ -881,7 +1016,7 @@ namespace IGLib.Core.Tests
                     // Check the next level:
                     for (int k = 0; k < dim3; ++k)
                     {
-                        converted[i][j][k].Should().Be(original[i, j, k]);
+                        converted[i][j][k].Should().Be(original[i, j, k].ToString());
                     }
                 }
             }
