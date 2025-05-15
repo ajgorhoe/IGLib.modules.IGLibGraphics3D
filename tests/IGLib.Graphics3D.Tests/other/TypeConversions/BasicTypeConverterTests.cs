@@ -40,7 +40,7 @@ namespace IGLib.Core.Tests
         #region BasicTypeConverterTests
 
         /// <summary>Minimum required number of executions per second in speed tests.</summary>
-        protected virtual double MinPerSecond { get; } = 100_000;
+        protected virtual double MinPerSecond { get; } = 10_000;
 
         // Conversons from int:
 

@@ -40,9 +40,14 @@ namespace IGLib.Core
             if (actualTargetType.IsInstanceOfType(value))
                 return value;
 
-            // Rectangular array to rectangular array or flatten
+            // Source is rectangular array"
             if (sourceType.IsArray && sourceType.GetElementType() != null && sourceType.GetArrayRank() > 1)
             {
+                if (actualTargetType.IsArray && IsJaggedArray(actualTargetType))
+                {
+                    // Target type is a jagged array:
+                    return ConvertRectangularToJagged((Array)value, actualTargetType);
+                }
                 return ConvertRectangularArray(value, actualTargetType);
             }
 
@@ -54,13 +59,6 @@ namespace IGLib.Core
 
                 if (actualTargetType.IsArray || ImplementsGenericInterface(actualTargetType, typeof(IEnumerable<>)))
                     return ConvertFromJaggedArray((Array)value, actualTargetType);
-            }
-
-            // Rectangular array to jagged array
-            if (sourceType.IsArray && sourceType.GetArrayRank() > 1 &&
-                actualTargetType.IsArray && IsJaggedArray(actualTargetType))
-            {
-                return ConvertRectangularToJagged((Array)value, actualTargetType);
             }
 
             // Generic enumerable conversions
@@ -297,8 +295,8 @@ namespace IGLib.Core
         /// <returns>The jagged array filled with values.</returns>
         private object ConvertRectangularToJagged(Array sourceArray, Type targetType)
         {
-            Type targetElementType = GetElementType(targetType);
-            targetElementType = GetJaggedArrayLeafElementType(targetType);
+            //$$ Type targetElementType = GetElementType(targetType);
+            Type targetElementType = GetJaggedArrayLeafElementType(targetType);
             int rank = sourceArray.Rank;
             int[] dims = Enumerable.Range(0, rank).Select(sourceArray.GetLength).ToArray();
             var flatValues = FlattenRectangularArray(sourceArray).ToList();
@@ -483,9 +481,6 @@ namespace IGLib.Core
                 {
                     list.Add(ConvertToType(item, targetElementType));
                 }
-
-                // $$ Original condition:
-                // if (targetArrayType.IsAssignableFrom(listType))
                 if (targetArrayType.IsAssignableFrom(list.GetType()))
                     return list;
 
