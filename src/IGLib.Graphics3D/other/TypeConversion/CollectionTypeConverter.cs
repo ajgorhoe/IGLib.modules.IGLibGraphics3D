@@ -6,18 +6,28 @@ using System.Linq;
 namespace IGLib.Core
 {
 
-
-
-
-    /// <summary>
-    /// Provides conversion logic for a wide range of collection types, including:
-    /// jagged arrays, rectangular arrays, generic lists, and enumerable sequences.
-    /// Supports element-wise conversion and flattening where appropriate.
+    /// <summary>A type converter that supports conversion between basic types and a wide range of collection types,
+    /// including jagged arrays, rectangular arrays, generic lists, and enumerable sequences. Supports element-wise 
+    /// type conversion and flattening where appropriate.
+    /// <para>This class extends the <see cref="BasicTypeConverter"/> with additional capabilities for array-like objects.
+    /// The class is is trimming-safe and Blazor/AOT-friendly.</para>
+    /// <para>Capabilities:</para>
+    /// <para>* All capabilities of <see cref="BasicTypeConverter"/> (e.g. conversion of types that implement IConvertible interface),
+    /// like int <=> double, etc., double <=> string, etc., derived class => base class.</para>
+    /// <para>* Various array-like conversios, with element-wise type conversions supported by <see cref="BasicTypeConverter"/>, if necessary:</para>
+    /// <para>* 1D <=> 1D (TSource[], List{TSource}, IEnumerable{TSource} <=> TTarget[], List{TTarget}, IEnumerable{TTarget})</para>
+    /// <para>* Multidimensional => 1D conversions (TSource[,,...], TSource[][]... <=> TTarget[], List{TTarget}), IEnumerable{TTarget}, IList{TTarget}</para>
+    /// <para>* Multidimensional <=> Multidimensional (only for rank and dimensions matching exactly)</para>
     /// </summary>
     public class CollectionTypeConverter : BasicTypeConverter
     {
+
         /// <summary>
-        /// Main entry point that dispatches conversion of arrays, lists, and jagged/rectangular collections.
+        /// Converts a value to the specified target type, supporting collections. Conversion is bsed on the actual
+        /// type of <paramref name="value"/> and the specified target type (<paramref name="targetType"/>). See the
+        /// class description for more details.
+        /// <para>Takes a value of type <see cref="object"/>, identifies its actual type, converts it to the type 
+        /// compatible with the specified desired target type, and returns the converted value as <see cref="object"/>.</para>
         /// </summary>
         /// <param name="value">The input object to be converted.</param>
         /// <param name="targetType">The desired target type.</param>
@@ -40,7 +50,7 @@ namespace IGLib.Core
             if (actualTargetType.IsInstanceOfType(value))
                 return value;
 
-            // Source is rectangular array"
+            // Source is rectangular array:
             if (sourceType.IsArray && sourceType.GetElementType() != null && sourceType.GetArrayRank() > 1)
             {
                 if (actualTargetType.IsArray && IsJaggedArray(actualTargetType))
@@ -48,6 +58,7 @@ namespace IGLib.Core
                     // Target type is a jagged array:
                     return ConvertRectangularToJagged((Array)value, actualTargetType);
                 }
+                // Target type is not a jagged array; convert to rectangular array of the same shape or flatten:
                 return ConvertRectangularArray(value, actualTargetType);
             }
 
@@ -87,11 +98,7 @@ namespace IGLib.Core
 
 
 
-
-
-
-
-        // Jagged array flattening and Conversion:
+        // Jagged arrays flattening and Conversion:
 
         /// <summary>
         /// Converts a jagged array to a 1D array, List&lt;T&gt;, or other flat collection.
@@ -186,11 +193,6 @@ namespace IGLib.Core
 
             return enumType?.GetGenericArguments()[0];
         }
-
-
-
-
-
 
 
         // Jagged → rectangular conversion
@@ -295,7 +297,6 @@ namespace IGLib.Core
         /// <returns>The jagged array filled with values.</returns>
         private object ConvertRectangularToJagged(Array sourceArray, Type targetType)
         {
-            //$$ Type targetElementType = GetElementType(targetType);
             Type targetElementType = GetJaggedArrayLeafElementType(targetType);
             int rank = sourceArray.Rank;
             int[] dims = Enumerable.Range(0, rank).Select(sourceArray.GetLength).ToArray();
@@ -371,11 +372,6 @@ namespace IGLib.Core
                 }
             }
         }
-
-
-
-
-
 
         // Rectangular array & enumerable
 
@@ -503,35 +499,14 @@ namespace IGLib.Core
                 yield return item;
         }
 
-
-
-
-
-
     }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/// <summary>
-/// Utility class for generating indices for multidimensional arrays.
-/// </summary>
-public class MultiDimensionalIndexGenerator : IEnumerable<int[]>
+    /// <summary>
+    /// Utility class for generating indices for multidimensional arrays.
+    /// </summary>
+    public class MultiDimensionalIndexGenerator : IEnumerable<int[]>
     {
         private readonly int[] _dimensions;
 

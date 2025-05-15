@@ -17,7 +17,7 @@ namespace IGLib.Core
 {
 
 
-    /// <remarks>This class was i place before a deeper analysis, and it does not correctly convert rectangular arrays
+    /// <remarks>This class was in place before a deeper analysis, and it does not correctly convert rectangular arrays
     /// to List{T}>.</remarks>
     /// 
     /// <summary>
@@ -38,7 +38,9 @@ namespace IGLib.Core
     public class CollectionTypeConverter_OLD_ToRemoveLater : BasicTypeConverter
     {
         /// <summary>
-        /// Converts a value to the specified target type, supporting collections.
+        /// Converts a value to the specified target type, supporting collections. Conversion is bsed on the actual
+        /// type of <paramref name="value"/> and the specified target type (<paramref name="targetType"/>). See the
+        /// class description for more details.
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <param name="targetType">The type to convert to.</param>

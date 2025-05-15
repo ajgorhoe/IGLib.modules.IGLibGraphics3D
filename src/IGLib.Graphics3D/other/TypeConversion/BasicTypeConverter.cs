@@ -2,11 +2,12 @@
 
 namespace IGLib.Core
 {
-    /// <summary>
-    /// Provides basic type conversion functionality using IConvertible and nullable handling.
+    /// <summary>Provides basic type conversion functionality using IConvertible and nullable handling.
+    /// <para>To include array-like conversion, use the <see cref="CollectionTypeConverter"/> class.</para>
     /// </summary>
     public class BasicTypeConverter : ITypeConverter
     {
+
         /// <summary>
         /// Converts the specified value to the specified target type.
         /// </summary>
