@@ -38,7 +38,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
             { 21, 22, 23 }
         };
 
-        /// <summary>Sample 2D rectangular array of int (type <see cref="string[,]"/>), for use in tests.
+        /// <summary>Sample 2D rectangular array of strings (type <see cref="string[,]"/>), for use in tests.
         /// Dimensions of the array are 2*3.
         /// <para>Elements of the array correspond to elements of <see cref="IntArray2x3"/> converted to 
         /// strings by <see cref="int.ToString()"/> method.</para></summary>
@@ -66,7 +66,7 @@ namespace IGLib.Tests.Base.SampleCollsctions
             }
         };
 
-        /// <summary>Sample 3D rectangular array of int (type <see cref="string[,,]"/>), for use in tests.
+        /// <summary>Sample 3D rectangular array of strings (type <see cref="string[,,]"/>), for use in tests.
         /// Dimensions of the array are 2*3*4.
         /// <para>Elements of the array correspond to elements of <see cref="IntArray3x2x4"/> converted to 
         /// strings by <see cref="int.ToString()"/> method.</para></summary>
@@ -94,6 +94,16 @@ namespace IGLib.Tests.Base.SampleCollsctions
             new int[] { 21, 22, 23 }
         };
 
+        /// <summary>Sample 2D jagged array of strings (type <see cref="string[][]"/>), for use in tests.
+        /// Array's shape corresponds to a 2D rectangular 2*3 array.
+        /// <para>Elements of the array correspond to elements of <see cref="IntJaggedArray2x3"/> converted to 
+        /// strings by <see cref="int.ToString()"/> method.</para></summary>
+        public static string[][] StringJaggedArray2x3 { get; } =
+        {
+            new string[] { "11", "12", "13" },
+            new string[] { "21", "22", "23" }
+        };
+
         /// <summary>Sample 2D jagged array of int (type <see cref="int[][]"/>), for use in tests.
         /// The array does not correspond to a rectangular array (some elements are missing).
         /// The smallest rectangular array that contains it is 2*3.</summary>
@@ -101,6 +111,17 @@ namespace IGLib.Tests.Base.SampleCollsctions
         {
             new int[] { 11, 12, 13 },
             new int[] { 21, 22 }
+        };
+
+        /// <summary>Sample 2D jagged array of strings (type <see cref="string[][]"/>), for use in tests.
+        /// The array does not correspond to a rectangular array (some elements are missing).
+        /// The smallest rectangular array that contains it is 2*3.
+        /// <para>Elements of the array correspond to elements of <see cref="IntJaggedArrayNonrectangular2x3"/> converted to 
+        /// strings by <see cref="int.ToString()"/> method.</para></summary>
+        public static string[][] StringJaggedArrayNonrectangular2x3 { get; } =
+        {
+            new string[] { "11", "12", "13" },
+            new string[] { "21", "22" }
         };
 
         /// <summary>Sample 2D jagged array of int (type <see cref="int[][][]"/>), for use in tests.
@@ -124,6 +145,29 @@ namespace IGLib.Tests.Base.SampleCollsctions
             }
         };
 
+        /// <summary>Sample 2D jagged array of strings (type <see cref="string[][][]"/>), for use in tests.
+        /// Array's shape corresponds to a 2D rectangular 3*2*4 array.
+        /// <para>Elements of the array correspond to elements of <see cref="IntJaggedArray3x2x4"/> converted to 
+        /// strings by <see cref="int.ToString()"/> method.</para></summary>
+        public static string[][][] StringJaggedArray3x2x4 { get; } =
+        {
+            new string[][]
+            {
+                new string[] { "111", "112", "113", "114" },
+                new string[] { "121", "122", "123", "124" }
+            },
+            new string[][]
+            {
+                new string[] { "211", "212", "213", "214" },
+                new string[] { "221", "222", "223", "224" }
+            },
+            new string[][]
+            {
+                new string[] { "311", "312", "313", "314" },
+                new string[] { "321", "322", "323", "324" }
+            }
+        };
+
         /// <summary>Sample 3D jagged array of int (type <see cref="int[][][]"/>), for use in tests.
         /// The array does not correspond to a rectangular array (some elements are missing).
         /// The smallest rectangular array that contains it is 3*2*4.</summary>
@@ -142,6 +186,29 @@ namespace IGLib.Tests.Base.SampleCollsctions
             {
                 new int[] { 311, 312 },
                 new int[] { 321, 322, 323, 324 }
+            }
+        };
+
+        /// <summary>Sample 3D jagged array of strings (type <see cref="string[][][]"/>), for use in tests.
+        /// The array does not correspond to a rectangular array (some elements are missing).
+        /// The smallest rectangular array that contains it is 3*2*4.
+        /// <para>Elements of the array correspond to elements of <see cref="IntJaggedArrayNonrectangular3x2x4"/> converted to 
+        /// strings by <see cref="int.ToString()"/> method.</para></summary>
+        public static string[][][] StringJaggedArrayNonrectangular3x2x4 { get; } =
+        {
+            new string[][]
+            {
+                new string[] { "111", "112", "113", "114" },
+                new string[] { "121", "122", "1234" }
+            },
+            new string[][]
+            {
+                new string[] { "211", "212", "213", "214" }
+            },
+            new string[][]
+            {
+                new string[] { "311", "312" },
+                new string[] { "321", "322", "323", "324" }
             }
         };
 

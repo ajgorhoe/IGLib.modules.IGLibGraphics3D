@@ -621,6 +621,85 @@ null
             }
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_RectangularArray2dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D rectangular array of ntegers to a readable string...");
+            string[,] collection = StringArray2x3;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
+            foreach (string str in collection)
+            {
+                stringRepresentation.Should().Contain(str.ToReadableString());
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {"11", "12", "13"},
+    {"21", "22", "23"}
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n","\n").Should().Be(expectedOutput.Replace("\r\n","\n"));
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_RectangularArray3dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D rectangular array of integers to a readable string...");
+            string[,,] collection = StringArray3x2x4;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
+            stringRepresentation.Should().Contain(ArrayIndentation + ArrayIndentation);
+            foreach (string str in collection)
+            {
+                stringRepresentation.Should().Contain(str.ToReadableString());
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {
+        {"111", "112", "113", "114"},
+        {"121", "122", "123", "124"}
+    },
+    {
+        {"211", "212", "213", "214"},
+        {"221", "222", "223", "224"}
+    },
+    {
+        {"311", "312", "313", "314"},
+        {"321", "322", "323", "324"}
+    }
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
+
 
         [Theory]
         [InlineData(false)]
@@ -704,6 +783,87 @@ null
             }
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_JaggedArray2dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
+            string[][] collection = StringJaggedArray2x3;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
+            foreach (string[] subCollection in collection)
+            {
+                foreach (string element in subCollection)
+                    stringRepresentation.Should().Contain(element.ToReadableString());
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {"11", "12", "13"},
+    {"21", "22", "23"}
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_JaggedArray3dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
+            string[][][] collection = StringJaggedArray3x2x4;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string[][] subCollection in collection)
+            {
+                foreach (string[] subSubCollection in subCollection)
+                {
+                    foreach (string element in subSubCollection)
+                        stringRepresentation.Should().Contain(element.ToReadableString());
+                }
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {
+        {"111", "112", "113", "114"},
+        {"121", "122", "123", "124"}
+    },
+    {
+        {"211", "212", "213", "214"},
+        {"221", "222", "223", "224"}
+    },
+    {
+        {"311", "312", "313", "314"},
+        {"321", "322", "323", "324"}
+    }
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
 
 
         [Theory]
@@ -777,6 +937,87 @@ null
     {
         {311, 312},
         {321, 322, 323, 324}
+    }
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_JaggedArray2dNonrectangularOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
+            string[][] collection = StringJaggedArrayNonrectangular2x3;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            stringRepresentation.Should().Contain(ArrayIndentation);
+            foreach (string[] subCollection in collection)
+            {
+                foreach (string element in subCollection)
+                    stringRepresentation.Should().Contain(element.ToReadableString());
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {"11", "12", "13"},
+    {"21", "22"}
+}
+""";
+                Console.WriteLine($"Expected output:\n<<\n{expectedOutput}\n>>");
+                stringRepresentation.Replace("\r\n", "\n").Should().Be(expectedOutput.Replace("\r\n", "\n"));
+                ;
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableString_JaggedArray3dNonrectangularOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
+            string[][][] collection = StringJaggedArrayNonrectangular3x2x4;
+            string stringRepresentation = collection.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string[][] subCollection in collection)
+            {
+                foreach (string[] subSubCollection in subCollection)
+                {
+                    foreach (string element in subSubCollection)
+                        stringRepresentation.Should().Contain(element.ToReadableString());
+                }
+            }
+            if (checkPreciseOutput)
+            {
+                Console.WriteLine("Verifying exact match with expected output...");
+                string expectedOutput =
+"""
+{
+    {
+        {"111", "112", "113", "114"},
+        {"121", "122", "1234"}
+    },
+    {
+        {"211", "212", "213", "214"}
+    },
+    {
+        {"311", "312"},
+        {"321", "322", "323", "324"}
     }
 }
 """;
@@ -1273,6 +1514,62 @@ null
         }
 
 
+
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_RectangularArray2dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D rectangular array of ntegers to a readable string...");
+            string[,] collection = StringArray2x3;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string str in collection)
+            {
+                stringRepresentation.Should().Contain(str.ToReadableString());
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_RectangularArray3dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D rectangular array of integers to a readable string...");
+            string[,,] collection = StringArray3x2x4;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string str in collection)
+            {
+                stringRepresentation.Should().Contain(str.ToString());
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -1330,7 +1627,62 @@ null
             }
         }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_JaggedArray2dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
+            string[][] collection = StringJaggedArray2x3;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string[] subCollection in collection)
+            {
+                foreach (string element in subCollection)
+                    stringRepresentation.Should().Contain(element.ToString());
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_JaggedArray3dOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
+            string[][][] collection = StringJaggedArray3x2x4;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string[][] subCollection in collection)
+            {
+                foreach (string[] subSubCollection in subCollection)
+                {
+                    foreach (string element in subSubCollection)
+                        stringRepresentation.Should().Contain(element.ToString());
+                }
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
 
         [Theory]
         [InlineData(false)]
@@ -1388,6 +1740,73 @@ null
                 stringRepresentation.Should().Be(expectedOutput);
             }
         }
+
+
+
+
+
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_JaggedArray2dNonrectangularOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 2D jagged array of integers to a readable string...");
+            string[][] collection = StringJaggedArrayNonrectangular2x3;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string[] subCollection in collection)
+            {
+                foreach (string element in subCollection)
+                    stringRepresentation.Should().Contain(element.ToString());
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        protected void CollectionExtensoins_ToReadableStringDynamic_JaggedArray3dNonrectangularOfString_WorksCorrectly(bool checkPreciseOutput)
+        {
+            Console.WriteLine("Converting a 3D jagged array of integers to a readable string...");
+            string[][][] collection = StringJaggedArrayNonrectangular3x2x4;
+            object obj = collection;
+            string expectedOutput = collection.ToReadableString();
+            Console.WriteLine($"Expected string (from typed object):\n<<\n{expectedOutput}\n>>");
+            string stringRepresentation = obj.ToReadableString();
+            Console.WriteLine($"Produced string (angular brackets don't belong to the string):\n<<\n{stringRepresentation}\n>>");
+            stringRepresentation.Should().NotBeNullOrWhiteSpace();
+            stringRepresentation.Should().Contain(ArrayBracketOpen);
+            stringRepresentation.Should().Contain(ArrayBracketClosed);
+            stringRepresentation.Should().Contain(ArraySeparator);
+            foreach (string[][] subCollection in collection)
+            {
+                foreach (string[] subSubCollection in subCollection)
+                {
+                    foreach (string element in subSubCollection)
+                        stringRepresentation.Should().Contain(element.ToString());
+                }
+            }
+            if (checkPreciseOutput)
+            {
+                stringRepresentation.Should().Be(expectedOutput);
+            }
+        }
+
+
+
+
+
 
 
         #endregion ToReadableString_ForCollections_Dynamic
