@@ -19,10 +19,10 @@ namespace IGLib.Core.Tests
 
     /// <summary>Tests of the basic type converter (<see cref="BasicTypeConverter"/>,
     /// implementation of the <see cref="ITypeConverter"/> interface).</summary>
-    public class CollectionTypeConverterTests : BasicTypeConverterTests
+    public class CollectionTypeConverterTests_DifferentElementTests : BasicTypeConverterTests
     {
 
-        public CollectionTypeConverterTests(ITestOutputHelper output) : base(output)
+        public CollectionTypeConverterTests_DifferentElementTests(ITestOutputHelper output) : base(output)
         { }
 
 
@@ -31,24 +31,24 @@ namespace IGLib.Core.Tests
 
 
 
-        #region CollectionConversions.SameElementTypes
+        #region CollectionConversions.DifferentElementTypes
 
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} can be used.</remarks>
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToIntIEnumerableObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToIntIEnumerableObjectToIntArray()
         {
             IList<int> originalObject = new CustomList<int>(1, 2, 3);
             IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
             int[] expectedRestoredValue = originalObject.ToArray();
             TypeConverter_ConversionToObjectAndBackTest<
-                IList<int>, IEnumerable<int>, int[] > (
+                IList<int>, IEnumerable<int>, int[]>(
                 TypeConverter, originalObject, expectedAssignedObject, expectedRestoredValue);
         }
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} can be used.</remarks>
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArrayToIntIEnumerableObjectToIntIList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToIntIEnumerableObjectToIntIList()
         {
             int[] originalObject = { 1, 2, 3 }; // new CustomList<int>(1, 2, 3);
             IEnumerable<int> expectedAssignedObject = new CustomEnumerable<int>(originalObject);
@@ -59,7 +59,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToIntArrayObjectToIntIList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToIntArrayObjectToIntIList()
         {
             int[] values = { 1, 2, 3, 4, 5 };
             IList<int> original = new CustomList<int>(values);
@@ -92,9 +92,9 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIEnumerableToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIEnumerableToIntListObjectToIntArray()
         {
-            IEnumerable<int> original = new CustomEnumerable<int>{ 1, 2, 3, 4 };
+            IEnumerable<int> original = new CustomEnumerable<int> { 1, 2, 3, 4 };
             List<int> expectedConvertedObject = original.ToList();
             int[] expectedRestoredValue = original.ToArray();
 
@@ -123,10 +123,10 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIEnumerableToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIEnumerableToIntArrayObjectToIntList()
         {
-            IEnumerable<int> original = new CustomEnumerable<int>{ 1, 2, 3, 4 };
-            int[] expectedConvertedObject =  original.ToArray();
+            IEnumerable<int> original = new CustomEnumerable<int> { 1, 2, 3, 4 };
+            int[] expectedConvertedObject = original.ToArray();
             List<int> expectedRestoredValue = original.ToList();
 
             var result = TypeConverter_ConversionToObjectAndBackTest<
@@ -156,7 +156,7 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntIListToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntIListToIntArrayObjectToIntList()
         {
             int[] values = { 1, 2, 3, 4, 5 };
             IList<int> original = new CustomList<int>(values);
@@ -190,7 +190,7 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArrayToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToIntListObjectToIntArray()
         {
             int[] original = { 1, 2, 3, 4, 5, 6, 7, 8 };
             List<int> expectedConvertedObject = original.ToList();
@@ -223,7 +223,7 @@ namespace IGLib.Core.Tests
 
         /// <remarks>Currently, conversions to IEnumerable{T} are not possible. Instead, conversions to List{T} or T[] can be used.</remarks>
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArrayToIntIListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArrayToIntIListObjectToIntArray()
         {
             int[] original = { 1, 2, 3, 4, 5, 6, 7, 8 };
             IList<int> expectedConvertedObject = original.ToList();
@@ -254,17 +254,17 @@ namespace IGLib.Core.Tests
         }
 
 
-        #region CollectionConversions.SameElementTypes.RectangularArrayTo1dOrRectangularArray
+        #region CollectionConversions.DifferentElementTypes.RectangularArrayTo1dOrRectangularArray
         // // Cnversions of rectangular arrays (T[, ... ,]) to 1D arrays (Ttarget[]), Lists (List<Ttarget>, IList<Ttarget]), enumerables (IEnumerable[Ttarget]):
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray2DToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray2DToIntArrayObjectToIntList()
         {
             int[,] original = IntArray2x3;
             int[] expectedConvertedObject = null;
             List<int> expectedRestoredValue = null;
             expectedRestoredValue = new List<int>();
-            foreach(int element in original)
+            foreach (int element in original)
             {
                 expectedRestoredValue.Add(element);
             }
@@ -295,7 +295,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntIListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntIListObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
             IList<int> expectedConvertedObject = null;
@@ -332,7 +332,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntListObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
             List<int> expectedConvertedObject = null;
@@ -369,7 +369,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntIEnumerableObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntIEnumerableObjectToIntArray()
         {
             int[,,] original = IntArray3x2x4;
             IEnumerable<int> expectedConvertedObject = null;
@@ -412,7 +412,7 @@ namespace IGLib.Core.Tests
         // Rectangular Array to rectangular Array:
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray2DToIntArray2DObjectToIntArray2D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray2DToIntArray2DObjectToIntArray2D()
         {
             int[,] original = IntArray2x3;
             int[,] expectedConvertedObject = original;
@@ -433,21 +433,21 @@ namespace IGLib.Core.Tests
             Console.WriteLine("Checking the converted object's elements...");
             for (int i = 0; i < expectedConvertedObject.GetLength(0); i++)
             {
-                for (int j = 0; j <  expectedConvertedObject.GetLength(1); j++)
-                converted[i,j].Should().Be(expectedConvertedObject[i,j]);
+                for (int j = 0; j < expectedConvertedObject.GetLength(1); j++)
+                    converted[i, j].Should().Be(expectedConvertedObject[i, j]);
             }
             Console.WriteLine("Checking the restored object's elements...");
             restored.GetLength(0).Should().Be(expectedRestoredValue.GetLength(0));
             restored.GetLength(1).Should().Be(expectedRestoredValue.GetLength(1));
             for (int i = 0; i < expectedRestoredValue.GetLength(0); i++)
             {
-                for (int j = 0;j < expectedRestoredValue.GetLength(1); j++)
+                for (int j = 0; j < expectedRestoredValue.GetLength(1); j++)
                     restored[i, j].Should().Be(expectedRestoredValue[i, j]);
             }
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntArray3DObjectToIntArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntArray3DObjectToIntArray3D()
         {
             int[,,] original = IntArray3x2x4;
             int[,,] expectedConvertedObject = original;
@@ -493,15 +493,15 @@ namespace IGLib.Core.Tests
             }
         }
 
-        #endregion CollectionConversions.SameElementTypes.RectangularArrayTo1dOrRectangularArray
+        #endregion CollectionConversions.DifferentElementTypes.RectangularArrayTo1dOrRectangularArray
 
 
-        #region CollectionConversions.SameElementTypes.JaggedArrayTo1dOrJaggedArray
+        #region CollectionConversions.DifferentElementTypes.JaggedArrayTo1dOrJaggedArray
         // Cnversions of jagged arrays (T[][]...) to 1D arrays (Ttarget[]), Lists (List<Ttarget>, IList<Ttarget]), enumerables (IEnumerable[Ttarget]):
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArrayNonrectangular2DToIntArrayObjectToIntList()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular2DToIntArrayObjectToIntList()
         {
             int[][] original = IntJaggedArrayNonrectangular2x3;
             int[] expectedConvertedObject = null;
@@ -544,7 +544,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArrayNonrectangular3DToIntIListObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular3DToIntIListObjectToIntArray()
         {
             int[][][] original = IntJaggedArrayNonrectangular3x2x4;
             IList<int> expectedConvertedObject = null;
@@ -590,7 +590,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArrayNonrectangular3DToIntIEnumerableObjectToIntArray()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArrayNonrectangular3DToIntIEnumerableObjectToIntArray()
         {
             int[][][] original = IntJaggedArrayNonrectangular3x2x4;
             IEnumerable<int> expectedConvertedObject = null;
@@ -640,7 +640,7 @@ namespace IGLib.Core.Tests
         // Jagged array to jagged array:
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray2DToIntJaggedArray2DObjectToIntJaggedArray2D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray2DToIntJaggedArray2DObjectToIntJaggedArray2D()
         {
             int[][] original = IntJaggedArray2x3;
             int[][] expectedConvertedObject = original;
@@ -681,7 +681,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray3DToIntJaggedArray3DObjectToIntJaggedArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToIntJaggedArray3DObjectToIntJaggedArray3D()
         {
             int[][][] original = IntJaggedArray3x2x4;
             int[][][] expectedConvertedObject = original;
@@ -713,7 +713,7 @@ namespace IGLib.Core.Tests
                     // check the next level:
                     for (int k = 0; k < expectedConvertedObject[i][j].Length; k++)
                     {
-                    converted[i][j][k].Should().Be(expectedConvertedObject[i][j][k]);
+                        converted[i][j][k].Should().Be(expectedConvertedObject[i][j][k]);
                     }
                 }
             }
@@ -740,16 +740,16 @@ namespace IGLib.Core.Tests
         }
 
 
-        #endregion CollectionConversions.SameElementTypes.JaggedArrayTo1dOrJaggedArray
+        #endregion CollectionConversions.DifferentElementTypes.JaggedArrayTo1dOrJaggedArray
 
 
 
-        #region CollectionConversions.SameElementTypes.JaggedArrayToRectangularArrayOrOpposite
+        #region CollectionConversions.DifferentElementTypes.JaggedArrayToRectangularArrayOrOpposite
         // Conversiion of jagged arrays (T[][]...) to rectangular arrays (Ttarget[, ... ,]), and vice-versa:
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntJaggedArray3DToIntArray3DObjectToIntJaggedArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntJaggedArray3DToIntArray3DObjectToIntJaggedArray3D()
         {
             bool restoreObjectBackToValue = true;
             int[][][] original = IntJaggedArray3x2x4;
@@ -828,7 +828,7 @@ namespace IGLib.Core.Tests
 
 
         [Fact]
-        protected virtual void SpecificTypeConverter_CollectionRoundTripConversion_IntArray3DToIntJaggedArray3DObjectToIntArray3D()
+        protected virtual void SpecificTypeConverter_CollectionDifferentTypesRoundTripConversion_IntArray3DToIntJaggedArray3DObjectToIntArray3D()
         {
             bool restoreObjectBackToValue = true;
             int[,,] original = IntArray3x2x4;
@@ -853,7 +853,7 @@ namespace IGLib.Core.Tests
             }
 
             var result = TypeConverter_ConversionToObjectAndBackTest(
-                TypeConverter, original, expectedConvertedObject, expectedRestoredValue,  restoreObjectBackToValue: restoreObjectBackToValue);
+                TypeConverter, original, expectedConvertedObject, expectedRestoredValue, restoreObjectBackToValue: restoreObjectBackToValue);
             int[][][] converted = result.Converted;
             int[,,] restored = result.Restored;
             // Assert (additional to asserts in the generic test mwthod called above):
@@ -897,17 +897,17 @@ namespace IGLib.Core.Tests
                     {
                         for (int k = 0; k < dim3; ++k)
                         {
-                            restored[i,j,k].Should().Be(original[i, j, k]);
+                            restored[i, j, k].Should().Be(original[i, j, k]);
                         }
                     }
-                } 
+                }
             }
         }
 
 
-        #endregion CollectionConversions.SameElementTypes.JaggedArrayToRectangularArrayOrOpposite
+        #endregion CollectionConversions.DifferentElementTypes.JaggedArrayToRectangularArrayOrOpposite
 
-        #endregion CollectionConversions.SameElementTypes
+        #endregion CollectionConversions.DifferentElementTypes
 
 
 
