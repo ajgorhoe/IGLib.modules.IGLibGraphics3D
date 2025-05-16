@@ -105,8 +105,13 @@ namespace IGLib.Core
         /// <returns>The flattened collection converted to the target type.</returns>
         private object ConvertFromJaggedArray(Array sourceArray, Type targetType)
         {
+            // Case: jagged → rectangular (e.g., int[][][] → int[,,])
+            if (targetType.IsArray && targetType.GetArrayRank() > 1)
+            {
+                return ConvertJaggedToRectangular(sourceArray, targetType);
+            }
 
-            // Conversion to jagged array:
+            // Case: jagged → jagged (e.g., int[][] → string[][])
             if (targetType.IsArray && IsJaggedArray(targetType))
             {
                 var shape = GetJaggedArrayShape(sourceArray).ToArray();
@@ -116,12 +121,7 @@ namespace IGLib.Core
                 return jagged;
             }
 
-            // Conversion to rectangular array:
-            if (targetType.IsArray && targetType.GetArrayRank() > 1)
-            {
-                return ConvertJaggedToRectangular(sourceArray, targetType);
-            }
-
+            // Case: jagged → flat array
             Type targetElementType = GetElementType(targetType) ?? typeof(object);
             var flatSource = FlattenJaggedArray(sourceArray).ToArray();
 
@@ -133,6 +133,7 @@ namespace IGLib.Core
                 return resultArray;
             }
 
+            // Case: jagged → List<T>, IEnumerable<T>, etc.
             if (ImplementsGenericInterface(targetType, typeof(IEnumerable<>)))
             {
                 var listType = typeof(List<>).MakeGenericType(targetElementType);
