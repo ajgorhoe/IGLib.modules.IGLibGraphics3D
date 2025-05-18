@@ -150,9 +150,7 @@ namespace IGLib.Core.Tests
         }
 
 
-
         #endregion ReflectionTypeConverter.DifferentCasesTests
-
 
 
     }
