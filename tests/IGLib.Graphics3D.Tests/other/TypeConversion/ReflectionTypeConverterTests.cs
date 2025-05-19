@@ -27,11 +27,6 @@ namespace IGLib.Core.Tests
         { }
 
 
-        /// <summary>The type converter that is under test.</summary>
-        protected new ReflectionTypeConverter TypeConverter { get; } = new ReflectionTypeConverter();
-
-
-
         #region ReflectionTypeConverter.BasicTests
 
         [Fact]
@@ -156,8 +151,6 @@ namespace IGLib.Core.Tests
     }
 
 
-
-
     #region SampleClasses.ReflectionTypeConverterTests
 
     public class Celsius
@@ -208,7 +201,6 @@ namespace IGLib.Core.Tests
     }
 
     #endregion SampleClasses.ReflectionTypeConverterTests
-
 
 
 }
