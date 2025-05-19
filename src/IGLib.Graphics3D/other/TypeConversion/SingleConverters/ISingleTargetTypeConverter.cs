@@ -3,22 +3,22 @@
 namespace IGLib.Core
 {
 
-    public interface ISingleTargetTypeConverter<SourceType> : ISingleSourceTypeConverter
+    public interface ISingleTargetTypeConverter<TargetType> : ISingleTargetTypeConverter
     {
-        TargetType ConvertTyped<TargetType>(SourceType source);
+        TargetType ConvertTyped<SourceType>(SourceType source);
 
-        bool TryConvertTyped<TargetType>(SourceType source, out TargetType target);
+        bool TryConvertTyped<SourceType>(SourceType source, out TargetType target);
 
     }
 
     public interface ISingleTargetTypeConverter
     {
     
-        Type SourceType { get; }
+        Type TargetType { get; }
         
-        object Convert(object source, Type targetType);
+        object Convert(object source);
 
-        bool TryConvert(object source, out object target, Type targetType);
+        bool TryConvert(object source, out object target);
 
     }
 
