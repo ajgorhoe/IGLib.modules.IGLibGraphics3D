@@ -18,8 +18,6 @@ namespace IGLib.Core
     
         Type SrouceType { get; }
         
-        Type TargetType { get; }
-
         Object Convert(object source);
 
         bool TryConvert(object source, out object target);

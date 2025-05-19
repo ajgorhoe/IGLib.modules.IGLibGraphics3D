@@ -6,9 +6,9 @@ namespace IGLib.Core
 
     public abstract class SingleTypeConverterBase<TSource, TTarget> : ISingleTypeConverter<TSource, TTarget>
     {
-        public Type SrouceType => throw new NotImplementedException();
+        public Type SrouceType { get; } = typeof(TSource);
 
-        public Type TargetType => throw new NotImplementedException();
+        public Type TargetType { get; } = typeof(TTarget);
 
         Type SourceType { get; } = typeof(TSource);
 
