@@ -7,9 +7,17 @@ namespace IGLib.Core
 
         void Register(Type sourceType, Type targetType, ISingleTypeConverter converter);
 
-        ISingleTypeConverter this[(Type SourceType, Type TargetType) key] { get; }
+        ISingleTypeConverter this[(Type sourceType, Type targetType) key] { get; }
 
-        public ISingleTypeConverter HasTypeConverter(Type sourceType, Type targetType);
+        ISingleTypeConverter HasConverter(Type sourceType, Type targetType);
+
+        ISingleTypeConverter<SourceType, TargetType> GetGenericConverter<SourceType, TargetType>();
+
+        bool HasGenericConverter<SourceType, TargetType>();
+
+        object Convert(object source, Type sourceType, Type targetType);
+
+        bool TryConvert(object source, out object target, Type sourceType, Type targetType);
 
     }
 }

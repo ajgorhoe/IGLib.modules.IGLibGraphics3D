@@ -3,6 +3,8 @@
 namespace IGLib.Core
 {
 
+
+
     public interface ISingleTypeConverter<SourceType, TargetType> : ISingleTypeConverter
     {
         TargetType ConvertTyped(SourceType source);
