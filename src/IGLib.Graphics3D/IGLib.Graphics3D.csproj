@@ -55,9 +55,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\IGLibCore\src\IGLib.Core\IGLib.Core.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="other\TypeConversionExtended\" />
-	</ItemGroup>
 	<!--
 	<ItemGroup>
 	  <Folder Include="other\Core\" />
