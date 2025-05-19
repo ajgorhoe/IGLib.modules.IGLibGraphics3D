@@ -13,7 +13,8 @@ namespace IGLib.Core.Tests
 {
 
     /// <summary>Tests for type conversion utilities.</summary>
-    public class TypeConversionTestsObsolete : TestBase<BasicTypeConverterTests>
+    [Obsolete()]
+    public class TypeConversionHelperTestsObsolete : TestBase<BasicTypeConverterTests>
     {
 
         /// <summary>Calling base constructor initializes things like <see cref="TestBase{TestClass}.Output"/> 
@@ -22,7 +23,7 @@ namespace IGLib.Core.Tests
         /// constructor) by the test framework. I is also stored to Console property, such that
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
-        public TypeConversionTestsObsolete(ITestOutputHelper output) : base(output)
+        public TypeConversionHelperTestsObsolete(ITestOutputHelper output) : base(output)
         {  }
 
 
