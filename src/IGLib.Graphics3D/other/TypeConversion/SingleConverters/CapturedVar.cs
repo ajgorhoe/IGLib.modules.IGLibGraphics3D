@@ -5,7 +5,7 @@ using System.Text;
 namespace IGLib.Core
 {
 
-    public class CapturedVarS
+    public class CapturedVar
     {
 
         public static CapturedVar<CapturedVariableType>

@@ -19,7 +19,7 @@ using Microsoft.Extensions.Configuration;
 namespace IGLib.Core.Tests
 {
 
-    using static CapturedVarS;
+    using static CapturedVar;
 
 
     /// <summary>Sandbox for quick tests related to type conversion.</summary>
