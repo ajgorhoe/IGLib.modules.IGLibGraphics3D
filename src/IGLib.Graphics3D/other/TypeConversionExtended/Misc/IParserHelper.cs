@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace IGLib.Core.Extended
+namespace IGLib.Core
 {
 
     /// <summary>
