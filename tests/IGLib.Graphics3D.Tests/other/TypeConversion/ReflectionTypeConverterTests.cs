@@ -27,6 +27,10 @@ namespace IGLib.Core.Tests
         { }
 
 
+        /// <summary>The type converter that is under test.</summary>
+        protected override ITypeConverter TypeConverter { get; } = new ReflectionTypeConverter();
+
+
         #region ReflectionTypeConverter.BasicTests
 
         [Fact]
@@ -130,8 +134,9 @@ namespace IGLib.Core.Tests
         public void Conversion_UsingInterfaceOperator_Ignored_WhenDisabled()
         {
             var obj = new InterfaceImpl(99);
-            Action act = () => TypeConverter.ConvertToType(obj, typeof(int), allowInterfaceConversions: false);
-            act.Should().Throw<InvalidOperationException>()
+            Action action = () => (TypeConverter as ReflectionTypeConverter)
+            .ConvertToType(obj, typeof(int), allowInterfaceConversions: false);
+            action.Should().Throw<InvalidOperationException>()
                 .WithMessage("*No conversion found*");
         }
 
