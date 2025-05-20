@@ -8,10 +8,10 @@ namespace IGLib.Core
     public class CapturedVarS
     {
 
-        public static CapturedVarGeneric<CapturedVariableType>
+        public static CapturedVar<CapturedVariableType>
             CaptureVar<CapturedVariableType>(CapturedVariableType var)
         {
-            return new CapturedVarGeneric<CapturedVariableType>(var);
+            return new CapturedVar<CapturedVariableType>(var);
         }
 
         public static Type VarType<TypeVar>(TypeVar var)
@@ -21,10 +21,10 @@ namespace IGLib.Core
 
     }
 
-    public class CapturedVarGeneric<DeclaredType> : ICapturedVar<DeclaredType>, ICapturedVar
+    public class CapturedVar<DeclaredType> : ICapturedVar<DeclaredType>, ICapturedVar
     {
 
-        public CapturedVarGeneric(DeclaredType variable)
+        public CapturedVar(DeclaredType variable)
         {
             Value = variable;
         }

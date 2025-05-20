@@ -254,7 +254,7 @@ namespace IGLib.Core.Tests
             Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
             Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
             // Act:
-            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>(variable);
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVar<IList<int>>(variable);
             ICapturedVar capturedVar = capturedVarTyped;
             Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
             Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
@@ -287,7 +287,7 @@ namespace IGLib.Core.Tests
             Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
 
             // Act:
-            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>(variable);
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVar<IList<int>>(variable);
             ICapturedVar capturedVar = capturedVarTyped;
             Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
             Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
@@ -333,7 +333,7 @@ namespace IGLib.Core.Tests
             Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
             Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
             // Act:
-            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>((IList<int>)new List<int>() { 5, 6, 7, 8 });
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVar<IList<int>>((IList<int>)new List<int>() { 5, 6, 7, 8 });
             ICapturedVar capturedVar = capturedVarTyped;
             Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
             Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
@@ -363,7 +363,7 @@ namespace IGLib.Core.Tests
             Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
             Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
             // Act:
-            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>((IList<int>)null);
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVar<IList<int>>((IList<int>)null);
             ICapturedVar capturedVar = capturedVarTyped;
             Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
             Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
