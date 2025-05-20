@@ -13,12 +13,13 @@ using IGLib.Core;
 using IGLib.Core.Extended;
 using IGLib.Tests.Base.SampleClasses;
 using IGLib.Core.CollectionExtensions;
+using Microsoft.Extensions.Configuration;
 
 
 namespace IGLib.Core.Tests
 {
 
-    using static CapturedVar;
+    using static CapturedVarS;
 
 
     /// <summary>Sandbox for quick tests related to type conversion.</summary>
@@ -40,45 +41,348 @@ namespace IGLib.Core.Tests
         protected void CapturedVar_StaticVarType_WorksCorrectlyWithoutStatingVariableTye()
         {
             // Arrange:
-            IList<int> variable = new List<int>() { 1, 2, 3, 4, 5 } ;
+            IList<int> variable = new List<int>() { 1, 2, 3 } ;
             Type actualVariableType = variable?.GetType();
-            Type declaredVadiableType = typeof(IList<int>);
-            // Type 
-            Console.WriteLine($"Test: getting declared type of a variable with static method VarType(variable)...\n");
-            Console.WriteLine($"Actual type of variable's value:          {actualVariableType.Name}");
-            Console.WriteLine($"Declared type of the variable:            {declaredVadiableType.Name}");
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: getting variable's declared type with static method VarType(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value:          {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:            {declaredVariableType.ToString()}");
             // Act:
             Type discoveredDeclaredVariableType = VarType(variable);
-            Console.WriteLine($"Discovered declared type of the variable: {discoveredDeclaredVariableType.Name}");
-            actualVariableType.Should().NotBe(declaredVadiableType, because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            Console.WriteLine($"Discovered declared type of the variable: {discoveredDeclaredVariableType.ToString()}");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType, 
+                because: "PRECOND: declared variable type should be different than actual type of its value for this test to be relevant");
             // Assert:
-            variable.GetType().Should().Be(typeof(List<int>), because: "Actual type of variable's value should be List of int and should be different than declared value.");
-            discoveredDeclaredVariableType.Should().Be(typeof(IList<int>), because: "VarType(variable) should returne declared type of the variable, NOT actual type of variable value.");
+            discoveredDeclaredVariableType.Should().Be(declaredVariableType, because: "VarType(variable) should returne declared type of the variable, NOT actual type of variable value");
         }
 
         [Fact]
-        protected void CapturedVar_StaticCapture_WorksCorrectlyWithoutStatingVariableTye()
+        protected void CapturedVar_StaticCaptureVar_WorksCorrectlyWithoutStatingVariableTye()
         {
             // Arrange:
-            IList<int> variable = new List<int>() { 1, 2, 3, 4, 5 } ;
-            Console.WriteLine($"Test: getting declared type of a variable with static method VarType(variable)...\n");
-            Console.WriteLine($"Actual type of variable's value:          {variable.GetType().Name}");
-            Console.WriteLine($"Declared type of the variable:            {typeof(IList<int>).Name}");
+            IList<int> variable = new List<int>() { 1, 2, 3, 4 } ;
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
             // Act:
-
             ICapturedVar<IList<int>> capturedVarTyped = CaptureVar(variable);
             ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            variable.Should().NotBeNull(because: "PRECOND: value of captured variable shoulld not be null for this test to be relevant.");
             // Assert:
-            
-            
-            variable.GetType().Should().Be(typeof(List<int>), because: "Actual type of variable's value should be List of int and should be different than declared value.");
-            //declaredVariableType.Should().Be(typeof(IList<int>), because: "VarType(variable) should returne declared type of the variable, NOT actual type of variable value.");
+            capturedVar.Should().NotBeNull(because: "CaptureVar(variable) should produce a valid captured variable object.");
+            capturedVar.ValueObject.Should().NotBeNull(because: "captured variable's value is not null");
+            ((object)capturedVarTyped.Value).Should().Be(variable, because: "value of the captured variable should be correctly captured");
+            capturedVar.ValueObject.Should().Be(variable, because: "value of the captured variable should be correctly captured and reflected even in non-generic ICapturedVar interface");
+
+            capturedVar.Type.Should().Be(declaredVariableType,because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.ValueType.Should().Be(actualVariableType,because: "ValueType property of captured variable should contain the actual type of variable value.");
         }
+
+        [Fact]
+        protected void CapturedVar_StaticCaptureVar_PropertiesShouldBeCorrect()
+        {
+            // Arrange:
+            IList<int> variable = new List<int>() { 1, 2, 3, 4, 5 };
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable) and checking properties...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = CaptureVar(variable);
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            Console.WriteLine($"Full captured variable object:\n{capturedVar?.ToStringLong("    ")}");
+
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            variable.Should().NotBeNull(because: "PRECOND: value of captured variable shoulld not be null for this test to be relevant.");
+            // Assert:
+
+            capturedVar.Type.Should().Be(declaredVariableType, 
+                because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.TypeName.Should().Be(declaredVariableType.Name, 
+                because: "TypeName property of captured variable should contain name of the declared variable type.");
+            capturedVar.TypeFullName.Should().Be(declaredVariableType.FullName, 
+                because: "TypeFullName property of captured variable should contain full name of the declared variable type.");
+            capturedVar.TypeString.Should().Be(declaredVariableType.ToString(), 
+                because: "TypeString property of captured variable should contain result of ToString() of the declared variable type.");
+            
+            capturedVar.ValueType.Should().Be(actualVariableType, 
+                because: "ValueType property of captured variable should contain the actual type of variable's value.");
+            capturedVar.ValueTypeName.Should().Be(actualVariableType.Name, 
+                because: "ValueTypeName property of captured variable should contain name of the actual variable value's type.");
+            capturedVar.ValueTypeFullName.Should().Be(actualVariableType.FullName, 
+                because: "ValueTypeFullName property of captured variable should contain full name of the actual variable value's type.");
+            capturedVar.ValueTypeString.Should().Be(actualVariableType?.ToString(), 
+                because: "ValueTypeString property of captured variable should contain result of ToString() of the actual variable value's type.");
+        }
+
+
+        [Fact]
+        protected void CapturedVar_StaticVarType_WorksCorrectlyWithCastValue()
+        {
+            // Arrange:
+            IList<int> variable = new List<int>() { 1, 2, 3, 4, 5, 6, 7 };
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: getting variable's declared type with static method VarType(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value:          {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:            {declaredVariableType.ToString()}");
+            // Act:
+            Type discoveredDeclaredVariableType = VarType((IList<int>) new List<int>() { 1, 2, 3, 4, 5, 6, 7 });
+            Console.WriteLine($"Discovered declared type of the variable: {discoveredDeclaredVariableType.ToString()}");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: declared variable type should be different than actual type of its value for this test to be relevant");
+            // Assert:
+            discoveredDeclaredVariableType.Should().Be(declaredVariableType, because: "VarType(variable) should returne declared type of the variable, NOT actual type of variable value");
+        }
+
+        [Fact]
+        protected void CapturedVar_StaticCaptureVar_WorksCorrectlyWithCastValue()
+        {
+            // Arrange:
+            IList<int> variable = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8 };
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = CaptureVar((IList<int>)new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8 });
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            variable.Should().NotBeNull(because: "PRECOND: value of captured variable shoulld not be null for this test to be relevant.");
+            // Assert:
+            capturedVar.Should().NotBeNull(because: "CaptureVar(variable) should produce a valid captured variable object.");
+            capturedVar.ValueObject.Should().NotBeNull(because: "captured variable's value is not null");
+
+            capturedVar.Type.Should().Be(declaredVariableType, because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.ValueType.Should().Be(actualVariableType, because: "ValueType property of captured variable should contain the actual type of variable value.");
+        }
+
+        [Fact]
+        protected void CapturedVar_StaticVarType_WorksCorrectlyWithCastValueNull()
+        {
+            // Arrange:
+            IList<int> variable = null;
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: getting variable's declared type with static method VarType(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {actualVariableType?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value:          {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:            {declaredVariableType.ToString()}");
+            // Act:
+            Type discoveredDeclaredVariableType = VarType((IList<int>) null);
+            Console.WriteLine($"Discovered declared type of the variable: {discoveredDeclaredVariableType.ToString()}");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().BeNull(because: "PRECOND: actual value type should be null when value is null.");
+            // Assert:
+            discoveredDeclaredVariableType.Should().Be(declaredVariableType, because: "VarType(variable) should returne declared type of the variable, NOT actual type of variable value");
+        }
+
+        [Fact]
+        protected void CapturedVar_StaticCaptureVar_WorksCorrectlyWithCastValueNull()
+        {
+            // Arrange:
+            IList<int> variable = null;
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {actualVariableType?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = CaptureVar((IList<int>) null);
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().BeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            // Assert:
+            capturedVar.Should().NotBeNull(because: "CaptureVar(variable) should produce a valid captured variable object.");
+            capturedVar.ValueObject.Should().BeNull(because: "captured variable's value is null");
+
+            capturedVar.Type.Should().Be(declaredVariableType, because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.ValueType.Should().Be(actualVariableType, because: "ValueType property of captured variable should contain the actual type of variable value.");
+        }
+
+
+
+
+        // Direectly working with CapturedVar<T>, rather than static methods:
+
+        [Fact]
+        protected void CapturedVar_WorksCorrectlyWithoutStatingVariableTye()
+        {
+            // Arrange:
+            IList<int> variable = new List<int>() { 4, 5, 6, 7 };
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>(variable);
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            variable.Should().NotBeNull(because: "PRECOND: value of captured variable shoulld not be null for this test to be relevant.");
+            // Assert:
+            capturedVar.Should().NotBeNull(because: "CaptureVar(variable) should produce a valid captured variable object.");
+            capturedVar.ValueObject.Should().NotBeNull(because: "captured variable's value is not null");
+            ((object)capturedVarTyped.Value).Should().Be(variable, because: "value of the captured variable should be correctly captured");
+            capturedVar.ValueObject.Should().Be(variable, because: "value of the captured variable should be correctly captured and reflected even in non-generic ICapturedVar interface");
+
+            capturedVar.Type.Should().Be(declaredVariableType, because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.ValueType.Should().Be(actualVariableType, because: "ValueType property of captured variable should contain the actual type of variable value.");
+        }
+
+        [Fact]
+        protected void CapturedVar_PropertiesShouldBeCorrect()
+        {
+            // Arrange:
+            IList<int> variable = new List<int>() { 5, 6, 7 };
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable) and checking properties...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>(variable);
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            Console.WriteLine($"Full captured variable object:\n{capturedVar?.ToStringLong("    ")}");
+
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            variable.Should().NotBeNull(because: "PRECOND: value of captured variable shoulld not be null for this test to be relevant.");
+            // Assert:
+
+            capturedVar.Type.Should().Be(declaredVariableType,
+                because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.TypeName.Should().Be(declaredVariableType.Name,
+                because: "TypeName property of captured variable should contain name of the declared variable type.");
+            capturedVar.TypeFullName.Should().Be(declaredVariableType.FullName,
+                because: "TypeFullName property of captured variable should contain full name of the declared variable type.");
+            capturedVar.TypeString.Should().Be(declaredVariableType.ToString(),
+                because: "TypeString property of captured variable should contain result of ToString() of the declared variable type.");
+
+            capturedVar.ValueType.Should().Be(actualVariableType,
+                because: "ValueType property of captured variable should contain the actual type of variable's value.");
+            capturedVar.ValueTypeName.Should().Be(actualVariableType.Name,
+                because: "ValueTypeName property of captured variable should contain name of the actual variable value's type.");
+            capturedVar.ValueTypeFullName.Should().Be(actualVariableType.FullName,
+                because: "ValueTypeFullName property of captured variable should contain full name of the actual variable value's type.");
+            capturedVar.ValueTypeString.Should().Be(actualVariableType?.ToString(),
+                because: "ValueTypeString property of captured variable should contain result of ToString() of the actual variable value's type.");
+        }
+
+
+        [Fact]
+        protected void CapturedVar_WorksCorrectlyWithCastValue()
+        {
+            // Arrange:
+            IList<int> variable = new List<int>() { 5, 6, 7, 8 };
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>((IList<int>)new List<int>() { 5, 6, 7, 8 });
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            actualVariableType.Should().NotBe(declaredVariableType,
+                because: "PRECOND: Declared variable type should be different than actual type of its value for this test to be relevant.");
+            variable.Should().NotBeNull(because: "PRECOND: value of captured variable shoulld not be null for this test to be relevant.");
+            // Assert:
+            capturedVar.Should().NotBeNull(because: "CaptureVar(variable) should produce a valid captured variable object.");
+            capturedVar.ValueObject.Should().NotBeNull(because: "captured variable's value is not null");
+
+            capturedVar.Type.Should().Be(declaredVariableType, because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.ValueType.Should().Be(actualVariableType, because: "ValueType property of captured variable should contain the actual type of variable value.");
+        }
+
+        [Fact]
+        protected void CapturedVar_WorksCorrectlyWithCastValueNull()
+        {
+            // Arrange:
+            IList<int> variable = null;
+            Type actualVariableType = variable?.GetType();
+            Type declaredVariableType = typeof(IList<int>);
+            Console.WriteLine($"Test: capturing variable with static method CaptureVar(variable)...\n");
+            Console.WriteLine($"Variable: actual type = {actualVariableType?.ToString()}, value = \n  {variable.ToReadableString()}\n");
+            Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
+            Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
+            // Act:
+            ICapturedVar<IList<int>> capturedVarTyped = new CapturedVarGeneric<IList<int>>((IList<int>)null);
+            ICapturedVar capturedVar = capturedVarTyped;
+            Console.WriteLine($"Captured var, actual type:       {capturedVar.ValueTypeString}");
+            Console.WriteLine($"Captured var, declared type:     {capturedVar.TypeString}");
+            Console.WriteLine($"Captured var, value:             {capturedVar.ValueObject.ToReadableString()}\n");
+            declaredVariableType.Should().NotBeNull(because: "PRECOND: declared value type should not be null for this test to be relevant.");
+            actualVariableType.Should().BeNull(because: "PRECOND: actual value type should not be null for this test to be relevant.");
+            // Assert:
+            capturedVar.Should().NotBeNull(because: "CaptureVar(variable) should produce a valid captured variable object.");
+            capturedVar.ValueObject.Should().BeNull(because: "captured variable's value is null");
+
+            capturedVar.Type.Should().Be(declaredVariableType, because: "Type property of captured variable should contain the declared variable type.");
+            capturedVar.ValueType.Should().Be(actualVariableType, because: "ValueType property of captured variable should contain the actual type of variable value.");
+        }
+
 
         #endregion CapturedVarTests
 
 
-            #region ParseHelperTests
+        #region ParseHelperTests
 
         [Fact]
         protected virtual void ParseHelperTest()
@@ -121,94 +425,6 @@ namespace IGLib.Core.Tests
 
     }
 
-
-    public static class CapturedVar
-    {
-
-        public static CapturedVar<CapturedVariableType>
-            CaptureVar<CapturedVariableType>(CapturedVariableType var)
-        {
-            return new CapturedVar<CapturedVariableType>(var);
-        }
-
-        public static Type VarType<TypeVar>(TypeVar var)
-        {
-            return CaptureVar(var)?.Type;
-        }
-
-    }
-
-
-    public interface ICapturedVar
-    {
-
-        object ValueObject { get; }
-
-        Type Type { get; }
-        
-        string TypeName { get; }
-        
-        string TypeFullName { get; }
-        
-        string TypeString { get; }
-
-
-        Type ValueType { get; }
-
-        string ValueTypeName { get; }
-
-        string ValueTypeFullName { get; }
-
-        string ValueTypeString { get; }
-
-
-        string ToString();
-
-    }
-
-    public interface ICapturedVar<DeclaredType>: ICapturedVar
-    {
-        
-        DeclaredType Value { get; init; }
-    
-    }
-
-    public class CapturedVar<DeclaredType> : ICapturedVar<DeclaredType>
-    {
-
-        public CapturedVar(DeclaredType variable)
-        {
-            Value = variable;
-        }
-
-        public DeclaredType Value { get; init; }
-
-        public object ValueObject => Value;
-
-        public Type Type => typeof(DeclaredType);
-
-        public string TypeName => Type.Name;
-
-        public string TypeFullName => Type.FullName;
-
-        public string TypeString => Type.ToString();
-
-        public Type ValueType => Value?.GetType();
-
-        public string ValueTypeName => ValueType?.Name;
-
-        public string ValueTypeFullName => ValueType?.FullName;
-
-        public string ValueTypeString => ValueType?.ToString();
-
-
-        public override string ToString()
-        {
-            return $"Variable: type = {TypeString}, actual type = {ValueTypeString}, "
-                + $"\n    value = {CollectionExtensions.CollectionExtensions.ToReadableString(Value)}";
-        }
-
-    }
 
     #region SamplClassesForTests
 

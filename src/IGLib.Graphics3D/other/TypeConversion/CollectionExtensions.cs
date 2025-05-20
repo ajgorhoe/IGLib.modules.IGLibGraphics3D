@@ -89,12 +89,14 @@ namespace IGLib.Core.CollectionExtensions
         /// <paramref name="separator">String used as separator in array representation; default is <see cref="ArraySeparator"/></paramref>
         /// which is also nicely structured and readable for objects of array-like types.</returns>
         public static string ToReadableString(this object o, string indentation = ArrayIndentation,
-            string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed, 
+            string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
             // Null check
             if (o == null)
-                return "null";
+            {
+                return NullString;
+            }
 
             // Handle strings:
             if (o is string str)
@@ -152,6 +154,10 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
+            if (array == null)
+            {
+                return NullString;
+            }
             if (array is int[,] int2DArray)
             {
                 return int2DArray.ToReadableString(indentation, openBracket, closedBracket, separator);
@@ -179,6 +185,10 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
+            if (jaggedArray == null)
+            {
+                return NullString;
+            }
             var sb = new StringBuilder();
             // This has been replaced: string indent = new string(' ', indentLevel * 4); // Indentation string based on the current level
             string indent = string.Concat(Enumerable.Repeat(indentation, indentLevel));
@@ -270,6 +280,10 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
+            if (list == null)
+            {
+                return NullString;
+            }
             return $"{openBracket}{string.Join($"{separator} ",
                 list.Select(a => a.ToReadableString(indentation, openBracket, closedBracket, separator)))}{closedBracket}";
         }
@@ -284,6 +298,10 @@ namespace IGLib.Core.CollectionExtensions
             string openBracket = ArrayBracketOpen, string closedBracket = ArrayBracketClosed,
             string separator = ArraySeparator)
         {
+            if (enumerable == null)
+            {
+                return NullString;
+            }
             return $"{openBracket}{string.Join($"{separator} ", 
                 enumerable.Select(a => a.ToReadableString(indentation, openBracket, closedBracket, separator)))}{closedBracket}";
         }
