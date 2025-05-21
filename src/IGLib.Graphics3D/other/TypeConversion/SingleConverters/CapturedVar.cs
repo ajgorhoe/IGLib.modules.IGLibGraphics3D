@@ -107,33 +107,45 @@ namespace IGLib.Core
             }
         }
 
+        /// <inheritdoc/>
         public DeclaredType Value { get; init; }
 
+        /// <inheritdoc/>
         public object ValueObject => Value;
 
+        /// <inheritdoc/>
         public Type Type => typeof(DeclaredType);
 
+        /// <inheritdoc/>
         public string TypeName => Type.Name;
 
+        /// <inheritdoc/>
         public string TypeFullName => Type.FullName;
 
+        /// <inheritdoc/>
         public string TypeString => Type.ToString();
 
+        /// <inheritdoc/>
         public Type ValueType => Value?.GetType()??null;
 
+        /// <inheritdoc/>
         public string ValueTypeName => ValueType?.Name;
 
+        /// <inheritdoc/>
         public string ValueTypeFullName => ValueType?.FullName;
 
+        /// <inheritdoc/>
         public string ValueTypeString => ValueType?.ToString();
 
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $"Captured entity: declared type = {TypeString}, actual type = {ValueTypeString}, "
                 + $"\n    value = {Value.ToReadableString()}";
         }
 
+        /// <inheritdoc/>
         public virtual string ToStringLong(string indentation = "  ")
         {
             StringBuilder sb = new StringBuilder();
@@ -141,7 +153,6 @@ namespace IGLib.Core
             sb.AppendLine(indentation + $"{nameof(TypeName)}: {TypeName}");
             sb.AppendLine(indentation + $"{nameof(TypeFullName)}: {TypeFullName}");
             sb.AppendLine(indentation + $"{nameof(TypeString)}: {TypeString}");
-            
             
             sb.AppendLine(indentation + $"Actual type of the captured value ({nameof(ValueType)}):\n{indentation + indentation}{ValueType?.ToString()}");
             sb.AppendLine(indentation + $"{nameof(ValueTypeName)}: {ValueTypeName}");

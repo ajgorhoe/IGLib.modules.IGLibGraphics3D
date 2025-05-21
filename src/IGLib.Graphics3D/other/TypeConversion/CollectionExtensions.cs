@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -43,11 +44,16 @@ namespace IGLib.Core.CollectionExtensions
         /// <summary>Array element separator used in the string representation of array-like objects.</summary>
         public const string ArraySeparator = ",";    // alternative: " |";
 
-        /// <summary>Default indentation used in the string representation of array-like objects.</summary>
-        public const string ArrayIndentation = "    ";    // alternative: "··";
+        /// <summary>Default indentation used in the string representation of array-like objects.
+        /// Corresponds to <see cref="DefaultIndentationString"/>.</summary>
+        public const string ArrayIndentation = DefaultIndentationString;    // alternative: "··";
 
         /// <summary>String that is used to output null objects.</summary>
         public const string NullString = "null";
+
+        /// <summary>Defines the default indentation string used in string representations of structured data
+        /// that extends over multiple lines.</summary>
+        public const string DefaultIndentationString = "    ";
 
 
 

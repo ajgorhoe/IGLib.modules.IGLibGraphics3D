@@ -13,8 +13,6 @@ using IGLib.Core;
 using IGLib.Core.Extended;
 using IGLib.Tests.Base.SampleClasses;
 using IGLib.Core.CollectionExtensions;
-using Microsoft.Extensions.Configuration;
-using IGLib.Core.CollectionExtensions;
 
 
 namespace IGLib.Core.Tests
@@ -470,9 +468,6 @@ namespace IGLib.Core.Tests
         }
 
 
-
-
-
         [Fact]
         protected void CapturedVarCreation_ToString_WorksCorrectly()
         {
@@ -480,7 +475,7 @@ namespace IGLib.Core.Tests
             IList<int> variable = new List<int>() { 1, 2, 3, 6, 7, 8 };
             Type actualVariableType = variable?.GetType();
             Type declaredVariableType = typeof(IList<int>);
-            Console.WriteLine($"Test: checking {nameof(CapturedVar)}.{nameof(ICapturedVar.ToString)}...\n");
+            Console.WriteLine($"Test: checking {nameof(CapturedVar)}.{nameof(ICapturedVar.ToString)}()...\n");
             Console.WriteLine($"Variable: actual type = {variable?.GetType()?.ToString()}, value = \n  {variable.ToReadableString()}\n");
             Console.WriteLine($"Actual type of variable's value: {actualVariableType?.ToString()}");
             Console.WriteLine($"Declared type of the variable:   {declaredVariableType.ToString()}\n");
