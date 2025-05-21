@@ -29,6 +29,11 @@ namespace IGLib.Core.Tests
         public SandboxTypeconversionTests(ITestOutputHelper output) : base(output)
         {  }
 
+
+
+        #region ParseHelperTests
+
+
         [Fact]
         protected virtual void ParseHelperTest()
         {
@@ -42,6 +47,10 @@ namespace IGLib.Core.Tests
             successful.Should().Be(true);
             number.ToString().Should().Be(parsedString);
         }
+
+
+        #endregion ParseHelperTests
+
 
 
 
