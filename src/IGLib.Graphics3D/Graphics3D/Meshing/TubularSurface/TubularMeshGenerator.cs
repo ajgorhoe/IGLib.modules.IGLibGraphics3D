@@ -143,6 +143,12 @@ namespace IGLib.Gr3D
                     prevB = B;
                 }
 
+                // $$ fix for null normals:
+                if (mesh.VertexNormals == null)
+                {
+                    mesh.AllocateNodeNormals();
+                }
+
                 for (int j = 0; j < numCirclePoints; ++j)
                 {
                     double theta = j * angleStep;
