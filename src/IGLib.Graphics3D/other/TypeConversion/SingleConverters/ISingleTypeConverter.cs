@@ -3,7 +3,11 @@
 namespace IGLib.Core
 {
 
+    public interface IStringToTypeConverter<TargetType> : ISingleTypeConverter<string, TargetType>
+    {  }
 
+    public interface ITypeToStringConverter<SourceType> : ISingleTypeConverter<SourceType, string>
+    {  }
 
     public interface ISingleTypeConverter<SourceType, TargetType> : ISingleTypeConverter
     {
