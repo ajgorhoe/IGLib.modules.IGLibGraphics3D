@@ -6,13 +6,9 @@ namespace IGLib.Core
 
     public abstract class SingleTypeConverterBase<TSource, TTarget> : ISingleTypeConverter<TSource, TTarget>
     {
-        public Type SrouceType { get; } = typeof(TSource);
+        public Type SourceType { get; } = typeof(TSource);
 
         public Type TargetType { get; } = typeof(TTarget);
-
-        Type SourceType { get; } = typeof(TSource);
-
-        Type Targetype { get; } = typeof(TTarget);
 
         public object Convert(object source)
         {

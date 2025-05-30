@@ -6,19 +6,17 @@ using FluentAssertions;
 using Xunit.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics;
 using IGLib.Tests.Base;
-using System.Linq;
 using IGLib.Core;
-using IGLib.Core.Extended;
-using IGLib.Tests.Base.SampleClasses;
 using IGLib.Core.CollectionExtensions;
+using static IGLib.Core.CapturedVar;
 
 
 namespace IGLib.Core.Tests
 {
 
-    using static CapturedVar;
 
 
     /// <summary>Tests of the <see cref="CapturedVar"/> class and related types and utiliities.</summary>
