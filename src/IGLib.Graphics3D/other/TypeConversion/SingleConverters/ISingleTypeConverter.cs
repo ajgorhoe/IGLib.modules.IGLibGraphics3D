@@ -3,13 +3,6 @@
 namespace IGLib.Core
 {
 
-    public interface IStringToTypeConverter<TargetType> : ISingleTypeConverter<string, TargetType>
-    {  }
-
-    public interface ITypeToStringConverter<SourceType> : ISingleTypeConverter<SourceType, string>
-    {  }
-
-
     /// <summary>Converts values from a single specific source type (<typeparamref name="SourceType"/>) 
     /// to a single specific target type (<typeparamref name="TargetType"/>). Conversion methods are not typed and have parameters and
     /// return value of type object.

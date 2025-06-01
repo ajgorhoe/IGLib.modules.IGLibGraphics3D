@@ -4,6 +4,7 @@ using System.Diagnostics;
 namespace IGLib.Core
 {
 
+    /// <inheritdoc/>
     public class SingleTypeConverterFromDelegate<TSource, TTarget>: SingleTypeConverterBase<TSource, TTarget>, 
         ISingleTypeConverter<TSource, TTarget>
     {
