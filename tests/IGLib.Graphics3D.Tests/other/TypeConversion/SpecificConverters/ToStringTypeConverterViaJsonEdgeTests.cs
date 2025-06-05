@@ -56,17 +56,17 @@ namespace IGLib.Core.Tests
             var child = new RecursiveNode { Name = "Child", Child = parent };
             parent.Child = child;
 
-            var options = new JsonSerializerOptions
+            var serializationOptions = new JsonSerializerOptions
             {
                 ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
                 WriteIndented = true
             };
 
-            string json = JsonSerializer.Serialize(parent, options);
+            string json = JsonSerializer.Serialize(parent, serializationOptions);
             Console.WriteLine($"JSON of object tree with circular references, using ReferenceHandler.Preserve:{json}");
             json.Should().Contain("$id").And.Contain("$ref");
 
-            var result = JsonSerializer.Deserialize<RecursiveNode>(json, options);
+            var result = JsonSerializer.Deserialize<RecursiveNode>(json, serializationOptions);
             result.Name.Should().Be("Parent");
             result.Child.Name.Should().Be("Child");
             result.Child.Child.Should().BeSameAs(result); // same reference

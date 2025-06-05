@@ -155,11 +155,16 @@ namespace IGLib.Core.Tests
             if (NumWarmupCycles > 0)
             {
                 var warmupList = new List<InitOnlyRecord>();
-                for (int i = 0; i < numObjects; i++)
+                for (int i = 0; i < NumWarmupCycles; i++)
                 {
                     warmupList.Add(new InitOnlyRecord($"Name{i}", i));
                 }
                 string json1 = JsonSerializer.Serialize(warmupList);
+                if (NumWarmupCycles <= 10)
+                {
+                    Console.WriteLine($"\nSerialized warmup list of objects (much shorter than the real list:");
+                    Console.WriteLine($"{json1}\n");
+                }
             }
 
             Stopwatch sw = Stopwatch.StartNew();
@@ -206,6 +211,11 @@ namespace IGLib.Core.Tests
                 var result1 = JsonSerializer.Deserialize<List<InitOnlyRecord>>(json1);
                 sw1.Stop();
                 result1.Should().HaveCount(NumWarmupCycles, "PRECOND: warm up works correctly.");
+                if (NumWarmupCycles <= 10)
+                {
+                    Console.WriteLine($"\nSerialized warmup list of objects (much shorter than the real list:");
+                    Console.WriteLine($"{json1}\n");
+                }
             }
             Stopwatch sw = Stopwatch.StartNew();
             var result = JsonSerializer.Deserialize<List<InitOnlyRecord>>(json);
@@ -241,12 +251,11 @@ namespace IGLib.Core.Tests
         [Fact]
         public void Json_InitOnlyClas_Serialize_Performance_And_Size_Benchmark()
         {
-            Console.WriteLine($"Benchmarking serialization of large lists of objexts...");
+            Console.WriteLine($"Benchmarking serialization of large lists of objects...");
             int numObjects = NumObjectsOrExecutions;
             int minSize = numObjects * 10;
             double minObjectsPerSecond = MinObjectsOrxecutionsPerSecond;
             Console.WriteLine($"Number of objects: {(double)numObjects / 1_000} k, min. expected size: {(double)minSize / 1_000.0}, min. exp. objecst / s: {(double)minObjectsPerSecond / 1_000} k");
-            Console.WriteLine("Warning: If this is the first test executed, the results can be much worse (easily by a factor of 100 or more).");
             Console.WriteLine("");
             var largeList = new List<InitOnlyClass>();
             for (int i = 0; i < numObjects; i++)
@@ -256,11 +265,16 @@ namespace IGLib.Core.Tests
             if (NumWarmupCycles > 0)
             {
                 var warmupList = new List<InitOnlyClass>();
-                for (int i = 0; i < numObjects; i++)
+                for (int i = 0; i < NumWarmupCycles; i++)
                 {
                     warmupList.Add(new InitOnlyClass($"Name{i}", i));
                 }
                 string json1 = JsonSerializer.Serialize(warmupList);
+                if (NumWarmupCycles <= 10)
+                {
+                    Console.WriteLine($"\nSerialized warmup list of objects (much shorter than the real list:");
+                    Console.WriteLine($"{json1}\n");
+                }
             }
 
             Stopwatch sw = Stopwatch.StartNew();
@@ -307,6 +321,11 @@ namespace IGLib.Core.Tests
                 var result1 = JsonSerializer.Deserialize<List<InitOnlyClass>>(json1);
                 sw1.Stop();
                 result1.Should().HaveCount(NumWarmupCycles, "PRECOND: warm up works correctly.");
+                if (NumWarmupCycles <= 10)
+                {
+                    Console.WriteLine($"\nSerialized warmup list of objects (much shorter than the real list:");
+                    Console.WriteLine($"{json1}\n");
+                }
             }
             Stopwatch sw = Stopwatch.StartNew();
             var result = JsonSerializer.Deserialize<List<InitOnlyClass>>(json);
@@ -322,6 +341,122 @@ namespace IGLib.Core.Tests
             Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms. \n  Executions per second: {executionsPerSecond / 1_000} k, minimum allowed: {minObjectsPerSecond / 1_000} k");
             executionsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
         }
+
+
+
+
+
+
+
+
+        [Fact]
+        public void Json_InitOnlyClas_WithReferenceHandler_Serialize_Performance_And_Size_Benchmark()
+        {
+            Console.WriteLine($"Benchmarking serialization of large lists of objexts...");
+            var serializationOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+                WriteIndented = false
+            };
+
+            int numObjects = NumObjectsOrExecutions;
+            int minSize = numObjects * 10;
+            double minObjectsPerSecond = MinObjectsOrxecutionsPerSecond;
+            Console.WriteLine($"Number of objects: {(double)numObjects / 1_000} k, min. expected size: {(double)minSize / 1_000.0}, min. exp. objecst / s: {(double)minObjectsPerSecond / 1_000} k");
+            Console.WriteLine("");
+            var largeList = new List<InitOnlyClass>();
+            for (int i = 0; i < numObjects; i++)
+            {
+                largeList.Add(new InitOnlyClass($"Name{i}", i));
+            }
+            if (NumWarmupCycles > 0)
+            {
+                var warmupList = new List<InitOnlyClass>();
+                for (int i = 0; i < NumWarmupCycles; i++)
+                {
+                    warmupList.Add(new InitOnlyClass($"Name{i}", i));
+                }
+                string json1 = JsonSerializer.Serialize(warmupList, serializationOptions);
+                if (NumWarmupCycles <= 10)
+                {
+                    Console.WriteLine($"\nSerialized warmup list of objects (much shorter than the real list:");
+                    Console.WriteLine($"{json1}\n");
+                }
+            }
+
+            Stopwatch sw = Stopwatch.StartNew();
+            string json = JsonSerializer.Serialize(largeList, serializationOptions);
+            sw.Stop();
+
+            double elapsedSeconds = sw.Elapsed.TotalSeconds;
+            int sizeBytes = System.Text.Encoding.UTF8.GetByteCount(json);
+            double objectsPerSecond = (double)numObjects / elapsedSeconds;
+            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms ({objectsPerSecond / 1_000_000.0} M objects / s)");
+            Console.WriteLine($"Size: {sizeBytes / 1024.0:F1} kB");
+
+            // Example expectations: can be adjusted based on environment
+            objectsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
+            sizeBytes.Should().BeGreaterThan(minSize);
+
+        }
+
+        [Fact]
+        public void Json_InitOnlyClas_WithReferenceHandler_Deserialize_Performance_And_Size_Benchmark()
+        {
+            int numObjects = NumObjectsOrExecutions;
+            double minObjectsPerSecond = MinObjectsOrxecutionsPerSecond;
+            Console.WriteLine("Benchmarking deserialization of a large list of objects...");
+            Console.WriteLine($"Number of objects: {numObjects / 1_000} k. Minimal number of objects per second: {minObjectsPerSecond / 1_000} k");
+            var serializationOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+                WriteIndented = false
+            };
+            var largeList = new List<InitOnlyClass>();
+            for (int i = 0; i < numObjects; i++)
+            {
+                largeList.Add(new InitOnlyClass($"Name{i}", i));
+            }
+            string json = JsonSerializer.Serialize(largeList, serializationOptions);
+
+            if (NumWarmupCycles > 0)
+            {
+                // Perform a warmup loop similar to what is measured, in order to perfotm the warmup: have the methods used
+                // JIT-ed, busting the CPU speed, having relevant memory in the cache, etc.
+                var warmupList = new List<InitOnlyClass>();
+                for (int i = 0; i < NumWarmupCycles; i++)
+                {
+                    warmupList.Add(new InitOnlyClass($"Name{i}", i));
+                }
+                string json1 = JsonSerializer.Serialize(warmupList, serializationOptions);
+                Stopwatch sw1 = Stopwatch.StartNew();
+                var result1 = JsonSerializer.Deserialize<List<InitOnlyClass>>(json1, serializationOptions);
+                sw1.Stop();
+                result1.Should().HaveCount(NumWarmupCycles, "PRECOND: warm up works correctly.");
+                if (NumWarmupCycles <= 10)
+                {
+                    Console.WriteLine($"\nSerialized warmup list of objects (much shorter than the real list:");
+                    Console.WriteLine($"{json1}\n");
+                }
+            }
+            Stopwatch sw = Stopwatch.StartNew();
+            var result = JsonSerializer.Deserialize<List<InitOnlyClass>>(json, serializationOptions);
+            sw.Stop();
+
+            double elapsedSeconds = sw.Elapsed.TotalSeconds;
+            result.Should().HaveCount(numObjects);
+            for (int i = 0; i < numObjects; i++)
+            {
+                result[i].Id.Should().Be(i, because: $"PRECOND: Deserialization should correctly restored ID property of objects on the deserialized list.");
+            }
+            double executionsPerSecond = numObjects / elapsedSeconds;
+            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms. \n  Executions per second: {executionsPerSecond / 1_000} k, minimum allowed: {minObjectsPerSecond / 1_000} k");
+            executionsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
+        }
+
+
+
+
 
 
 
