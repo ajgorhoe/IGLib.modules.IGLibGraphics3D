@@ -174,13 +174,13 @@ namespace IGLib.Core.Tests
             double elapsedSeconds = sw.Elapsed.TotalSeconds;
             int sizeBytes = System.Text.Encoding.UTF8.GetByteCount(json);
             double objectsPerSecond = (double)numObjects / elapsedSeconds;
-            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms ({objectsPerSecond / 1_000_000.0} M objects / s)");
             Console.WriteLine($"Size: {sizeBytes / 1024.0:F1} kB");
+            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms.");
+            Console.WriteLine($"  Objects per second: {objectsPerSecond / 1_000_000.0} M, minimum required: {(double)minObjectsPerSecond / 1_000} k");
 
             // Example expectations: can be adjusted based on environment
             objectsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
             sizeBytes.Should().BeGreaterThan(minSize);
-
         }
 
         [Fact]
@@ -228,7 +228,8 @@ namespace IGLib.Core.Tests
                 result[i].Id.Should().Be(i, because: $"PRECOND: Deserialization should correctly restored ID property of objects on the deserialized list.");
             }
             double executionsPerSecond = numObjects / elapsedSeconds;
-            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms. \n  Executions per second: {executionsPerSecond / 1_000} k, minimum allowed: {minObjectsPerSecond / 1_000} k");
+            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms.");
+            Console.WriteLine($"  Objects per second: {executionsPerSecond / 1_000} k, minimum required: {minObjectsPerSecond / 1_000} k");
             executionsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
         }
 
@@ -284,13 +285,13 @@ namespace IGLib.Core.Tests
             double elapsedSeconds = sw.Elapsed.TotalSeconds;
             int sizeBytes = System.Text.Encoding.UTF8.GetByteCount(json);
             double objectsPerSecond = (double)numObjects / elapsedSeconds;
-            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms ({objectsPerSecond / 1_000_000.0} M objects / s)");
             Console.WriteLine($"Size: {sizeBytes / 1024.0:F1} kB");
+            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms.");
+            Console.WriteLine($"  Objects per second: {objectsPerSecond / 1_000_000.0} M, minimum required: {(double)minObjectsPerSecond / 1_000} k");
 
             // Example expectations: can be adjusted based on environment
             objectsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
             sizeBytes.Should().BeGreaterThan(minSize);
-
         }
 
         [Fact]
@@ -338,15 +339,10 @@ namespace IGLib.Core.Tests
                 result[i].Id.Should().Be(i, because: $"PRECOND: Deserialization should correctly restored ID property of objects on the deserialized list.");
             }
             double executionsPerSecond = numObjects / elapsedSeconds;
-            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms. \n  Executions per second: {executionsPerSecond / 1_000} k, minimum allowed: {minObjectsPerSecond / 1_000} k");
+            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms.");
+            Console.WriteLine($"  Objects per second: {executionsPerSecond / 1_000} k, minimum required: {minObjectsPerSecond / 1_000} k");
             executionsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
         }
-
-
-
-
-
-
 
 
         [Fact]
@@ -391,13 +387,13 @@ namespace IGLib.Core.Tests
             double elapsedSeconds = sw.Elapsed.TotalSeconds;
             int sizeBytes = System.Text.Encoding.UTF8.GetByteCount(json);
             double objectsPerSecond = (double)numObjects / elapsedSeconds;
-            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms ({objectsPerSecond / 1_000_000.0} M objects / s)");
             Console.WriteLine($"Size: {sizeBytes / 1024.0:F1} kB");
+            Console.WriteLine($"Serialized {numObjects} objects in {elapsedSeconds / 1_000.0} ms.");
+            Console.WriteLine($"  Objects per seconds: {objectsPerSecond / 1_000_000.0} M. Minimum required: {(double)minObjectsPerSecond / 1_000} k.");
 
             // Example expectations: can be adjusted based on environment
             objectsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
             sizeBytes.Should().BeGreaterThan(minSize);
-
         }
 
         [Fact]
@@ -450,15 +446,10 @@ namespace IGLib.Core.Tests
                 result[i].Id.Should().Be(i, because: $"PRECOND: Deserialization should correctly restored ID property of objects on the deserialized list.");
             }
             double executionsPerSecond = numObjects / elapsedSeconds;
-            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms. \n  Executions per second: {executionsPerSecond / 1_000} k, minimum allowed: {minObjectsPerSecond / 1_000} k");
+            Console.WriteLine($"Deserialized {numObjects} objects in {elapsedSeconds * 1_000} ms.");
+            Console.WriteLine($"  Objects per second: {executionsPerSecond / 1_000} k, minimum required: {minObjectsPerSecond / 1_000} k");
             executionsPerSecond.Should().BeGreaterThan(minObjectsPerSecond);
         }
-
-
-
-
-
-
 
 
     }
