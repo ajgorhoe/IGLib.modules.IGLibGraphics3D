@@ -23,9 +23,9 @@ namespace IGLib.Core
     public class JsonSerializerOptionsFactoryBasic
     {
 
-        private static object _staticLock = new object();
+        private static readonly object _staticLock = new object();
 
-        private static JsonSerializerOptions _default = null;
+        private static volatile JsonSerializerOptions _default = null;
 
         /// <summary>Gets a singleton, lazy evaluated <see cref="JsonSerializerOptions"/>, read-only and
         /// thread safe object standard for use with the library in cases where polymorfic serialization / 
