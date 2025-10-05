@@ -4,8 +4,36 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>IGLib.Graphic3D.Tests</RootNamespace>
+		<NeutralLanguage>en-us</NeutralLanguage>
 	</PropertyGroup>
-	
+
+	<PropertyGroup>
+		<!-- This group contains attributes previously in AsemblyInfo.cs. -->
+		<AssemblyName>IGLib.Graphics3D.Tests</AssemblyName>
+		<PackageId>IGLib.Graphics3D.Tests</PackageId>
+		<!-- Versioning is now handled with GitVersion (attributes: Version, AssemblyVersion, FileVersion). -->
+		<Authors>Igor Grešovnik</Authors>
+		<Company>IGLib</Company>
+		<Product>IGLib</Product>
+		<RepositoryUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<Description>IGLib Library for 3D graphics in C#.</Description>
+		<PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+		<PackageIconUrl>https://ajgorhoe.github.io/icons/IGLibIcon_64x64.png</PackageIconUrl>
+		<PackageTags>3D Graphics, IGLib</PackageTags>
+		<PackageReleaseNotes>Normal Release</PackageReleaseNotes>
+
+		<Copyright>Copyright © Igor Grešovnik (2024 - present).</Copyright>
+		<!-- Remark: PackageLicenseExpression is available only for OSI AND FSF approved licenses. -->
+		<PackageLicenseUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D/blob/main/LICENSE.md</PackageLicenseUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- For automatic versioning with GitVersion tool (https://gitversion.net/docs/usage/cli/) 
+			- versions specified from Git tags (like v.1.4.2 on min branch) & history : -->
+		<PackageReference Include="GitVersion.MsBuild" Version="*" PrivateAssets="All" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="xunit" Version="2.9.3" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">

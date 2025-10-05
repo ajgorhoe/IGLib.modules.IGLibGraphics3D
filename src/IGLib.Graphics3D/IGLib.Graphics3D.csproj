@@ -11,38 +11,36 @@
 		<LangVersion>latest</LangVersion>
 		<IsPackable>true</IsPackable>
 		<RootNamespace>IGLib.Graphics3D</RootNamespace>
-
+		<NeutralLanguage>en-us</NeutralLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<!-- Attributes that were previously put into AsemblyInfo.cs: -->
+		<!-- This group contains attributes previously in AsemblyInfo.cs. -->
 		<AssemblyName>IGLib.Graphics3D</AssemblyName>
 		<PackageId>IGLib.Graphics3D</PackageId>
-		<Version>2.0.0</Version>
-		<AssemblyVersion>2.0.0</AssemblyVersion>
-		<FileVersion>2.0.0</FileVersion>
+		<!-- Versioning is now handled with GitVersion (attributes: Version, AssemblyVersion, FileVersion). -->
 		<Authors>Igor Grešovnik et al.</Authors>
 		<Company>IGLib</Company>
 		<Product>IGLib</Product>
-		<NeutralLanguage>en-us</NeutralLanguage>
 		<RepositoryUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<Description>IGLib Library for 3D graphics in C#.</Description>
-		<Copyright>Copyright © Igor Grešovnik (2024 - present).</Copyright>
-		<PackageLicenseUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D/blob/main/LICENSE.md</PackageLicenseUrl>
-		<PackageProjectUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D/</PackageProjectUrl>
+		<PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
 		<PackageIconUrl>https://ajgorhoe.github.io/icons/IGLibIcon_64x64.png</PackageIconUrl>
 		<PackageTags>3D Graphics, IGLib</PackageTags>
 		<PackageReleaseNotes>Normal Release</PackageReleaseNotes>
-		<!--
-		Generate XML documentation file and disable warnings about missing documentation comments:
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<NoWarn>CS1591</NoWarn>
-		-->
-		<!--
-    <PackageLicenseExpression>IGLib Binary Redistributable Licence</PackageLicenseExpression>
-	-->
+
+		<Copyright>Copyright © Igor Grešovnik (2024 - present).</Copyright>
+		<!-- Remark: PackageLicenseExpression is available only for OSI AND FSF approved licenses. -->
+		<PackageLicenseUrl>https://github.com/ajgorhoe/IGLib.modules.IGLibGraphics3D/blob/main/LICENSE.md</PackageLicenseUrl>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- For automatic versioning with GitVersion tool (https://gitversion.net/docs/usage/cli/) 
+			- versions specified from Git tags (like v.1.4.2 on min branch) & history : -->
+		<PackageReference Include="GitVersion.MsBuild" Version="*" PrivateAssets="All" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'netstandard2.0'">
 		<!-- OrderedDictionary<TKey, TValue is not available in net48 or netstandard2.0: -->
 		<!--
