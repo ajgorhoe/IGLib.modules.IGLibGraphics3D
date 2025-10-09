@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11018.127 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{6F7BD4E0-E7F3-4235-987B-EDC52C2FE25B}"
 EndProject
@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0_SolutionItems", "0_SolutionItems", "{CB1B7E08-2967-435C-A5BC-85DDB2C2A491}"
 	ProjectSection(SolutionItems) = preProject
 		ajgorhoe_IGLib.modules.IGLibGraphics3D.url = ajgorhoe_IGLib.modules.IGLibGraphics3D.url
+		GitVersion.yml = GitVersion.yml
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
