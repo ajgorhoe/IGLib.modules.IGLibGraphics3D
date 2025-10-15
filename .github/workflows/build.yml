@@ -36,6 +36,15 @@ jobs:
           # Temporary token created automatically for the main repo (owner of the workflow) 
           token: ${{ secrets.GITHUB_TOKEN  }}
 
+      # CLONE IGLibCore
+      - name: Clone IGLibCore
+        shell: pwsh
+        # Important: set --depth 0 to avoid shallow clones (needed
+        #   for GitVersion)
+        run: |
+          git clone https://github.com/ajgorhoe/IGLib.modules.IGLibCore `
+            IGLibCore
+
       # CLONE IGLibScripts
       - name: Clone IGLibScripts
         shell: pwsh
