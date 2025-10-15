@@ -13,6 +13,7 @@ env:
   # Main repository directory:
   # Placeholder: ${{ env.REPODIR }}
   REPODIR: IGLibGraphics3D
+  SOURCE_DIR: ${{ REPODIR }}/src/IGLib.Graphics3D/
   # Whether failed tests are ignored (should normally be false):
   # Placeholder: ${{ env.IGNORE_TEST_ERRORS }}
   IGNORE_TEST_ERRORS: true
@@ -132,7 +133,8 @@ jobs:
         # shell: pwsh
         # Remark: we use the solution instead of projects.
         run: dotnet test ${{ env.REPODIR }}/${{ env.REPODIR }}.sln --configuration Release --logger trx --results-directory test-results
-        continue-on-error: ${{ env.IGNORE_TEST_ERRORS }}
+        continue-on-error: true
+        # ${{ env.IGNORE_TEST_ERRORS }}
 
       # Report tests failure
       - name: Report tests failure
@@ -145,7 +147,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: BuildArtifacts
-          path: ${{ env.REPODIR }}/src/IGLib.Core/bin/Release/
+          path: ${{ env.SOURCE_DIR }}/bin/Release/
 
       # RUN a TEST SCRIPT (PowerShell)
       - name: Run Post-Build PowerShell Script
