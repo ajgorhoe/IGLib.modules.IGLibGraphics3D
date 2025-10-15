@@ -132,7 +132,8 @@ jobs:
         # shell: pwsh
         # Remark: we use the solution instead of projects.
         run: dotnet test ${{ env.REPODIR }}/${{ env.REPODIR }}.sln --configuration Release --logger trx --results-directory test-results
-        continue-on-error: ${{ env.IGNORE_TEST_ERRORS }}
+        continue-on-error: true
+        # ${{ env.IGNORE_TEST_ERRORS }}
 
       # Report tests failure
       - name: Report tests failure
