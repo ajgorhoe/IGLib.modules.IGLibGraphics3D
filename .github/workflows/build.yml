@@ -45,15 +45,15 @@ jobs:
           git clone https://github.com/ajgorhoe/IGLib.modules.IGLibScripts `
             IGLibScripts
 
-      # CHECKOUT IGLibScripting
-      - name: Clone IGLibScripting
-        uses: actions/checkout@v4
-        with:
-          repository: ajgorhoe/IGLib.modules.IGLibScripting
-          path: IGLibScripting
-          ref: main
-          # Use automatically generated token (private repo, same owner)
-          token: ${{ secrets.PAT_ACTIONS_IGLIB_READONLY }}
+      # # CHECKOUT IGLibScripting
+      # - name: Clone IGLibScripting
+        # uses: actions/checkout@v4
+        # with:
+          # repository: ajgorhoe/IGLib.modules.IGLibScripting
+          # path: IGLibScripting
+          # ref: main
+          # # Use automatically generated token (private repo, same owner)
+          # token: ${{ secrets.PAT_ACTIONS_IGLIB_READONLY }}
 
       # # CLONE IGLibScripting 
       # - name: Clone IGLibScripting Dependency
