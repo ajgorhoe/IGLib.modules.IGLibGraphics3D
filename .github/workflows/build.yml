@@ -11,9 +11,11 @@ on:
   
 env:
   # Main repository directory:
-  REPODIR: IGLibGraphics3D   # Placeholder: ${{ env.REPODIR }}
+  # Placeholder: ${{ env.REPODIR }}
+  REPODIR: IGLibGraphics3D
   # Whether failed tests are idnored (should normally be false):
-  IGNORE_TEST_ERRORS: true   # ${{ env.IGNORE_TEST_ERRORS }}
+  # Placeholder: ${{ env.IGNORE_TEST_ERRORS }}
+  IGNORE_TEST_ERRORS: true
 
 jobs:
 
@@ -130,7 +132,6 @@ jobs:
         continue-on-error: ${{ env.IGNORE_TEST_ERRORS }}
         # Remark: we use the solution instead of projects.
         run: dotnet test ${{ env.REPODIR }}/${{ env.REPODIR }}.sln --configuration Release --logger trx --results-directory test-results
-        # run: dotnet test ${{ env.REPODIR }}/test/IGLib.Core.Tests/IGLib.Core.Tests.csproj --configuration Release --logger trx --results-directory test-results
 
       # UPLOAD BUILD OUTPUT (DLLs, EXEs, etc.)
       - name: Upload Build Artifacts
