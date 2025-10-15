@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11018.127 d18.0
+VisualStudioVersion = 18.0.11018.127
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{6F7BD4E0-E7F3-4235-987B-EDC52C2FE25B}"
 EndProject
@@ -25,6 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0_SolutionItems", "0_Soluti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGLib.TestBase", "..\IGLibCore\tests\IGLib.TestBase\IGLib.TestBase.csproj", "{381BCB6E-F5CF-777C-1AED-4DA261403F4F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InitModules", "InitModules", "{946183CB-9344-41EA-A1A9-32776D963028}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitModulesGraphics3D", "src\0InitModules\InitModulesGraphics3D\InitModulesGraphics3D.csproj", "{18242FDA-731A-1AA5-3523-C8C6EC161269}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,10 @@ Global
 		{381BCB6E-F5CF-777C-1AED-4DA261403F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{381BCB6E-F5CF-777C-1AED-4DA261403F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{381BCB6E-F5CF-777C-1AED-4DA261403F4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +64,6 @@ Global
 		{F86C1DA2-8F39-4D74-AC44-AFB86797C1AC} = {08A352A6-C128-4679-980A-C9B658F182B4}
 		{B95F1406-17E2-4630-8116-750FFDA3A395} = {F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}
 		{381BCB6E-F5CF-777C-1AED-4DA261403F4F} = {F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}
+		{18242FDA-731A-1AA5-3523-C8C6EC161269} = {946183CB-9344-41EA-A1A9-32776D963028}
 	EndGlobalSection
 EndGlobal
