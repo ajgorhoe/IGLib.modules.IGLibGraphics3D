@@ -13,7 +13,9 @@ env:
   # Main repository directory:
   # Placeholder: ${{ env.REPODIR }}
   REPODIR: IGLibGraphics3D
-  SOURCE_DIR: ${{ REPODIR }}/src/IGLib.Graphics3D/
+  # Main source project directory:
+  # Placeholder: ${{ env.SOURCE_DIR }}
+  SOURCE_DIR: ${{ env.REPODIR }}/src/IGLib.Graphics3D/
   # Whether failed tests are ignored (should normally be false):
   # Placeholder: ${{ env.IGNORE_TEST_ERRORS }}
   IGNORE_TEST_ERRORS: true
