@@ -127,11 +127,18 @@ jobs:
         run: dotnet build ${{ env.REPODIR }}/${{ env.REPODIR }}.sln --configuration Release --no-restore
 
       # RUN TESTS & COLLECT RESULTS
-      - name: Run Unit Tests
-        shell: pwsh
-        continue-on-error: ${{ env.IGNORE_TEST_ERRORS }}
+      - name: Run Tests
+        id: teststep
+        # shell: pwsh
         # Remark: we use the solution instead of projects.
         run: dotnet test ${{ env.REPODIR }}/${{ env.REPODIR }}.sln --configuration Release --logger trx --results-directory test-results
+        continue-on-error: ${{ env.IGNORE_TEST_ERRORS }}
+
+      # Report tests failure
+      - name: Report tests failure
+        if: steps.teststep.outcome == 'failure'
+        run: echo "❌ Some tests failed, but build will continue."
+
 
       # UPLOAD BUILD OUTPUT (DLLs, EXEs, etc.)
       - name: Upload Build Artifacts
