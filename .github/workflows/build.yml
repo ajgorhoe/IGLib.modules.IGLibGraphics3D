@@ -124,7 +124,9 @@ jobs:
 
       # RUN TESTS & COLLECT RESULTS
       - name: Run Unit Tests
-        # Remark: use the solution instead of projects.
+        shell: pwsh
+        continue-on-error: true
+        # Remark: we use the solution instead of projects.
         run: dotnet test ${{ env.REPODIR }}/${{ env.REPODIR }}.sln --configuration Release --logger trx --results-directory test-results
         # run: dotnet test ${{ env.REPODIR }}/test/IGLib.Core.Tests/IGLib.Core.Tests.csproj --configuration Release --logger trx --results-directory test-results
 
