@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{08A352A6-C128-4679-980A-C9B658F182B4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IGLibModules", "IGLibModules", "{F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}"
+	ProjectSection(SolutionItems) = preProject
+		..\IGLibCore\src\0InitModules\InitModulesCore\InitModulesCore.csproj = ..\IGLibCore\src\0InitModules\InitModulesCore\InitModulesCore.csproj
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGLib.Core", "..\IGLibCore\src\IGLib.Core\IGLib.Core.csproj", "{B95F1406-17E2-4630-8116-750FFDA3A395}"
 EndProject
