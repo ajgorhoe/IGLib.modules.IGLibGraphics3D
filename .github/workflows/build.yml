@@ -30,6 +30,7 @@ jobs:
         dotnet-version: [ '10.0' ]
 
     steps:
+      
       # CHECKOUT Main Repository
       - name: Clone Main Repository
         uses: actions/checkout@v4
@@ -61,36 +62,24 @@ jobs:
       #     git clone https://github.com/ajgorhoe/IGLib.modules.IGLibScripts `
       #       IGLibScripts
 
-      # CHECKOUT IGLibScripting
-      - name: Clone IGLibScripting
-        uses: actions/checkout@v4
-        with:
-          repository: ajgorhoe/IGLib.modules.IGLibScripting
-          path: IGLibScripting
-          ref: main
-          # Use automatically generated token (private repo, same owner)
-          token: ${{ secrets.PAT_ACTIONS_IGLIB_READONLY }}
-
-      # CLONE IGLibScripting 
-      - name: Clone IGLibScripting Dependency
-        shell: pwsh
-        # Important: set --depth 0 to avoid shallow clones (needed
-        #   for GitVersion)
-        run: |
-          git clone https://${{ secrets.PAT_ACTIONS_IGLIB_READONLY }}@github.com/ajgorhoe/IGLib.modules.IGLibScripting `
-            IGLibScripting1
-
-      # # SET UP .NET SDK 8.0
-      # - name: Setup .NET 8
-      #   uses: actions/setup-dotnet@v3
+      # # CHECKOUT IGLibScripting
+      # - name: Clone IGLibScripting
+      #   uses: actions/checkout@v4
       #   with:
-      #     dotnet-version: 8.0.x
+      #     repository: ajgorhoe/IGLib.modules.IGLibScripting
+      #     path: IGLibScripting
+      #     ref: main
+      #     # Use automatically generated token (private repo, same owner)
+      #     token: ${{ secrets.PAT_ACTIONS_IGLIB_READONLY }}
 
-      # # SET UP .NET SDK 6.0
-      # - name: Setup .NET 6
-      #   uses: actions/setup-dotnet@v3
-      #   with:
-      #     dotnet-version: 6.0.x
+      # # CLONE IGLibScripting 
+      # - name: Clone IGLibScripting Dependency
+      #   shell: pwsh
+      #   # Important: set --depth 0 to avoid shallow clones (needed
+      #   #   for GitVersion)
+      #   run: |
+      #     git clone https://${{ secrets.PAT_ACTIONS_IGLIB_READONLY }}@github.com/ajgorhoe/IGLib.modules.IGLibScripting `
+      #       IGLibScripting1
 
       - name: SET UP .NET SDK
         uses: actions/setup-dotnet@v4
