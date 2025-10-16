@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InitModules", "InitModules"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitModulesGraphics3D", "src\0InitModules\InitModulesGraphics3D\InitModulesGraphics3D.csproj", "{18242FDA-731A-1AA5-3523-C8C6EC161269}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitModulesCore", "..\IGLibCore\src\0InitModules\InitModulesIGLibCore\InitModulesCore.csproj", "{115A1171-4396-BD4A-5E6B-02C06006A8A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18242FDA-731A-1AA5-3523-C8C6EC161269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{115A1171-4396-BD4A-5E6B-02C06006A8A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{115A1171-4396-BD4A-5E6B-02C06006A8A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{115A1171-4396-BD4A-5E6B-02C06006A8A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{115A1171-4396-BD4A-5E6B-02C06006A8A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +71,6 @@ Global
 		{B95F1406-17E2-4630-8116-750FFDA3A395} = {F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}
 		{381BCB6E-F5CF-777C-1AED-4DA261403F4F} = {F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}
 		{18242FDA-731A-1AA5-3523-C8C6EC161269} = {946183CB-9344-41EA-A1A9-32776D963028}
+		{115A1171-4396-BD4A-5E6B-02C06006A8A4} = {F86C1DA2-8F39-4D74-AC44-AFB86797C1AC}
 	EndGlobalSection
 EndGlobal
