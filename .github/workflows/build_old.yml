@@ -134,24 +134,15 @@ jobs:
         id: teststep
         # shell: pwsh
         # Remark: we use the solution instead of projects.
-        run: dotnet test ${{ env.REPO_DIR }}/${{ env.REPO_DIR }}.sln --configuration Release --logger trx --results-directory TestResults
+        run: dotnet test ${{ env.REPO_DIR }}/${{ env.REPO_DIR }}.sln --configuration Release --logger trx --results-directory test-results
         continue-on-error: true
         # ${{ env.IGNORE_TEST_ERRORS }}
-
-      - name: Upload test results
-        if: always()   # runs even if previous step failed
-        uses: actions/upload-artifact@v4
-        with:
-          # Name of the uploaded artifact (arbitrary):
-          name: TestResults
-          # Path (relative to the workspace) of the file(s) or folder(s) to 
-          # upload as artifact:
-          path: ./TestResults
 
       # Report tests failure
       - name: Report tests failure
         if: steps.teststep.outcome == 'failure'
-        run: echo "⚠️ Some tests failed, but the pipeline will continue."
+        run: echo "❌ Some tests failed, but build will continue."
+
 
       # UPLOAD BUILD OUTPUT (DLLs, EXEs, etc.)
       - name: Upload Build Artifacts
