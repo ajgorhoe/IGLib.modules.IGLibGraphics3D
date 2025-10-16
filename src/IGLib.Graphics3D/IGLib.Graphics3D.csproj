@@ -41,6 +41,18 @@
 		<PackageReference Include="GitVersion.MsBuild" Version="*" PrivateAssets="All" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- The referenced InitModules below ensures that source code repositories are cloned to correct relative locations.
+			Attributes:
+		To prevent copying output of referenced project to output of this project (e.g. DLLs, but not text files):
+		  ReferenceOutputAssembly="false"
+		To prevent this reference to appear in NuGet package of this project:
+		  PrivateAssets="All"
+		ReferenceOutputAssembly="false" PrivateAssets="All"   -->
+		<ProjectReference Include="..\0InitModules\InitModulesGraphics3D\InitModulesGraphics3D.csproj"
+						  ReferenceOutputAssembly="false" PrivateAssets="All" />
+	</ItemGroup>
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'netstandard2.0'">
 		<!-- OrderedDictionary<TKey, TValue is not available in net48 or netstandard2.0: -->
 		<!--
@@ -50,15 +62,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\IGLibCore\src\IGLib.Core\IGLib.Core.csproj" />
-		<!-- The referenced InitModules below ensures that source code repositories are cloned in the correct locations.
-			Attributes:
-		To prevent copying output of referenced project to output of this project (e.g. DLLs, but not text files):
-		  ReferenceOutputAssembly="false"
-		To prevent this reference to appear in NuGet package of this project:
-		  PrivateAssets="All"
-		ReferenceOutputAssembly="false" PrivateAssets="All"   -->
-		<ProjectReference Include="..\0InitModules\InitModulesGraphics3D\InitModulesGraphics3D.csproj"
-						  ReferenceOutputAssembly="false" PrivateAssets="All" />
 	</ItemGroup>
 	<!--
 	<ItemGroup>
