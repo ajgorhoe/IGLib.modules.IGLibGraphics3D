@@ -62,12 +62,12 @@ jobs:
           Write-Host "Directory Contents:`n"
           ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
 
-      # -name: CHECK DIRECTORY STRUCTURE
-      #   shell: pwsh
-      #   run: |
-      #     Write-Host "`n`nChecking directory structure...`n"
-      #     Write-Host "Current directory: $(Get-Location)`n"
-      #     ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
+      -name: CHECK DIRECTORY STRUCTURE
+        shell: pwsh
+        run: |
+          Write-Host "`n`nChecking directory structure...`n"
+          Write-Host "Current directory: $(Get-Location)`n"
+          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
 
       - name: SET UP .NET SDK
         uses: actions/setup-dotnet@v4
