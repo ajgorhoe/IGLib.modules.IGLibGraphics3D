@@ -62,7 +62,7 @@ jobs:
           Write-Host "Directory Contents:`n"
           ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
 
-      -name: CHECK DIRECTORY STRUCTURE
+      - name: CHECK DIRECTORY STRUCTURE
         shell: pwsh
         run: |
           Write-Host "`n`nChecking directory structure...`n"
