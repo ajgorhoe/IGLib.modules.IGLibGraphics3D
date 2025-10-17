@@ -50,8 +50,8 @@ jobs:
         # Important: set --depth 0 to avoid shallow clones (needed
         #   for GitVersion)
         run: |
-          echo "Cloning dependencies via repo's own script (UpdateDepencencyReposExtended.ps1)`n`n..."
-          ./${{ env.REPO_DIR }}/scripts/UpdateDepencencyReposExtended.ps1
+          echo "Cloning dependencies via repo's own script (UpdateDependencyReposExtended.ps1)`n`n..."
+          ./${{ env.REPO_DIR }}/scripts/UpdateDependencyReposExtended.ps1
 
       # CLONE DEPENDENCY repositories repeated:
       # This step is repeated in order to  check that the operation can be repeated twice in row
@@ -61,8 +61,8 @@ jobs:
         # Important: set --depth 0 to avoid shallow clones (needed
         #   for GitVersion)
         run: |
-          echo "Cloning dependencies via repo's own script (UpdateDepencencyReposExtended.ps1)`n`n..."
-          ./${{ env.REPO_DIR }}/scripts/UpdateDepencencyReposExtended.ps1
+          echo "Cloning dependencies via repo's own script (UpdateDependencyReposExtended.ps1)`n`n..."
+          ./${{ env.REPO_DIR }}/scripts/UpdateDependencyReposExtended.ps1
       
       # CLONE DEPENDENCY repositories:
       - name: CHECK DIRECTORY STRUCTURE
