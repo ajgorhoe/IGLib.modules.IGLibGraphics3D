@@ -52,6 +52,22 @@ jobs:
         run: |
           echo "Cloning dependencies via repo's own script (UpdateDepencencyReposExtended.ps1)`n`n..."
           ./${{ env.REPO_DIR }}/scripts/UpdateDepencencyReposExtended.ps1
+      
+      # CLONE DEPENDENCY repositories:
+      - name: CHECK DIRECTORY STRUCTURE
+        shell: pwsh
+        run: |
+          Write-Host "`n`nChecking directory structure...`n"
+          Write-Host "Current directory: $(Get-Location)`n"
+          Write-Host "Directory Contents:`n"
+          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
+
+      # -name: CHECK DIRECTORY STRUCTURE
+      #   shell: pwsh
+      #   run: |
+      #     Write-Host "`n`nChecking directory structure...`n"
+      #     Write-Host "Current directory: $(Get-Location)`n"
+      #     ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
 
       - name: SET UP .NET SDK
         uses: actions/setup-dotnet@v4
