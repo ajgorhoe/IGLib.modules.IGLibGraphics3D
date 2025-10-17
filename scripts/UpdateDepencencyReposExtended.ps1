@@ -10,7 +10,7 @@ $scriptFilename = [System.IO.Path]::GetFileName($scriptPath)
 Write-Host "Script directory: $scriptDir"
 
 # Write-Host "`nUpdating basic dependencies of IGLibGraphics3D:`n" # this output already in script.
-& $(join-path $scriptDir "UpdateDepencencyRepos.ps1")
+& $(join-path $scriptDir "UpdateDependencyRepos.ps1")
 
 Write-Host "`nUpdating extended dependencies of IGLibGraphics3D:`n"
 
