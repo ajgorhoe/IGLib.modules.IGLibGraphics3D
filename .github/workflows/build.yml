@@ -90,8 +90,8 @@ jobs:
       - name: Run Pre-Build PowerShell Script
         run: pwsh -File ${{ env.REPO_DIR }}/scripts/PrintEnv.ps1
 
-      # CHECK .NET SDK version and global tools:
-      - name: Check .NET SDK and global tools
+      # Verify .NET SDK version and global tools to insure everything we need is installed:
+      - name: VERIFY .NET SDK and global tools
         shell: pwsh
         run: |
           Write-Host "Checking .NET SDK version..."
@@ -99,13 +99,16 @@ jobs:
           Write-Host "Listing global dotnet tools..."
           dotnet tool list --global
 
-      # CHECK GitVersion:
+      # Verify that GitVersion works properly & printing the calculated version of the current commit:
+      # Remark: malfunctioning of GitVersion (likely due to misconfiguration) is often a cause for
+      # subsequent build to fail.
       - name: CHECK GitVersion
         shell: pwsh
         run: |
-          Write-Host "Checking GitVersion..."
-          Write-Host "Repository VERSION returned by GitVersion:"
+          Write-Host "Verifying GitVersion and printing version of the current commit..."
           cd ${{ env.REPO_DIR }}
+          Write-Host "Directory for getting the version:`n  $($(Get-Location).Path)"
+          Write-Host "Repository VERSION returned by GitVersion:"
           dotnet gitversion /showvariable FullSemVer
       
       # RESTORE DEPENDENCIES
