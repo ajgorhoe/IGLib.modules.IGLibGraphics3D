@@ -96,7 +96,7 @@ jobs:
           Write-Host "Verifying GitVersion and printing version of the current commit..."
           cd ${{ env.REPO_DIR }}
           Write-Host "Directory for getting the version:`n  $($(Get-Location).Path)"
-		  Write-Host "Running: 'dotnet gitversion /showvariable FullSemVer'"
+          Write-Host "Running: 'dotnet gitversion /showvariable FullSemVer'"
           Write-Host "Repository VERSION returned by GitVersion:"
           dotnet gitversion /showvariable FullSemVer
       
