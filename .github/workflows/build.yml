@@ -79,7 +79,7 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
       
       # INSTALL global DOTNET TOOLS
-      - name: INSTALL global DOTNET TOOLS
+      - name: INSTALL global DOTNET TOOLS (GitVersion)
         run: |
           dotnet tool install --global GitVersion.Tool
 
@@ -98,10 +98,16 @@ jobs:
           dotnet --version
           Write-Host "Listing global dotnet tools..."
           dotnet tool list --global
-          Write-Host "Repo VERSION via GitVersion..."
+
+      # CHECK GitVersion:
+      - name: CHECK GitVersion
+        shell: pwsh
+        run: |
+          Write-Host "Checking GitVersion..."
+          Write-Host "Repository VERSION returned by GitVersion:"
           cd ${{ env.REPO_DIR }}
           dotnet gitversion /showvariable FullSemVer
-
+      
       # RESTORE DEPENDENCIES
       - name: Restore NuGet packages
         run: dotnet restore ${{ env.REPO_DIR }}/${{ env.REPO_DIR }}.sln
