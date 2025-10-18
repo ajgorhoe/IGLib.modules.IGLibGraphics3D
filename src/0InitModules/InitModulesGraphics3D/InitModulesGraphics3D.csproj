@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"> 
 	<!-- Utility project; Initializes dependencies for the EventAggregator and EventAggregatorTests projects:
 	  * Clones / updates source repositories of dependencies side by side
-	See: https://github.com/ajgorhoe/IGLib.modules.IGLibEventAggregator/blob/main/src/0InitModules/InitializationProjects.md -->
+	See: https://github.com/ajgorhoe/IGLib.modules.IGLibCore/blob/main/src/0InitModules/InitializationProjects.md -->
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<OutputType>Library</OutputType>
@@ -40,7 +40,7 @@
 		<_ExecPolicy Condition="'$(OS)' == 'Windows_NT'">-ExecutionPolicy Bypass</_ExecPolicy>
 		<!-- Define the command to be executed (use a SINGLE LINE for command!): -->
 		<InitCommand1>
-			$(_PSExe) -NoProfile $(_ExecPolicy) -File "$(MSBuildProjectDirectory)/../../../scripts/UpdateDepencencyRepos.ps1"
+			$(_PSExe) -NoProfile $(_ExecPolicy) -File "$(MSBuildProjectDirectory)/../../../scripts/UpdateDependencyRepos.ps1"
 			<!-- Add eventual script arguments to the above line, e.g.:
 				-Arg1 "$(SomeArg)" -Arg2 "$(AnotherArg)"  
 				-->
