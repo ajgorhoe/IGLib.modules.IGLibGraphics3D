@@ -80,9 +80,9 @@ jobs:
           # Write-Host "`n`n`nCurrent directory: $(Get-Location)`n"
           # Write-Host "`nListing './`${{ env.SOURCE_DIR }}', depth 3 (main project in more detail):`n"
           # ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./${{ env.SOURCE_DIR }}" -MaxDepth 3 -IncludeHidden
-          Write-Host "`n`nCurrent directory: $(Get-Location)`n"
-          Write-Host "`nListing './_external', depth 2 (external dependencies in some detail):`n"
-          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./_external" -MaxDepth 2 -IncludeHidden
+          # Write-Host "`n`nCurrent directory: $(Get-Location)`n"
+          # Write-Host "`nListing './_external', depth 2 (external dependencies in some detail):`n"
+          # ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./_external" -MaxDepth 2 -IncludeHidden
 
       - name: SET UP .NET SDK
         uses: actions/setup-dotnet@v4
