@@ -56,10 +56,32 @@ jobs:
       - name: CHECK DIRECTORY STRUCTURE
         shell: pwsh
         run: |
-          Write-Host "`n`nChecking directory structure...`n"
+          Write-Host "`nChecking directory structure...`n"
           Write-Host "Current directory: $(Get-Location)`n"
-          Write-Host "Directory Contents:`n"
-          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path . -MaxDepth 2 -IncludeHidden
+          Write-Host "Directory Contents ('./', depth 2):`n"
+          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./" -MaxDepth 2 -IncludeHidden
+
+      - name: CHECK DIRECTORY STRUCTURE, 3 levels
+        shell: pwsh
+        run: |
+          Write-Host "`nChecking directory structure...`n"
+          Write-Host "Current directory: $(Get-Location)`n"
+          Write-Host "Directory Contents ('./', depth 3):`n"
+          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./" -MaxDepth 3 -IncludeHidden
+
+      - name: CHECK DIRECTORY STRUCTURE, SELECTED DETAILS
+        shell: pwsh
+        run: |
+          Write-Host "`n`nChecking directory structure - details...`n"
+          Write-Host "`n`n`nCurrent directory: $(Get-Location)`n"
+          Write-Host "`nListing './`${{ env.REPO_DIR }}', depth 2 (main repo dir in some detail):`n"
+          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./${{ env.REPO_DIR }}" -MaxDepth 2 -IncludeHidden
+          # Write-Host "`n`n`nCurrent directory: $(Get-Location)`n"
+          # Write-Host "`nListing './`${{ env.SOURCE_DIR }}', depth 3 (main project in more detail):`n"
+          # ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./${{ env.SOURCE_DIR }}" -MaxDepth 3 -IncludeHidden
+          Write-Host "`n`nCurrent directory: $(Get-Location)`n"
+          Write-Host "`nListing './_external', depth 2 (external dependencies in some detail):`n"
+          ${{ env.REPO_DIR }}/scripts/ShowDirectoryTree.ps1 -Path "./_external" -MaxDepth 2 -IncludeHidden
 
       - name: SET UP .NET SDK
         uses: actions/setup-dotnet@v4
