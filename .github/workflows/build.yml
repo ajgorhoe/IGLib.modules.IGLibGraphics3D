@@ -71,6 +71,7 @@ jobs:
 
       - name: CHECK DIRECTORY STRUCTURE, SELECTED DETAILS
         shell: pwsh
+        continue-on-error: true
         run: |
           Write-Host "`n`nChecking directory structure - details...`n"
           Write-Host "`n`n`nCurrent directory: $(Get-Location)`n"
