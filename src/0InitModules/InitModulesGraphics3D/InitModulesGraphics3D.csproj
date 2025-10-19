@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"> 
-	<!-- Utility project; Initializes dependencies for the EventAggregator and EventAggregatorTests projects:
+	<!-- Utility project; Initializes dependencies for the Graphics3D and Graphics3DTests projects:
 	  * Clones / updates source repositories of dependencies side by side
 	See: https://github.com/ajgorhoe/IGLib.modules.IGLibCore/blob/main/src/0InitModules/InitializationProjects.md -->
 	<PropertyGroup>
