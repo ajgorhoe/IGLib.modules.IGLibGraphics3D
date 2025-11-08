@@ -1,4 +1,7 @@
-﻿//Remove the definition below when if directives are removed and the tests permanently remain here!
+﻿
+#nullable disable
+
+//Remove the definition below when if directives are removed and the tests permanently remain here!
 #define IncludeFailedTestsByDesign
 
 using Xunit;

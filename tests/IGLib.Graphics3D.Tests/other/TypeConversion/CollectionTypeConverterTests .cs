@@ -1,4 +1,7 @@
-﻿//Uncomment the definition below in order to include tests that fail at this hierarchy level by design!
+﻿
+#nullable disable
+
+//Uncomment the definition below in order to include tests that fail at this hierarchy level by design!
 // #define IncludeFailedTestsByDesign
 
 using Xunit;
