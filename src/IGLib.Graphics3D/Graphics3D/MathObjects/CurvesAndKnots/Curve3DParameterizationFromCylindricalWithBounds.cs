@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+#nullable disable
+
+using System;
 using static System.Math;
 
 using IG.Num;

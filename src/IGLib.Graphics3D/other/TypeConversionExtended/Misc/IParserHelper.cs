@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+#nullable disable
+
+using System;
 using System.Globalization;
 
 namespace IGLib.Core

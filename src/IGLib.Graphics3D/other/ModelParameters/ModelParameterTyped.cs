@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+#nullable disable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -173,8 +176,6 @@ namespace IGLib.Core
             }
         }
 
-        private object _valueObject = null;
-
         /// <inheritdoc/>
         /// <remarks>Implementation from the base class <see cref="ModelParameter"/> is overriden here because
         /// this property is bound to the new strongly typed property <see cref="Value"/>.</remarks>
@@ -245,7 +246,7 @@ namespace IGLib.Core
 
         /// <summary>Creates a sample <see cref="ModelParameter{Double}"/> object, prints its content to console,
         /// and returns it.</summary>
-        internal static new ModelParameter<double> CreateExampleParameter12()
+        internal static ModelParameter<double> CreateExampleParameter12()
         {
             ModelParameter<double> param = new ModelParameter<double>("Param1")
             {

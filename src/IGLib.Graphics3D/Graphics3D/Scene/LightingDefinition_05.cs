@@ -1,4 +1,7 @@
-﻿using IGLib.Gr3D;
+﻿
+#nullable disable
+
+using IGLib.Gr3D;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

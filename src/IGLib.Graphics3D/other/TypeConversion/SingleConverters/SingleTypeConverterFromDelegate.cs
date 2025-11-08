@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+#nullable disable
+
+using System;
 using System.Diagnostics;
 
 namespace IGLib.Core

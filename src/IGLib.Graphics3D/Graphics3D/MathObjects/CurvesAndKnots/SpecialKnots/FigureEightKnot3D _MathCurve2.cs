@@ -1,4 +1,7 @@
-﻿using IG.Num;
+﻿
+#nullable disable
+
+using IG.Num;
 using static System.Math;
 
 namespace IGLib.Gr3D

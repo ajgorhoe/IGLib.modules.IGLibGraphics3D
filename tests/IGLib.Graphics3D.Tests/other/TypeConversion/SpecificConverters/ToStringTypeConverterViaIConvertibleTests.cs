@@ -16,13 +16,13 @@ namespace IGLib.Core.Tests
         /// constructor) by the test framework. I is also stored to Console property, such that
         /// test code can use <see cref="RoslynScriptingApiExamplesTests.Console.WriteLine(string)"/> 
         /// method to generate test output.</param>
-        public ToStringTypeConverterViaIConvertibleTests(ITestOutputHelper output) : base(output)
+        protected ToStringTypeConverterViaIConvertibleTests(ITestOutputHelper output) : base(output)
         { }
 
         [Theory]
         [InlineData("123", 123)]
         [InlineData("-456", -456)]
-        public void FromStringIConvertible_ShouldConvertToInt(string input, int expected)
+        protected void FromStringIConvertible_ShouldConvertToInt(string input, int expected)
         {
             var converter = new FromStringTypeConverterViaIConvertible();
             converter.TryConvertTyped<int>(input, out var result).Should().BeTrue();
@@ -32,7 +32,7 @@ namespace IGLib.Core.Tests
         [Theory]
         [InlineData("3.14", 3.14)]
         [InlineData("-2.71", -2.71)]
-        public void FromStringIConvertible_ShouldConvertToDouble(string input, double expected)
+        protected void FromStringIConvertible_ShouldConvertToDouble(string input, double expected)
         {
             var converter = new FromStringTypeConverterViaIConvertible();
             converter.TryConvertTyped<double>(input, out var result).Should().BeTrue();
@@ -43,7 +43,7 @@ namespace IGLib.Core.Tests
         [InlineData(123)]
         [InlineData(3.14159)]
         [InlineData(true)]
-        public void ToStringIConvertible_ShouldConvertAndBeRoundTrippable<T>(T value)
+        protected void ToStringIConvertible_ShouldConvertAndBeRoundTrippable<T>(T value)
         {
             var toConverter = new ToStringTypeConverterViaIConvertible();
             var fromConverter = new FromStringTypeConverterViaIConvertible();
@@ -53,7 +53,7 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        public void ToStringIConvertible_ShouldReturnFalseForUnsupportedType()
+        protected void ToStringIConvertible_ShouldReturnFalseForUnsupportedType()
         {
             var converter = new ToStringTypeConverterViaIConvertible();
             var unsupported = new object(); // object does not implement IConvertible
@@ -63,14 +63,14 @@ namespace IGLib.Core.Tests
         }
 
         [Fact]
-        public void FromStringIConvertible_ShouldFailOnInvalidInput()
+        protected void FromStringIConvertible_ShouldFailOnInvalidInput()
         {
             var converter = new FromStringTypeConverterViaIConvertible();
             converter.TryConvertTyped<int>("notanumber", out _).Should().BeFalse();
         }
 
         [Fact]
-        public void RoundTripConversion_ShouldWorkForDateTime()
+        protected void RoundTripConversion_ShouldWorkForDateTime()
         {
             var now = DateTime.UtcNow;
             Console.WriteLine($"Testing round trip conversion from {nameof(DateTime)} to string and back...");
@@ -89,7 +89,7 @@ namespace IGLib.Core.Tests
 #if false  // This converter does not work for Guid because Guid does not implement the IConvertible interface.
         [Fact]
 #endif
-        public void RoundTripConversion_ShouldWorkForGuid()
+        protected void RoundTripConversion_ShouldWorkForGuid()
         {
             Guid guid = Guid.NewGuid();
             Console.WriteLine($"Testing round trip conversion from {nameof(DateTime)} to string and back...");

@@ -1,3 +1,6 @@
+
+#nullable disable
+
 using FluentAssertions;
 using IGLib.Core;
 using System;

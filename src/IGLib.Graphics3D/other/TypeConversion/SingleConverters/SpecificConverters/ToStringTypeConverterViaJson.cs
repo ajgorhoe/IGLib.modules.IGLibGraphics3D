@@ -1,3 +1,6 @@
+
+#nullable disable
+
 using System;
 using System.Text.Json;
 

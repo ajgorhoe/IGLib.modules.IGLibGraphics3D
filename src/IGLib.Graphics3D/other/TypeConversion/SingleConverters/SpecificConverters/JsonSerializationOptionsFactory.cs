@@ -1,3 +1,6 @@
+
+#nullable disable
+
 using Microsoft.Extensions.Options;
 using System;
 using System.Text.Json;
