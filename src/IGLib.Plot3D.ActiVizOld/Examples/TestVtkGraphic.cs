@@ -9,7 +9,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 
 using IG.Lib;
-using IG.Gr;
+//using IG.Gr;
 using IG.Num;
 
 using Kitware.VTK;

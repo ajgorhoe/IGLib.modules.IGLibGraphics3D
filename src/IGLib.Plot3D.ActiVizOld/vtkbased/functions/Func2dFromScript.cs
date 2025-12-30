@@ -50,8 +50,11 @@ namespace IG.Num
         public virtual IScalarFunction CreateScalarFunction(string varName1, string varName2, string valueExpression,
             string[] gradientExpressions, string[][] hessianExpressions)
         {
+            throw new NotImplementedException($"{nameof(CreateScalarFunction)} is not implemented because the ScalarFunctionLoader is not yet implemented.");
+#if false
             return Func2dFromScalarScript.CreateScalarFunction(new string[]{varName1, varName2},
                 valueExpression, gradientExpressions, hessianExpressions);
+#endif
         }
 
         /// <summary>Creates and returns a scalar function that is formed on basis of expressions that define how
@@ -64,6 +67,8 @@ namespace IG.Num
         public static IScalarFunction CreateScalarFunction(string[] variableNames, string valueExpression,
             string[] gradientExpressions, string[][] hessianExpressions)
         {
+            throw new NotImplementedException("ScalarFunctionLoader is not yet implemented.");
+#if false
             if (variableNames == null)
                 throw new ArgumentNullException("No Variabel Names Defined.");
             if (valueExpression == null)
@@ -84,6 +89,7 @@ namespace IG.Num
             //ScalarFunctionLoader.Example();
 
             return ret;
+#endif
         }
 
 
