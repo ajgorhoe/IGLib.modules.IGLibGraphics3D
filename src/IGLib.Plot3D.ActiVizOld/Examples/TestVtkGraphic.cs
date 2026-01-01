@@ -21,7 +21,7 @@ namespace IG.Gr3d
     /* The following questions need to be answered:
      
      * How to scale graphics in x, y, and z directions in such a way that labels on scale
-     axes are not affected? This is emported for graphs of mathematical functions where the
+     axes are not affected? This is important for graphs of mathematical functions where the
      aspect ratios of the bounding boxes are large.
      
      * How to position the axes relatively to the bounding box. Maybe the axes will have to
