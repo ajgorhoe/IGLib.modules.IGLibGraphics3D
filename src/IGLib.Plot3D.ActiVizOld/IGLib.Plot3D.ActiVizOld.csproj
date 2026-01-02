@@ -13,7 +13,15 @@
 		<OutputPath>..\..\..\..\output\bin</OutputPath>
 		-->
 	</PropertyGroup>
-
+	
+	<PropertyGroup>
+		<!--
+		Solution to DPI awareness issues with WinForms designer in Visual Studio - see the following links:
+		https://github.com/dotnet/winforms/blob/main/docs/designer/designer-high-dpi-mode.md
+		-->
+		<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+		<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<!-- Attributes previously in AsemblyInfo.cs: -->
